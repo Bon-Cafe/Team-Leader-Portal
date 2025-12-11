@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Team Leader Portal</title>
+  <title>BON Cafe Team Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -47,7 +47,7 @@
     }
     .main-wrapper.full { margin-left: 0; }
 
-    /* TOP BAR (Sandwich Icon Here) */
+    /* TOP BAR */
     .top-bar {
       background: white; padding: 15px 30px; border-bottom: 1px solid var(--border);
       display: flex; align-items: center; gap: 20px; flex-shrink: 0;
@@ -137,7 +137,8 @@
     #admin-pin-input { letter-spacing: 8px; font-size: 1.5rem; text-align: center; font-weight: 700; border: 2px solid #e5e7eb; border-radius: 10px; transition: 0.2s; width: 100%; max-width: 200px; }
     #admin-pin-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
 
-    #notification { position: fixed; top: 25px; right: 25px; background: white; color: #1f2937; padding: 16px 24px; border-radius: 10px; display: none; z-index: 1100; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-left: 5px solid var(--primary); font-weight: 500; display: flex; align-items: center; gap: 10px; animation: slideInRight 0.4s; }
+    /* TOAST NOTIFICATION */
+    #notification { position: fixed; top: 25px; right: 25px; background: white; color: #1f2937; padding: 16px 24px; border-radius: 10px; display: none; z-index: 1100; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-left: 5px solid var(--primary); font-weight: 500; align-items: center; gap: 10px; animation: slideInRight 0.4s; }
     #notification.error { border-left-color: #ef4444; }
     #notification.fade-out { animation: fadeOut 0.3s forwards; }
     #notification i { font-size: 20px; }
@@ -155,7 +156,7 @@
     /* MOBILE SPECIFIC */
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-260px); }
-      .sidebar.closed { transform: translateX(0); } /* Desktop style closed not used on mobile */
+      .sidebar.closed { transform: translateX(0); }
       .sidebar.mobile-open { transform: translateX(0); }
       .main-wrapper { margin-left: 0; width: 100%; }
       .content-area { padding: 10px; }
@@ -180,7 +181,7 @@
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="logo-area" onclick="showTab('landing')">
-      TEAM LEADERS PORTAL
+      TEAM LEADERS' PORTAL
       <!-- Mobile Close Button -->
       <i class="material-icons" onclick="toggleMenu()" style="cursor:pointer; display:none;" id="sidebar-close-btn">close</i>
     </div>
@@ -277,7 +278,7 @@
       </div>
 
       <div id="vacation" class="form-section">
-        <h2>Vacation Request</h2>
+        <h2>Vacation Detail</h2>
         <form onsubmit="handleSubmit(event, 'Vacation')">
           <div class="form-group"><label>Name</label><input list="dl-names" name="name" required placeholder="Select Name..."></div>
           <div class="form-group" style="display:flex; gap:10px;">
@@ -370,14 +371,26 @@
         </div>
       </div>
     </div>
-    <div class="footer">Created by the Training-Coordinator | BON Cafe.</div>
+    <div class="footer">Created by the Training-Coordinator, the company is BON Cafe.</div>
   </div>
 
   <datalist id="dl-names"></datalist><datalist id="dl-ids"></datalist><datalist id="dl-branches"></datalist><datalist id="dl-sups"></datalist><datalist id="dl-ams"></datalist>
 
+  <!-- WELCOME MODAL (New) -->
+  <div id="welcome-modal" class="modal-overlay">
+    <div class="modal-box">
+      <i class="material-icons" style="font-size:48px; color:var(--primary); margin-bottom:10px;">waving_hand</i>
+      <h3>Welcome Back!</h3>
+      <p>Team Leader</p>
+      <button class="modal-btn btn-yes" onclick="closeWelcome()" style="width:100px;">OK</button>
+    </div>
+  </div>
+
   <div id="confirm-modal" class="modal-overlay"><div class="modal-box"><i class="material-icons" style="font-size:48px; color:var(--primary); margin-bottom:10px;">school</i><h3>Start Training?</h3><p>You are about to access the 9-Day training program. Proceed?</p><div><button class="modal-btn btn-no" onclick="closeModal()">Cancel</button><button class="modal-btn btn-yes" onclick="proceedToTraining()">Yes, Start</button></div></div></div>
   <div id="pin-modal" class="modal-overlay"><div class="modal-box"><i class="material-icons" style="font-size:48px; color:#4b5563; margin-bottom:10px;">lock</i><h3>Admin Access</h3><p>Enter the secure PIN code to view the Report Dashboard.</p><input type="password" id="admin-pin-input" placeholder="••••"><p id="pin-error" style="color:#ef4444; font-size:0.85rem; margin-top:10px; display:none;"><i class="material-icons" style="font-size:14px; vertical-align:middle;">error</i> Incorrect PIN</p><div style="margin-top:25px;"><button class="modal-btn btn-no" onclick="closePinModal()">Cancel</button><button class="modal-btn btn-yes" onclick="verifyPin()">Unlock</button></div></div></div>
-  <div id="notification"><i class="material-icons">check_circle</i><span id="notif-text">Success!</span></div>
+  
+  <!-- NOTIFICATION (Hidden by default via style) -->
+  <div id="notification" style="display:none;"><i class="material-icons">check_circle</i><span id="notif-text">Success!</span></div>
 
   <script>
     // *** IMPORTANT: PASTE YOUR APP SCRIPT DEPLOYMENT URL HERE ***
@@ -494,6 +507,11 @@
     function closeModal() { document.getElementById('confirm-modal').style.display = 'none'; }
     function proceedToTraining() { closeModal(); showTab('training-dash'); }
 
+    // --- WELCOME MODAL ---
+    function closeWelcome() {
+       document.getElementById('welcome-modal').style.display = 'none';
+    }
+
     // --- ADMIN PIN ---
     let isAdminUnlocked = false;
     function checkAdminAccess() {
@@ -541,7 +559,10 @@
             toast.classList.add('error'); icon.innerText = 'error'; icon.style.color = '#ef4444';
         }
         
+        // Remove inline display none if present, use flex
+        toast.style.removeProperty('display');
         toast.style.display = 'flex';
+        
         setTimeout(() => {
             toast.classList.add('fade-out');
             setTimeout(() => { toast.style.display = 'none'; toast.classList.remove('fade-out'); }, 300);
@@ -660,6 +681,10 @@
     // --- INIT ---
     window.onload = function() {
       window.history.replaceState({pageId: 'landing'}, "", "#landing");
+      
+      // SHOW WELCOME MODAL ON LOAD
+      document.getElementById('welcome-modal').style.display = 'flex';
+      
       loadDaily();
       loadWeekly();
       loadGlobalDropdowns();

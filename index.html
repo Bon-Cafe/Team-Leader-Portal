@@ -123,6 +123,24 @@
     .history-table th { background: #f3f4f6; font-weight: 600; white-space: nowrap; color: #374151; }
     .done-tag { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.5px; white-space: nowrap; }
     
+    /* NEW PROGRESS BAR STYLES */
+    .progress-section { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 25px; }
+    .progress-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .progress-card { background: white; border: 1px solid var(--border); padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .p-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; color: #374151; }
+    .p-sub { font-size: 0.85rem; color: #9ca3af; font-weight: 400; }
+    .p-track { height: 12px; background: #f3f4f6; border-radius: 6px; width: 100%; position: relative; margin-top: 12px; }
+    .p-fill { height: 100%; background: var(--primary); border-radius: 6px; width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+    .p-text { text-align: right; font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-top: 5px; }
+    /* Coffee Icon Marker */
+    .coffee-marker { 
+        position: absolute; right: -12px; top: -14px; 
+        color: #78350f; /* Coffee Brown */
+        font-size: 24px; 
+        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        transition: left 0.8s;
+    }
+
     /* Modals */
     .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
     .modal-box { background: white; padding: 35px; border-radius: 16px; width: 90%; max-width: 340px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); animation: scaleUp 0.3s; }
@@ -310,10 +328,8 @@
         <h2 id="training-title">Training Day</h2>
         <form id="dynamic-form" onsubmit="handleDynamicSubmit(event, 'Training')">
           <input type="hidden" name="category" id="train-cat">
-          <!-- Manual Text Inputs as requested -->
           <div class="form-group"><label>Trainee Name</label><input type="text" name="traineeName" required placeholder="Enter Trainee Name (Manual)"></div>
           <div class="form-group"><label>Trainee ID</label><input type="text" name="traineeId" required placeholder="Enter Trainee ID (Manual)"></div>
-          <!-- Dropdown with validation -->
           <div class="form-group"><label>Trainer Name</label><input list="dl-names" name="trainerName" required placeholder="Select Trainer..."></div>
           <div id="questions-container">Loading...</div>
           <div class="form-group"><label>Notes</label><textarea name="notes" rows="3"></textarea></div>
@@ -335,6 +351,15 @@
               <tbody id="history-body"><tr><td colspan="6" style="text-align:center;">Click Filter to load data</td></tr></tbody>
             </table>
         </div>
+        
+        <!-- NEW PROGRESS SECTION -->
+        <div id="progress-section" class="progress-section" style="display:none;">
+            <h3>Trainee Progress</h3>
+            <div id="progress-grid" class="progress-grid">
+                <!-- Bars will be injected here -->
+            </div>
+        </div>
+
       </div>
 
       <div id="report-dash" class="form-section">
@@ -657,25 +682,69 @@
        document.getElementById('sc-total').innerText = Math.round(((dailyProgress * dailyWeight) + (weeklyProgress * weeklyWeight) + trainScore) * 100) + "%";
     }
 
-    // --- HISTORY ---
+    // --- HISTORY & PROGRESS BAR LOGIC ---
     function showHistory() { showTab('history-view'); fetchHistory(); }
+    
     async function fetchHistory() {
       const id = document.getElementById('hist-id').value;
       const start = document.getElementById('hist-start').value;
       const end = document.getElementById('hist-end').value;
       const tbody = document.getElementById('history-body');
+      const pSection = document.getElementById('progress-section');
+      const pGrid = document.getElementById('progress-grid');
+
       tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>';
+      pSection.style.display = 'none'; // Hide progress until loaded
       
       const data = await fetchAPI('getTrainingHistory', {id, start, end});
       if(data) {
           if(data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No records found.</td></tr>';
           } else {
+            // 1. Populate Table
             let html = '';
             data.forEach(row => {
               html += `<tr><td>${row.date}</td><td><span style="background:#e0e7ff; color:#3730a3; padding:2px 8px; border-radius:4px; font-size:0.8em;">${row.day}</span></td><td>${row.name}</td><td>${row.id}</td><td>${row.trainer}</td><td>${row.notes}</td></tr>`;
             });
             tbody.innerHTML = html;
+
+            // 2. Calculate Progress
+            const trainees = {};
+            data.forEach(row => {
+                // Initialize if new ID
+                if(!trainees[row.id]) {
+                    trainees[row.id] = { name: row.name, days: new Set() };
+                }
+                // Extract number from "Day X" or just "X" to store unique days
+                const dayNum = row.day.toString().match(/\d+/);
+                if(dayNum) {
+                    trainees[row.id].days.add(parseInt(dayNum[0]));
+                }
+            });
+
+            // 3. Render Progress Bars
+            let progressHtml = '';
+            for (const [empId, info] of Object.entries(trainees)) {
+                const uniqueDays = info.days.size;
+                const percentage = Math.min((uniqueDays / 9) * 100, 100);
+                
+                progressHtml += `
+                <div class="progress-card">
+                    <div class="p-header">
+                        <span>${info.name}</span>
+                        <span>${uniqueDays} / 9</span>
+                    </div>
+                    <div class="p-sub">ID: ${empId}</div>
+                    <div class="p-track">
+                        <div class="p-fill" style="width:${percentage}%">
+                            <i class="material-icons coffee-marker">local_cafe</i>
+                        </div>
+                    </div>
+                    <div class="p-text">${Math.round(percentage)}% Completed</div>
+                </div>`;
+            }
+            pGrid.innerHTML = progressHtml;
+            pSection.style.display = 'block'; // Show section
           }
       }
     }
@@ -774,38 +843,29 @@
 
     // --- VALIDATION LOGIC ---
     function validateFormInputs(form) {
-        // Find all inputs with a 'list' attribute inside this form
         const inputs = form.querySelectorAll('input[list]');
         for (let input of inputs) {
             const listId = input.getAttribute('list');
             const dataList = document.getElementById(listId);
-            // Check if datalist exists and has options (prevent blocking if API failed)
             if (dataList && dataList.options.length > 0) {
-                // Get all valid values
                 const validValues = Array.from(dataList.options).map(opt => opt.value);
-                // Check if current value is valid
                 if (input.value && !validValues.includes(input.value)) {
                     input.setCustomValidity("Please select a valid option from the list.");
-                    input.reportValidity(); // Shows the browser bubble
-                    
-                    // Reset validity on input change so user can fix it
+                    input.reportValidity();
                     input.addEventListener('input', () => {
                         input.setCustomValidity("");
                     }, { once: true });
-                    
-                    return false; // Validation failed
+                    return false;
                 }
             }
         }
-        return true; // Validation passed
+        return true;
     }
 
     // --- SUBMIT ---
     async function handleDynamicSubmit(e, cat) {
       e.preventDefault();
-      // VALIDATE BEFORE SUBMITTING
       if (!validateFormInputs(e.target)) return;
-
       const fd = new FormData(e.target);
       const obj = { category: cat };
       fd.forEach((v, k) => obj[k] = v);
@@ -814,9 +874,7 @@
 
     async function handleSubmit(e, cat) {
       e.preventDefault();
-      // VALIDATE BEFORE SUBMITTING
       if (!validateFormInputs(e.target)) return;
-
       const fd = new FormData(e.target);
       const obj = { category: cat };
       fd.forEach((v, k) => obj[k] = v);
@@ -827,9 +885,7 @@
       const btn = form.querySelector('button');
       const txt = btn.innerText;
       btn.innerText = 'Saving...'; btn.disabled = true;
-      
       const res = await postAPI(obj);
-      
       btn.innerText = txt; btn.disabled = false;
       showToast(res.message, res.success);
       if(res.success) {

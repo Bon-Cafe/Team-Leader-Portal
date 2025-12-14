@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe Team Leader</title>
+  <title>BON Cafe | Team Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -49,15 +49,29 @@
     }
     .main-wrapper.full { margin-left: 0; }
 
-    /* --- MOBILE MENU TRIGGER --- */
+    /* --- CONTENT HEADER (Menu + Title) --- */
+    .content-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e5e7eb;
+    }
     .mobile-menu-btn {
-        display: none; 
-        padding: 15px 20px;
+        padding: 5px;
         color: var(--text);
-        font-size: 30px;
+        font-size: 32px;
         cursor: pointer;
-        background: transparent;
-        width: fit-content;
+        border-radius: 4px;
+        transition: 0.2s;
+    }
+    .mobile-menu-btn:hover { background: #e5e7eb; color: var(--primary); }
+    .page-header-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0;
     }
 
     /* --- SCROLL AREA --- */
@@ -66,10 +80,10 @@
     .form-section.active { display: block; }
 
     /* --- LANDING --- */
-    .landing-wrapper { display: none; width: 100%; max-width: 1200px; margin: 0 auto; flex: 1; }
+    .landing-wrapper { display: none; width: 100%; max-width: 800px; margin: 0 auto; flex: 1; }
     .landing-wrapper.active { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.3s ease-out; }
 
-    .carousel-container { width: 100%; height: 280px; border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); flex-shrink: 0; }
+    .carousel-container { width: 100%; height: 250px; border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); flex-shrink: 0; }
     .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; opacity: 0; transition: opacity 1s ease-in-out; transform: scale(1.05); }
     .slide.active-slide { opacity: 1; transform: scale(1); }
 
@@ -80,44 +94,47 @@
     .role-content.open { max-height: 600px; padding: 20px; border-top: 1px solid var(--border); }
     .role-content p { margin-bottom: 10px; line-height: 1.5; color: #4b5563; font-size: 0.95rem; }
 
-    /* --- CATEGORY CARDS (FIXED TO BE SQUARES AND NOT COMPRESSED) --- */
-    .category-grid { 
-        display: grid; 
-        grid-template-columns: repeat(4, 1fr); 
-        gap: 20px; 
+    /* --- CATEGORY LIST (STACKED RECTANGLES) --- */
+    .category-list { 
+        display: flex; 
+        flex-direction: column; /* Stack on top of each other */
+        gap: 15px; 
         padding-bottom: 20px;
         width: 100%;
     }
     .cat-card { 
         background: white; 
-        padding: 15px 10px; 
+        padding: 20px 25px; 
         border-radius: var(--radius); 
-        text-align: center; 
         box-shadow: var(--shadow); 
         cursor: pointer; 
         transition: 0.2s; 
         border: 1px solid transparent; 
-        
-        /* Force minimum height so they don't squash */
-        min-height: 150px;
-        height: 100%;
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        align-items: center; 
-    }
-    .cat-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-    .cat-card i { font-size: 42px; color: var(--primary); margin-bottom: 12px; display: block; }
-    
-    .cat-card span { 
-        font-weight: 600; 
-        color: var(--text); 
-        font-size: 0.95rem; 
-        line-height: 1.3; 
-        display: block;
         width: 100%;
-        word-wrap: break-word; 
-        white-space: normal;   
+        display: flex; 
+        align-items: center; /* Vertically center */
+        gap: 20px; /* Space between Icon and Text */
+        text-align: left;
+    }
+    .cat-card:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    
+    /* Icon Styling */
+    .cat-card i { 
+        font-size: 32px; 
+        color: var(--primary); 
+        margin: 0; /* Remove bottom margin */
+        flex-shrink: 0;
+        background: #ecfdf5;
+        padding: 10px;
+        border-radius: 50%;
+    }
+    
+    /* Text Styling */
+    .cat-card span { 
+        font-weight: 700; 
+        color: var(--text); 
+        font-size: 1.05rem; 
+        line-height: 1.3; 
     }
 
     /* --- FORM ELEMENTS --- */
@@ -191,25 +208,8 @@
       
       .main-wrapper { margin-left: 0; width: 100%; }
       
-      .mobile-menu-btn { display: block; margin-left: -20px; margin-top: -10px; }
-      
       .content-area { padding: 20px 15px; }
       .form-section { padding: 20px 15px; }
-      
-      /* FIX: 2 Columns for Cards on Mobile - FORCE GRID */
-      .category-grid { 
-          display: grid;
-          grid-template-columns: 1fr 1fr; /* Strictly 2 columns */
-          gap: 15px; 
-      }
-      /* Ensure cards have space */
-      .cat-card { 
-          padding: 15px 5px; 
-          min-height: 140px; 
-          width: 100%; 
-      }
-      .cat-card i { font-size: 36px; margin-bottom: 8px; }
-      .cat-card span { font-size: 0.85rem; }
       
       .carousel-container { height: 180px; }
       
@@ -237,6 +237,7 @@
     </div>
   </div>
 
+  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="logo-area" onclick="showTab('landing')">
       <span id="welcome-msg">Welcome</span> 
@@ -258,7 +259,12 @@
 
   <div class="main-wrapper" id="main-wrapper">
     <div class="content-area">
-      <i class="material-icons mobile-menu-btn" onclick="toggleMenu()">menu</i>
+      
+      <!-- ADDED HEADER: MENU ICON + TITLE -->
+      <div class="content-header">
+         <i class="material-icons mobile-menu-btn" onclick="toggleMenu()">menu</i>
+         <h1 class="page-header-title" id="dynamic-title">Home</h1>
+      </div>
 
       <div id="landing" class="landing-wrapper active">
         <div class="carousel-container">
@@ -278,7 +284,8 @@
             </div>
         </div>
 
-        <div class="category-grid tl-only">
+        <!-- STACKED RECTANGLE LIST -->
+        <div class="category-list tl-only">
             <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
             <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task Checklist</span></div>
             <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task Report</span></div>
@@ -286,14 +293,15 @@
             <div class="cat-card" onclick="showTab('vacation')"><i class="material-icons">flight</i><span>Vacation Request</span></div>
             <div class="cat-card" onclick="confirmTraining()"><i class="material-icons">school</i><span>Training Program</span></div>
         </div>
-        <div class="category-grid admin-only" style="display:none;">
+        <div class="category-list admin-only" style="display:none;">
             <div class="cat-card" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i><span>Global Dashboard</span></div>
         </div>
       </div>
 
+      <!-- TL DASHBOARD -->
       <div id="tl-dash" class="form-section">
          <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
-            <h2 style="margin:0;">My Performance</h2>
+            <h2 style="margin:0;">Performance Overview</h2>
             <button class="submit-btn" style="width:auto; padding:10px 20px; font-size:0.9rem;" onclick="loadTLData()">Refresh</button>
          </div>
          <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
@@ -330,8 +338,9 @@
          </div>
       </div>
 
+      <!-- ADMIN DASHBOARD -->
       <div id="admin-dash" class="form-section" style="max-width:1200px;">
-         <h2>Global Dashboard</h2>
+         <h2>Overview</h2>
          <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
             <input type="date" id="ad-start" style="flex:1;"> <input type="date" id="ad-end" style="flex:1;">
             <button class="submit-btn" style="width:auto; flex:0 0 100px;" onclick="loadAdminData()">Load</button>
@@ -344,8 +353,9 @@
          </div>
       </div>
 
+      <!-- DAILY TASK -->
       <div id="daily" class="form-section">
-        <h2>Daily Task Checklist</h2>
+        <h2>Checklist</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Daily Task')">
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
              <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
@@ -359,8 +369,9 @@
         </form>
       </div>
 
+      <!-- WEEKLY TASK -->
       <div id="weekly" class="form-section">
-        <h2>Weekly Task Report</h2>
+        <h2>Report Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Weekly Task')">
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
              <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
@@ -375,8 +386,9 @@
         </form>
       </div>
 
+      <!-- REPORT PROBLEM -->
       <div id="problem" class="form-section">
-        <h2>Report Problem</h2>
+        <h2>Report Issue</h2>
         <form onsubmit="handleProblem(event)">
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
              <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
@@ -406,8 +418,9 @@
         </form>
       </div>
 
+      <!-- VACATION -->
       <div id="vacation" class="form-section">
-        <h2>Vacation Request</h2>
+        <h2>Request Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Vacation')">
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
              <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
@@ -422,6 +435,7 @@
         </form>
       </div>
 
+      <!-- TRAINING (9-DAY GRID) -->
       <div id="training-dash" class="form-section">
         <h2>9-Days Training</h2>
         <div class="training-grid">
@@ -437,6 +451,7 @@
         </div>
       </div>
 
+      <!-- TRAINING FORM -->
       <div id="training-dynamic" class="form-section">
         <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
         <h2 id="training-title">Training Day</h2>
@@ -451,8 +466,9 @@
         </form>
       </div>
 
+      <!-- TRAINING HISTORY -->
       <div id="history-view" class="form-section" style="max-width:1000px;">
-        <h2>Training History</h2>
+        <h2>Records</h2>
         <div class="filter-bar">
           <input list="dl-ids" id="hist-id" placeholder="Filter by Employee ID" style="flex:2;">
           <button class="submit-btn" style="width:auto; flex:1;" onclick="fetchHistory()">Filter</button>
@@ -497,6 +513,15 @@
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
        
+       // Update Header Title
+       const titleMap = {
+           'landing': 'Home', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task',
+           'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation',
+           'training-dash': 'Training Grid', 'training-dynamic': 'Training Form',
+           'history-view': 'History', 'admin-dash': 'Admin Panel'
+       };
+       document.getElementById('dynamic-title').innerText = titleMap[id] || 'Bon Portal';
+
        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
        const btn = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(id));
        if(btn) btn.classList.add('active');
@@ -552,7 +577,10 @@
 
        const d = await fetchAPI('getGlobalDropdowns');
        if(d) {
-          const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => sel.innerHTML = data.map(i=>`<option>${i}</option>`).join(''));
+          // ADDED DEFAULT "Select option"
+          const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => {
+             sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join('');
+          });
           fills('.db-branch', d.branches); fills('.db-sup', d.sups); fills('.db-am', d.ams);
        }
        
@@ -669,7 +697,6 @@
        document.getElementById('tl-bar').style.width = score + "%";
        document.getElementById('tl-score').innerText = score + "%";
        
-       // NOW INCLUDES BRANCH
        const dailyHTML = res.daily.length ? res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
        const weeklyHTML = res.weekly.length ? res.weekly.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
 

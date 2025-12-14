@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe Team Portal</title>
+  <title>BON Cafe | Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -13,6 +13,7 @@
       --bg: #f3f4f6; --surface: #ffffff; --sidebar-bg: #111827;
       --text: #1f2937; --text-light: #6b7280; --border: #e5e7eb; --radius: 12px;
       --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; display: flex; }
@@ -49,35 +50,83 @@
     }
     .main-wrapper.full { margin-left: 0; }
 
-    /* --- CONTENT HEADER (Menu + Title) --- */
+    /* --- CONTENT HEADER --- */
     .content-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e5e7eb;
+        display: flex; align-items: center; gap: 15px;
+        margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb;
     }
     .mobile-menu-btn {
-        padding: 5px;
-        color: var(--text);
-        font-size: 32px;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: 0.2s;
+        padding: 5px; color: var(--text); font-size: 32px; cursor: pointer;
+        border-radius: 4px; transition: 0.2s;
     }
     .mobile-menu-btn:hover { background: #e5e7eb; color: var(--primary); }
-    .page-header-title {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: #111827;
-        margin: 0;
+    .page-header-title { font-size: 1.4rem; font-weight: 800; color: #111827; margin: 0; flex: 1; }
+    
+    /* Bell Notification */
+    .bell-wrapper { position: relative; cursor: pointer; margin-right: 10px; }
+    .bell-icon { font-size: 28px; color: var(--text); }
+    .bell-badge {
+        position: absolute; top: -5px; right: -5px;
+        background: var(--danger); color: white;
+        border-radius: 50%; font-size: 0.7rem; font-weight: 700;
+        width: 18px; height: 18px; display: flex;
+        justify-content: center; align-items: center;
+        border: 2px solid white; display: none;
     }
 
     /* --- SCROLL AREA --- */
     .content-area { flex: 1; padding: 20px 30px; overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; }
     .form-section { display: none; animation: slideUp 0.3s ease-out; max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; }
     .form-section.active { display: block; }
+
+    /* --- CUSTOM MODAL --- */
+    .custom-modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000;
+        display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
+    }
+    .custom-modal-overlay.open { display: flex; opacity: 1; }
+    .custom-modal-box {
+        background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 16px;
+        text-align: center; transform: scale(0.9); transition: transform 0.3s;
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+    .custom-modal-overlay.open .custom-modal-box { transform: scale(1); }
+    .c-modal-icon { font-size: 50px; margin-bottom: 15px; }
+    .c-modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+    .c-modal-msg { font-size: 1rem; color: var(--text-light); margin-bottom: 25px; line-height: 1.5; }
+    .c-modal-btns { display: flex; gap: 10px; justify-content: center; }
+    .c-btn {
+        padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; flex: 1;
+        transition: 0.2s; font-size: 1rem;
+    }
+    .c-btn-primary { background: var(--primary); color: white; }
+    .c-btn-primary:hover { background: var(--primary-dark); }
+    .c-btn-cancel { background: #e5e7eb; color: var(--text); }
+    .c-btn-cancel:hover { background: #d1d5db; }
+    
+    /* Modal Colors */
+    .mod-success .c-modal-icon { color: var(--success); }
+    .mod-error .c-modal-icon { color: var(--danger); }
+    .mod-warning .c-modal-icon { color: var(--warning); }
+    .mod-confirm .c-modal-icon { color: #3b82f6; }
+
+    /* --- ANNOUNCEMENT CARDS --- */
+    .announce-card {
+        border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px;
+        background: #fff; border-left: 5px solid var(--primary);
+    }
+    .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+    .ac-date { font-size: 0.85rem; color: #9ca3af; font-weight: 600; }
+    .ac-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+    .ac-msg { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 15px; white-space: pre-wrap; }
+    .ac-btn-read {
+        background: var(--primary); color: white; border: none; padding: 8px 16px;
+        border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+    }
+    .ac-read-badge {
+        background: #e5e7eb; color: #6b7280; padding: 5px 12px; border-radius: 20px;
+        font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
+    }
 
     /* --- LANDING --- */
     .landing-wrapper { display: none; width: 100%; max-width: 800px; margin: 0 auto; flex: 1; }
@@ -94,48 +143,16 @@
     .role-content.open { max-height: 600px; padding: 20px; border-top: 1px solid var(--border); }
     .role-content p { margin-bottom: 10px; line-height: 1.5; color: #4b5563; font-size: 0.95rem; }
 
-    /* --- CATEGORY LIST (STACKED RECTANGLES) --- */
-    .category-list { 
-        display: flex; 
-        flex-direction: column; /* Stack on top of each other */
-        gap: 15px; 
-        padding-bottom: 20px;
-        width: 100%;
-    }
+    /* --- CATEGORY LIST --- */
+    .category-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; width: 100%; }
     .cat-card { 
-        background: white; 
-        padding: 20px 25px; 
-        border-radius: var(--radius); 
-        box-shadow: var(--shadow); 
-        cursor: pointer; 
-        transition: 0.2s; 
-        border: 1px solid transparent; 
-        width: 100%;
-        display: flex; 
-        align-items: center; /* Vertically center */
-        gap: 20px; /* Space between Icon and Text */
-        text-align: left;
+        background: white; padding: 20px 25px; border-radius: var(--radius); box-shadow: var(--shadow); 
+        cursor: pointer; transition: 0.2s; border: 1px solid transparent; width: 100%;
+        display: flex; align-items: center; gap: 20px; text-align: left;
     }
     .cat-card:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    
-    /* Icon Styling */
-    .cat-card i { 
-        font-size: 32px; 
-        color: var(--primary); 
-        margin: 0; /* Remove bottom margin */
-        flex-shrink: 0;
-        background: #ecfdf5;
-        padding: 10px;
-        border-radius: 50%;
-    }
-    
-    /* Text Styling */
-    .cat-card span { 
-        font-weight: 700; 
-        color: var(--text); 
-        font-size: 1.05rem; 
-        line-height: 1.3; 
-    }
+    .cat-card i { font-size: 32px; color: var(--primary); margin: 0; flex-shrink: 0; background: #ecfdf5; padding: 10px; border-radius: 50%; }
+    .cat-card span { font-weight: 700; color: var(--text); font-size: 1.05rem; line-height: 1.3; }
 
     /* --- FORM ELEMENTS --- */
     h2 { margin-bottom: 20px; color: #111827; font-weight: 700; font-size: 1.5rem; }
@@ -201,23 +218,16 @@
         border-top: 1px solid transparent;
     }
 
-    /* --- MOBILE RESPONSIVE STYLES --- */
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%); width: 280px; }
       .sidebar.mobile-open { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
-      
       .main-wrapper { margin-left: 0; width: 100%; }
-      
       .content-area { padding: 20px 15px; }
       .form-section { padding: 20px 15px; }
-      
       .carousel-container { height: 180px; }
-      
       .tl-header { flex-direction: column; text-align: center; padding: 20px; }
       .tl-graph-box { width: 100%; margin-top: 15px; }
-      
       .admin-grid { grid-template-columns: 1fr; }
-      
       .table-responsive { border-left: none; border-right: none; border-radius: 0; margin-left: -15px; width: calc(100% + 30px); }
     }
 
@@ -226,6 +236,18 @@
   </style>
 </head>
 <body>
+
+  <!-- MODERN CUSTOM MODAL -->
+  <div class="custom-modal-overlay" id="c-modal">
+    <div class="custom-modal-box" id="c-modal-box">
+       <i class="material-icons c-modal-icon" id="c-icon">check_circle</i>
+       <div class="c-modal-title" id="c-title">Success</div>
+       <div class="c-modal-msg" id="c-msg">Operation completed successfully.</div>
+       <div class="c-modal-btns" id="c-btns">
+         <button class="c-btn c-btn-primary" id="c-btn-ok" onclick="closeModal()">OK</button>
+       </div>
+    </div>
+  </div>
 
   <div id="login-overlay">
     <div class="login-box">
@@ -244,6 +266,7 @@
     </div>
     <ul class="nav-links">
       <li class="nav-item tl-only active" onclick="showTab('landing')"><i class="material-icons">home</i> Home</li>
+      <li class="nav-item tl-only" onclick="showTab('announce-view')"><i class="material-icons">campaign</i> Announcements</li>
       <li class="nav-item tl-only" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i> My Dashboard</li>
       <li class="nav-item tl-only" onclick="showTab('daily')"><i class="material-icons">today</i> Daily Task</li>
       <li class="nav-item tl-only" onclick="showTab('weekly')"><i class="material-icons">event_note</i> Weekly Task</li>
@@ -252,17 +275,24 @@
       <li class="nav-item tl-only" onclick="confirmTraining()"><i class="material-icons">school</i> 9-Days Training</li>
       <li class="nav-item tl-only" onclick="showHistory()"><i class="material-icons">history</i> Training History</li>
       <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i> Global Dashboard</li>
-      <li style="margin-top:auto; border-top:1px solid #374151;" class="nav-item" onclick="logout()"><i class="material-icons">logout</i> Logout</li>
+      <!-- ADMIN POST ANNOUNCEMENT MENU -->
+      <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-post-ann')"><i class="material-icons">campaign</i> Post Announcement</li>
+      
+      <li style="margin-top:auto; border-top:1px solid #374151;" class="nav-item" onclick="confirmLogout()"><i class="material-icons">logout</i> Logout</li>
     </ul>
   </div>
 
   <div class="main-wrapper" id="main-wrapper">
     <div class="content-area">
       
-      <!-- HEADER -->
       <div class="content-header">
          <i class="material-icons mobile-menu-btn" onclick="toggleMenu()">menu</i>
          <h1 class="page-header-title" id="dynamic-title">Home</h1>
+         <!-- BELL ICON -->
+         <div class="bell-wrapper" onclick="showTab('announce-view')">
+            <i class="material-icons bell-icon">notifications_none</i>
+            <span class="bell-badge" id="bell-count">0</span>
+         </div>
       </div>
 
       <div id="landing" class="landing-wrapper active">
@@ -284,6 +314,7 @@
         </div>
 
         <div class="category-list tl-only">
+            <div class="cat-card" onclick="showTab('announce-view')"><i class="material-icons">campaign</i><span>Announcements</span></div>
             <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
             <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task Checklist</span></div>
             <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task Report</span></div>
@@ -293,7 +324,26 @@
         </div>
         <div class="category-list admin-only" style="display:none;">
             <div class="cat-card" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i><span>Global Dashboard</span></div>
+            <div class="cat-card" onclick="showTab('admin-post-ann')"><i class="material-icons">campaign</i><span>Post Announcement</span></div>
         </div>
+      </div>
+
+      <!-- ANNOUNCEMENTS VIEW -->
+      <div id="announce-view" class="form-section">
+         <h2>Team Announcements</h2>
+         <div id="announcement-list">Loading...</div>
+      </div>
+
+      <!-- ADMIN POST ANNOUNCEMENT -->
+      <div id="admin-post-ann" class="form-section">
+         <h2>Create New Announcement</h2>
+         <form onsubmit="handleDynamicSubmit(event, 'Announcements')">
+            <div class="form-group"><label>Creator Name</label><input class="u-name" name="name" readonly></div>
+            <div class="form-group"><label>Title</label><input type="text" name="title" required></div>
+            <div class="form-group"><label>Effective Date (Notification Trigger)</label><input type="date" name="effDate" required></div>
+            <div class="form-group"><label>Message Details</label><textarea name="message" rows="5" required></textarea></div>
+            <button class="submit-btn">Post Announcement</button>
+         </form>
       </div>
 
       <div id="tl-dash" class="form-section">
@@ -317,22 +367,10 @@
                <div id="tl-score" class="prog-txt">0%</div>
             </div>
          </div>
-         
          <h3>Daily Tasks</h3>
-         <div class="table-responsive">
-             <table class="history-table">
-                 <thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead>
-                 <tbody id="tl-daily-body"></tbody>
-             </table>
-         </div>
-
+         <div class="table-responsive"><table class="history-table"><thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead><tbody id="tl-daily-body"></tbody></table></div>
          <h3 style="margin-top:25px;">Weekly Tasks</h3>
-         <div class="table-responsive">
-             <table class="history-table">
-                 <thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead>
-                 <tbody id="tl-weekly-body"></tbody>
-             </table>
-         </div>
+         <div class="table-responsive"><table class="history-table"><thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead><tbody id="tl-weekly-body"></tbody></table></div>
       </div>
 
       <div id="admin-dash" class="form-section" style="max-width:1200px;">
@@ -442,7 +480,6 @@
         </div>
       </div>
 
-      <!-- TRAINING FORM (UPDATED) -->
       <div id="training-dynamic" class="form-section">
         <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
         <h2 id="training-title">Training Day</h2>
@@ -450,7 +487,6 @@
           <input type="hidden" name="category" id="train-cat">
           <div class="form-group"><label>Trainee Name</label><input type="text" name="traineeName" required></div>
           <div class="form-group"><label>Trainee ID</label><input type="text" name="traineeId" required></div>
-          <!-- ADDED EMAIL FIELD -->
           <div class="form-group"><label>Trainee Email</label><input type="email" name="traineeEmail" required></div>
           
           <div class="form-group"><label>Trainer Name</label><input class="u-name" name="trainerName" readonly></div>
@@ -469,36 +505,78 @@
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
            <input type="date" id="hist-start"> <input type="date" id="hist-end">
         </div>
-        
         <div id="progress-section" class="progress-section" style="display:none;">
             <h3 style="margin-bottom:15px; font-size:1.1rem;">Trainee Progress</h3>
             <div id="progress-grid" class="progress-grid"></div>
         </div>
-
         <div class="table-responsive" style="margin-top:25px;">
             <table class="history-table"><thead><tr><th>Date</th><th>Day</th><th>Name</th><th>ID</th><th>Trainer</th><th>Notes</th></tr></thead><tbody id="history-body"></tbody></table>
         </div>
       </div>
 
       <div class="footer">Created by the Training-Coordinator | Bon Cafe</div>
-
     </div>
   </div>
   
   <datalist id="dl-ids"></datalist>
 
   <script>
-    // *** PASTE YOUR WEB APP URL HERE ***
     const API_URL = "https://script.google.com/macros/s/AKfycbyRtDjSzUxjygsRpcKe20a0m_ytOazLh5_SWuwIfGy456UmGjtFo_4pJqk7e0M41jkKpA/exec";
 
     let currentUser = null;
     let isAdminMode = false;
+    let activeAnnouncements = [];
 
+    // --- MODERN MODAL SYSTEM ---
+    function showModal(type, title, msg, onConfirm = null) {
+        const modal = document.getElementById('c-modal');
+        const box = document.getElementById('c-modal-box');
+        const icon = document.getElementById('c-icon');
+        const t = document.getElementById('c-title');
+        const m = document.getElementById('c-msg');
+        const btns = document.getElementById('c-btns');
+
+        // Reset classes
+        box.classList.remove('mod-success', 'mod-error', 'mod-warning', 'mod-confirm');
+        btns.innerHTML = '';
+
+        t.innerText = title;
+        m.innerText = msg;
+
+        if(type === 'success') {
+            box.classList.add('mod-success'); icon.innerText = 'check_circle';
+            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">OK</button>';
+        } else if(type === 'error') {
+            box.classList.add('mod-error'); icon.innerText = 'error';
+            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Close</button>';
+        } else if(type === 'warning') {
+            box.classList.add('mod-warning'); icon.innerText = 'warning';
+            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Understood</button>';
+        } else if(type === 'confirm') {
+            box.classList.add('mod-confirm'); icon.innerText = 'help';
+            const yes = document.createElement('button'); yes.className = 'c-btn c-btn-primary'; yes.innerText = 'Yes';
+            const no = document.createElement('button'); no.className = 'c-btn c-btn-cancel'; no.innerText = 'Cancel';
+            yes.onclick = () => { closeModal(); if(onConfirm) onConfirm(); };
+            no.onclick = closeModal;
+            btns.append(no, yes);
+        }
+
+        modal.classList.add('open');
+    }
+
+    function closeModal() { document.getElementById('c-modal').classList.remove('open'); }
+
+    // --- NAVIGATION SECURITY ---
     window.onpopstate = function(event) {
         if(event.state && event.state.tab) {
             showTab(event.state.tab, false);
         } else {
-            showTab('landing', false);
+            // BACK BUTTON PRESSED ON LANDING -> CONFIRM EXIT
+            showModal('confirm', 'Exit Portal?', 'Are you sure you want to log out?', () => {
+                location.reload();
+            });
+            // Push state back so they stay if they cancel
+            window.history.pushState({tab: 'landing'}, "", "#landing");
         }
     };
 
@@ -507,10 +585,10 @@
        document.getElementById(id).classList.add('active');
        
        const titleMap = {
-           'landing': 'Home', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task',
+           'landing': 'Home', 'announce-view': 'Announcements', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task',
            'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation',
            'training-dash': 'Training Grid', 'training-dynamic': 'Training Form',
-           'history-view': 'History', 'admin-dash': 'Admin Panel'
+           'history-view': 'History', 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement'
        };
        document.getElementById('dynamic-title').innerText = titleMap[id] || 'Bon Portal';
 
@@ -526,8 +604,11 @@
        if(pushState) {
            window.history.pushState({tab: id}, "", "#" + id);
        }
+       
+       if(id === 'announce-view') fetchAnnouncements();
     }
 
+    // --- AUTH ---
     function toggleAdmin() {
        isAdminMode = !isAdminMode;
        document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : "Team Portal Login";
@@ -536,6 +617,8 @@
        const u = document.getElementById('login-u').value;
        const p = document.getElementById('login-p').value;
        const btn = document.querySelector('#login-overlay button');
+       if(!u || !p) { showModal('warning', 'Input Missing', 'Please enter username and password'); return; }
+
        btn.innerText = "Checking...";
        const res = await fetchAPI('handleLogin', {username:u, password:p});
        if(res.success) {
@@ -544,11 +627,17 @@
            if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('mobile-open');
            initApp();
            window.history.replaceState({tab: 'landing'}, "", "#landing");
+           fetchAnnouncements(); // Initial Check
        } else {
-           alert(res.message); btn.innerText = "Login";
+           showModal('error', 'Login Failed', res.message); btn.innerText = "Login";
        }
     }
-    function logout() { currentUser = null; location.reload(); }
+    
+    function confirmLogout() {
+        showModal('confirm', 'Confirm Logout', 'Are you sure you want to log out?', () => {
+            currentUser = null; location.reload();
+        });
+    }
 
     async function initApp() {
        document.getElementById('welcome-msg').innerText = "Welcome, " + currentUser.name.split(' ')[0]; 
@@ -589,6 +678,42 @@
         } else {
             sb.classList.toggle('closed'); 
             document.getElementById('main-wrapper').classList.toggle('full'); 
+        }
+    }
+
+    // --- ANNOUNCEMENT SYSTEM ---
+    async function fetchAnnouncements() {
+        const listDiv = document.getElementById('announcement-list');
+        const badge = document.getElementById('bell-count');
+        
+        const res = await fetchAPI('getAnnouncements', {userId: currentUser.id});
+        activeAnnouncements = res;
+
+        // Calc unread
+        const unread = res.filter(a => !a.isRead).length;
+        if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } 
+        else { badge.style.display = 'none'; }
+
+        if(res.length === 0) { listDiv.innerHTML = '<p style="text-align:center;color:#666;">No active announcements.</p>'; return; }
+
+        listDiv.innerHTML = res.map(a => `
+           <div class="announce-card">
+              <div class="ac-header">
+                  <span class="ac-date">${a.date}</span>
+                  ${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}
+              </div>
+              <div class="ac-title">${a.title}</div>
+              <div class="ac-msg">${a.message}</div>
+              ${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}
+           </div>
+        `).join('');
+    }
+
+    async function readAnnouncement(id, btn) {
+        btn.innerText = "Processing...";
+        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json());
+        if(res.success) {
+            fetchAnnouncements();
         }
     }
 
@@ -738,9 +863,14 @@
 
     async function postData(obj, btn, form) {
        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json());
-       alert(res.message);
        btn.innerText = "Submit"; btn.disabled = false;
-       if(res.success) { form.reset(); if(!obj.category.includes('Admin')) loadTLData(); }
+       if(res.success) { 
+           showModal('success', 'Success', res.message);
+           form.reset(); 
+           if(!obj.category.includes('Admin')) loadTLData();
+       } else {
+           showModal('error', 'Error', res.message);
+       }
     }
 
     function confirmTraining() { showTab('training-dash'); }

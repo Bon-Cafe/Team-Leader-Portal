@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BON Cafe Team Portal</title>
+  <title>BON Cafe | Team Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    /* --- ORIGINAL STYLES PRESERVED --- */
+    /* --- EXACT ORIGINAL STYLES --- */
     :root {
       --primary: #10b981; --primary-dark: #059669;
       --bg: #f3f4f6; --surface: #ffffff; --sidebar-bg: #111827;
@@ -64,7 +64,7 @@
     .content-area { flex: 1; padding: 20px; overflow-y: auto; overflow-x: hidden; position: relative; }
     .form-section { display: none; animation: slideUp 0.4s ease-out; max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; }
     .form-section.active { display: block; }
-
+    
     /* LANDING */
     .landing-wrapper { display: none; width: 100%; max-width: 1000px; margin: 0 auto; }
     .landing-wrapper.active { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.4s ease-out; }
@@ -72,31 +72,23 @@
     /* Carousel */
     .carousel-container { width: 100%; height: 260px; border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); }
     .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; opacity: 0; transition: opacity 1s ease-in-out; transform: scale(1.05); }
-    .slide.active-slide { opacity: 1; transform: scale(1); transition: opacity 1s, transform 6s; }
+    .slide.active-slide { opacity: 1; transform: scale(1); }
 
-    /* Collapsible Role Section */
+    /* Role Section */
     .role-section { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
     .role-header { padding: 18px 25px; background: white; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
-    .role-header:hover { background: #f9fafb; color: var(--primary); }
     .role-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0 25px; background: #fff; }
     .role-content.open { max-height: 500px; padding: 20px 25px; border-top: 1px solid var(--border); }
     .role-content p { margin-bottom: 8px; line-height: 1.5; color: #4b5563; }
 
-    /* Category Cards Grid */
+    /* Category Cards */
     .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
     .cat-card { background: white; padding: 30px 15px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid transparent; position: relative; overflow: hidden; }
     .cat-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
     .cat-card i { font-size: 36px; color: var(--primary); margin-bottom: 15px; display: block; transition: 0.3s; }
-    .cat-card:hover i { transform: scale(1.1); }
     .cat-card span { font-weight: 600; color: var(--text); }
 
-    /* Scorecard */
-    .scorecard-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-    .score-box { flex: 1; min-width: 130px; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .score-title { font-size: 0.8rem; color: #6b7280; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-    .score-val { font-size: 1.8rem; font-weight: 700; color: var(--text); }
-    
-    /* Common */
+    /* Forms */
     h2 { margin-bottom: 20px; color: #111827; font-weight: 700; font-size: 1.5rem; }
     .form-group { margin-bottom: 20px; }
     label { display: block; margin-bottom: 8px; font-weight: 500; color: #374151; font-size: 0.9rem; }
@@ -105,7 +97,7 @@
     .submit-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 1rem; }
     .submit-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
     
-    /* 9-Day Grid */
+    /* 9-Day Training Grid */
     .training-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
     .day-card { border: 1px solid var(--border); padding: 25px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.2s; background: white; }
     .day-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow); background: #ecfdf5; }
@@ -121,15 +113,19 @@
     .history-table th { background: #f3f4f6; font-weight: 600; white-space: nowrap; color: #374151; }
     .done-tag { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.5px; white-space: nowrap; }
     
-    /* Animation Keyframes */
+    /* Conditional Inputs */
+    .question-block { background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
+    .q-options { display: flex; gap: 15px; margin-top: 12px; flex-wrap: wrap; }
+    .hidden-input { display: none; margin-top: 12px; animation: fadeIn 0.3s; }
+    .hidden-input.show { display: block; }
+
     @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* --- LOGIN OVERLAY STYLES --- */
+    /* --- ADDED FOR LOGIN/DASHBOARD FEATURES --- */
     #login-overlay { position: fixed; inset: 0; background: var(--sidebar-bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-    .login-box { background: white; padding: 40px; border-radius: var(--radius); width: 90%; max-width: 380px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .login-box { background: white; padding: 40px; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     
-    /* --- NEW DASHBOARD WIDGETS --- */
     .tl-header { display: flex; align-items: center; gap: 20px; background: #f9fafb; padding: 25px; border-radius: 12px; margin-bottom: 25px; flex-wrap: wrap; border: 1px solid #e5e7eb; }
     .tl-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); }
     .tl-graph-box { flex: 1; min-width: 250px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; }
@@ -155,7 +151,7 @@
   <!-- LOGIN PAGE -->
   <div id="login-overlay">
     <div class="login-box">
-       <h2>Team Portal Login</h2>
+       <h2>BON PORTAL LOGIN</h2>
        <div class="form-group"><input type="text" id="login-u" placeholder="Username"></div>
        <div class="form-group"><input type="password" id="login-p" placeholder="Password"></div>
        <button class="submit-btn" onclick="doLogin()">Login</button>
@@ -163,13 +159,13 @@
     </div>
   </div>
 
-  <!-- SIDEBAR -->
+  <!-- SIDEBAR (EXACT REPLICA) -->
   <div class="sidebar" id="sidebar">
     <div class="logo-area" onclick="showTab('landing')">
       BON PORTAL <i class="material-icons" onclick="toggleMenu()" style="cursor:pointer; display:none;" id="sidebar-close-btn">close</i>
     </div>
     <ul class="nav-links">
-      <li class="nav-item tl-only" onclick="showTab('landing')"><i class="material-icons">home</i> Home</li>
+      <li class="nav-item tl-only active" onclick="showTab('landing')"><i class="material-icons">home</i> Home</li>
       <li class="nav-item tl-only" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i> My Dashboard</li>
       <li class="nav-item tl-only" onclick="showTab('daily')"><i class="material-icons">today</i> Daily Task</li>
       <li class="nav-item tl-only" onclick="showTab('weekly')"><i class="material-icons">event_note</i> Weekly Task</li>
@@ -200,21 +196,10 @@
         <div class="role-section">
             <div class="role-header" onclick="toggleRoles()"><span>Role and Duties of Team Leaders</span><i class="material-icons" id="role-icon">expand_more</i></div>
             <div class="role-content" id="role-text">
-                <p><strong>1. Team Management:</strong> Oversee daily operations.</p>
-                <p><strong>2. Reporting:</strong> Submit daily and weekly task reports.</p>
-                <p><strong>3. Training:</strong> Conduct the 9-Day training program.</p>
+                <p><strong>1. Team Management:</strong> Oversee daily operations, ensure attendance, and manage shift schedules.</p>
+                <p><strong>2. Reporting:</strong> Submit daily and weekly task reports promptly to the Area Manager.</p>
+                <p><strong>3. Training:</strong> Conduct the 9-Day training program for new hires and log progress.</p>
             </div>
-        </div>
-        <div class="category-grid tl-only">
-            <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
-            <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task</span></div>
-            <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task</span></div>
-            <div class="cat-card" onclick="showTab('problem')"><i class="material-icons">report_problem</i><span>Report Problem</span></div>
-            <div class="cat-card" onclick="showTab('vacation')"><i class="material-icons">flight</i><span>Vacation</span></div>
-            <div class="cat-card" onclick="confirmTraining()"><i class="material-icons">school</i><span>Training</span></div>
-        </div>
-        <div class="category-grid admin-only" style="display:none;">
-            <div class="cat-card" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i><span>Global Dashboard</span></div>
         </div>
       </div>
 
@@ -265,10 +250,45 @@
          </div>
       </div>
 
-      <!-- REPORT PROBLEM -->
+      <!-- DAILY TASK (RESTORED GRID LAYOUT) -->
+      <div id="daily" class="form-section">
+        <h2>Daily Task Checklist</h2>
+        <form onsubmit="handleDynamicSubmit(event, 'Daily Task')">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+             <div class="form-group"><label>Name</label><input list="dl-names" name="name" required placeholder="Select Name..."></div>
+             <div class="form-group"><label>ID</label><input list="dl-ids" name="empId" required placeholder="Select ID..."></div>
+          </div>
+          <div class="form-group"><label>Branch</label><input list="dl-branches" name="branch" required></div>
+          <div class="form-group"><label>Supervisor</label><input list="dl-sups" name="supervisor" required></div>
+          <div class="form-group"><label>Area Manager</label><input list="dl-ams" name="areaManager" required></div>
+          <div id="daily-questions">Loading...</div>
+          <button class="submit-btn">Submit Daily Task</button>
+        </form>
+      </div>
+
+      <!-- WEEKLY TASK (RESTORED GRID LAYOUT) -->
+      <div id="weekly" class="form-section">
+        <h2>Weekly Task Report</h2>
+        <form onsubmit="handleDynamicSubmit(event, 'Weekly Task')">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+             <div class="form-group"><label>Name</label><input list="dl-names" name="name" required></div>
+             <div class="form-group"><label>ID</label><input list="dl-ids" name="empId" required></div>
+          </div>
+          <div class="form-group"><label>Branch</label><input list="dl-branches" name="branch" required></div>
+          <div class="form-group"><label>Supervisor</label><input list="dl-sups" name="supervisor" required></div>
+          <div class="form-group"><label>Area Manager</label><input list="dl-ams" name="areaManager" required></div>
+          <div class="form-group"><label>Week Ending</label><input type="date" name="weekDate" required></div>
+          <div id="weekly-questions">Loading...</div>
+          <button class="submit-btn">Submit Weekly Report</button>
+        </form>
+      </div>
+
+      <!-- REPORT PROBLEM (ENHANCED) -->
       <div id="problem" class="form-section">
         <h2>Report Problem</h2>
         <form onsubmit="handleProblem(event)">
+          <div class="form-group"><label>Name</label><input list="dl-names" name="name" required placeholder="Select Name..."></div>
+          <!-- Dropdowns from DB -->
           <div class="form-group"><label>Supervisor</label><select id="p-sup" name="supervisor"></select></div>
           <div class="form-group"><label>Branch</label><select id="p-br" name="branch"></select></div>
           <div class="form-group"><label>Area Manager</label><select id="p-am" name="areaManager"></select></div>
@@ -297,38 +317,68 @@
           <button class="submit-btn">Submit Report</button>
         </form>
       </div>
-
-      <!-- DAILY TASK -->
-      <div id="daily" class="form-section">
-        <h2>Daily Task Checklist</h2>
-        <form onsubmit="handleDynamicSubmit(event, 'Daily Task')">
-           <div class="form-group"><label>Name</label><input list="dl-names" name="name" required placeholder="Select Name..."></div>
-           <div class="form-group"><label>ID</label><input list="dl-ids" name="empId" required placeholder="Select ID..."></div>
-           <div class="form-group"><label>Branch</label><input list="dl-branches" name="branch" required></div>
-           <div class="form-group"><label>Supervisor</label><input list="dl-sups" name="supervisor" required></div>
-           <div class="form-group"><label>Area Manager</label><input list="dl-ams" name="areaManager" required></div>
-           <div id="daily-questions">Loading...</div>
-           <button class="submit-btn">Submit Daily Task</button>
-        </form>
-      </div>
-
-      <!-- WEEKLY TASK -->
-      <div id="weekly" class="form-section">
-        <h2>Weekly Task Report</h2>
-        <form onsubmit="handleDynamicSubmit(event, 'Weekly Task')">
-           <div class="form-group"><label>Name</label><input list="dl-names" name="name" required></div>
-           <div class="form-group"><label>ID</label><input list="dl-ids" name="empId" required></div>
-           <div class="form-group"><label>Week Ending</label><input type="date" name="weekDate" required></div>
-           <div id="weekly-questions">Loading...</div>
-           <button class="submit-btn">Submit Weekly Report</button>
+      
+      <!-- VACATION (RESTORED GRID LAYOUT) -->
+      <div id="vacation" class="form-section">
+        <h2>Vacation Detail</h2>
+        <form onsubmit="handleDynamicSubmit(event, 'Vacation')">
+          <div class="form-group"><label>Name</label><input list="dl-names" name="name" required placeholder="Select Name..."></div>
+          <div class="form-group" style="display:flex; gap:10px;">
+            <div style="flex:1"><label>Start</label><input type="date" name="startDate" required></div>
+            <div style="flex:1"><label>End</label><input type="date" name="endDate" required></div>
+          </div>
+          <div class="form-group"><label>Reason</label><input type="text" name="reason" required></div>
+          <button class="submit-btn">Submit</button>
         </form>
       </div>
       
-      <!-- VACATION -->
-      <div id="vacation" class="form-section"><h2>Vacation</h2><form onsubmit="handleDynamicSubmit(event, 'Vacation')"><input list="dl-names" name="name" placeholder="Name"><input list="dl-ids" name="empId" placeholder="ID"><input type="date" name="startDate"><input type="date" name="endDate"><input name="reason" placeholder="Reason"><button class="submit-btn">Submit</button></form></div>
-      
-      <!-- TRAINING PLACEHOLDER -->
-      <div id="training-dash" class="form-section"><h2>Training Placeholder</h2><div class="training-grid"></div></div>
+      <!-- TRAINING DASH (RESTORED GRID) -->
+      <div id="training-dash" class="form-section">
+        <h2>9-Days Training</h2>
+        <div class="training-grid">
+          <div class="day-card" onclick="loadTrainingDay(1)"><span class="day-num">1</span> Day One</div>
+          <div class="day-card" onclick="loadTrainingDay(2)"><span class="day-num">2</span> Day Two</div>
+          <div class="day-card" onclick="loadTrainingDay(3)"><span class="day-num">3</span> Day Three</div>
+          <div class="day-card" onclick="loadTrainingDay(4)"><span class="day-num">4</span> Day Four</div>
+          <div class="day-card" onclick="loadTrainingDay(5)"><span class="day-num">5</span> Day Five</div>
+          <div class="day-card" onclick="loadTrainingDay(6)"><span class="day-num">6</span> Day Six</div>
+          <div class="day-card" onclick="loadTrainingDay(7)"><span class="day-num">7</span> Day Seven</div>
+          <div class="day-card" onclick="loadTrainingDay(8)"><span class="day-num">8</span> Day Eight</div>
+          <div class="day-card" onclick="loadTrainingDay(9)"><span class="day-num">9</span> Day Nine</div>
+        </div>
+      </div>
+
+      <!-- TRAINING DYNAMIC (RESTORED) -->
+      <div id="training-dynamic" class="form-section">
+        <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:15px; color:#6b7280; font-weight:500;">&#8592; Back to Grid</div>
+        <h2 id="training-title">Training Day</h2>
+        <form id="dynamic-form" onsubmit="handleDynamicSubmit(event, 'Training')">
+          <input type="hidden" name="category" id="train-cat">
+          <div class="form-group"><label>Trainee Name</label><input type="text" name="traineeName" required placeholder="Enter Trainee Name (Manual)"></div>
+          <div class="form-group"><label>Trainee ID</label><input type="text" name="traineeId" required placeholder="Enter Trainee ID (Manual)"></div>
+          <div class="form-group"><label>Trainer Name</label><input list="dl-names" name="trainerName" required placeholder="Select Trainer..."></div>
+          <div id="questions-container">Loading...</div>
+          <div class="form-group"><label>Notes</label><textarea name="notes" rows="3"></textarea></div>
+          <button class="submit-btn">Submit Evaluation</button>
+        </form>
+      </div>
+
+      <!-- TRAINING HISTORY (RESTORED) -->
+      <div id="history-view" class="form-section" style="max-width:1000px;">
+        <h2>Training History</h2>
+        <div class="filter-bar">
+          <input list="dl-ids" id="hist-id" placeholder="Filter by Employee ID">
+          <input type="date" id="hist-start" placeholder="Start Date">
+          <input type="date" id="hist-end" placeholder="End Date">
+          <button class="submit-btn" style="width:auto;" onclick="fetchHistory()">Filter</button>
+        </div>
+        <div class="table-responsive">
+            <table class="history-table">
+              <thead><tr><th>Date</th><th>Day</th><th>Name</th><th>ID</th><th>Trainer</th><th>Notes</th></tr></thead>
+              <tbody id="history-body"><tr><td colspan="6" style="text-align:center;">Click Filter to load data</td></tr></tbody>
+            </table>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -482,6 +532,11 @@
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
        document.getElementById('page-title').innerText = id.toUpperCase();
+       
+       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+       const clickedBtn = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(id));
+       if(clickedBtn) clickedBtn.classList.add('active');
+
        if(window.innerWidth <= 768) toggleMenu();
     }
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('closed'); document.getElementById('main-wrapper').classList.toggle('full'); }
@@ -492,7 +547,50 @@
 
     function fillList(id, l) { document.getElementById(id).innerHTML = l.map(i=>`<option value="${i}">`).join(''); }
     function fillSelect(id, l) { document.getElementById(id).innerHTML = l.map(i=>`<option>${i}</option>`).join(''); }
-    function renderChecklist(id, qs, p) { document.getElementById(id).innerHTML = qs.map((q,i)=>`<div class="form-group">${q}<br><input type="radio" name="${p}_q_${i}" value="Yes"> Yes</div>`).join(''); }
+    function renderChecklist(id, qs, p) { document.getElementById(id).innerHTML = qs.map((q,i)=>`<div class="question-block"><div>${i+1}. ${q}</div><div class="q-options"><label><input type="radio" name="${p}_q_${i}" value="Yes"> Yes</label><label><input type="radio" name="${p}_q_${i}" value="No"> No</label></div></div>`).join(''); }
+
+    // Training Specific
+    async function loadTrainingDay(day) {
+      showTab('training-dynamic');
+      document.getElementById('training-title').innerText = "Training Day " + day;
+      document.getElementById('train-cat').value = "Training Day " + day;
+      const div = document.getElementById('questions-container');
+      div.innerHTML = 'Loading...';
+      
+      const qs = await fetchAPI('getTrainingQuestions', {day: day});
+      if(qs) {
+        if(!qs.length) { div.innerHTML = 'No questions.'; return; }
+        let html = '';
+        qs.forEach((q, i) => {
+          html += `<div class="question-block"><div>${i+1}. ${q}</div><div class="q-options"><label style="margin-right:10px;"><input type="radio" name="q_${i}" value="Pass" required> Pass</label><label style="margin-right:10px;"><input type="radio" name="q_${i}" value="Fail"> Fail</label></div></div>`;
+        });
+        div.innerHTML = html;
+      }
+    }
+    
+    function confirmTraining() { showTab('training-dash'); }
+    function showHistory() { showTab('history-view'); fetchHistory(); }
+    
+    async function fetchHistory() {
+      const id = document.getElementById('hist-id').value;
+      const start = document.getElementById('hist-start').value;
+      const end = document.getElementById('hist-end').value;
+      const tbody = document.getElementById('history-body');
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>';
+      
+      const data = await fetchAPI('getTrainingHistory', {id, start, end});
+      if(data) {
+          if(data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No records found.</td></tr>';
+          } else {
+            let html = '';
+            data.forEach(row => {
+              html += `<tr><td>${row.date}</td><td><span style="background:#e0e7ff; color:#3730a3; padding:2px 8px; border-radius:4px; font-size:0.8em;">${row.day}</span></td><td>${row.name}</td><td>${row.id}</td><td>${row.trainer}</td><td>${row.notes}</td></tr>`;
+            });
+            tbody.innerHTML = html;
+          }
+      }
+    }
 
     async function fetchAPI(act, p={}) {
        const u = new URL(API_URL); u.searchParams.append('action', act);

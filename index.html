@@ -3,349 +3,383 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BON Cafe | Portal</title>
+  <title>BON Cafe Team Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    /* PRESERVED ORIGINAL STYLES + NEW COMPONENTS */
+    /* --- ORIGINAL CSS FROM YOUR FIRST REQUEST --- */
     :root {
       --primary: #10b981; --primary-dark: #059669;
       --bg: #f3f4f6; --surface: #ffffff; --sidebar-bg: #111827;
       --text: #1f2937; --text-light: #6b7280; --border: #e5e7eb; --radius: 12px;
-      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; display: flex; }
     
-    /* LOGIN SCREEN */
-    #login-page { position: fixed; inset: 0; background: var(--sidebar-bg); z-index: 2000; display: flex; justify-content: center; align-items: center; }
-    .login-card { background: white; padding: 40px; border-radius: 16px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    .login-card h2 { margin-bottom: 25px; color: var(--text); }
-    .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; }
-
-    /* LAYOUT */
-    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; height: 100vh; position: fixed; transition: 0.3s; z-index: 500; display: flex; flex-direction: column; }
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px; background: var(--sidebar-bg); color: white;
+      height: 100vh; position: fixed; left: 0; top: 0;
+      transition: transform 0.3s ease; z-index: 500;
+      display: flex; flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
     .sidebar.closed { transform: translateX(-260px); }
-    .logo-area { padding: 25px 20px; font-weight: 700; font-size: 1.1rem; border-bottom: 1px solid #374151; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-    .nav-links { list-style: none; padding: 20px 10px; overflow-y: auto; flex: 1; }
-    .nav-item { padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #d1d5db; transition: all 0.2s; }
-    .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
-    .nav-item[style*="display: none"] { display: none !important; }
-
-    .main-wrapper { flex: 1; margin-left: 260px; height: 100vh; display: flex; flex-direction: column; transition: margin-left 0.3s; width: 100%; }
-    .main-wrapper.full { margin-left: 0; }
-    .top-bar { background: white; padding: 15px 30px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .content-area { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
     
-    .form-section { display: none; max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); animation: slideUp 0.3s ease-out; }
+    .logo-area { 
+        padding: 25px 20px; font-weight: 700; font-size: 1.1rem; 
+        border-bottom: 1px solid #374151; display: flex; align-items: center; 
+        justify-content: space-between; cursor: pointer; letter-spacing: 0.5px; 
+    }
+    .nav-links { list-style: none; padding: 20px 10px; overflow-y: auto; flex: 1; }
+    .nav-item {
+      padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;
+      display: flex; align-items: center; gap: 12px; color: #d1d5db; transition: all 0.2s;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; transform: translateX(3px); }
+    .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+    .nav-item i { font-size: 20px; }
+
+    /* MAIN CONTENT */
+    .main-wrapper {
+      flex: 1; margin-left: 260px; height: 100vh; display: flex; flex-direction: column;
+      transition: margin-left 0.3s ease; width: 100%;
+    }
+    .main-wrapper.full { margin-left: 0; }
+
+    /* TOP BAR */
+    .top-bar {
+      background: white; padding: 15px 30px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 20px; flex-shrink: 0;
+      position: sticky; top: 0; z-index: 400;
+    }
+    .menu-btn { 
+        cursor: pointer; color: var(--text); font-size: 28px; 
+        padding: 5px; border-radius: 5px; transition: 0.2s; 
+    }
+    .menu-btn:hover { background: #f3f4f6; color: var(--primary); }
+    
+    /* CONTENT AREA */
+    .content-area { flex: 1; padding: 20px; overflow-y: auto; overflow-x: hidden; position: relative; }
+    .form-section { display: none; animation: slideUp 0.4s ease-out; max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; }
     .form-section.active { display: block; }
 
-    /* TEAM LEADER DASHBOARD WIDGET */
-    .tl-header { display: flex; align-items: center; gap: 20px; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 25px; flex-wrap: wrap; }
-    .tl-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); background: #e5e7eb; }
-    .tl-info { flex: 1; min-width: 150px; }
-    .tl-info h2 { margin: 0; font-size: 1.4rem; }
-    .graph-area { flex: 2; min-width: 250px; }
-    
-    /* Modern Progress Bar */
-    .prog-track { height: 30px; background: #e5e7eb; border-radius: 15px; overflow: hidden; position: relative; display: flex; align-items: center; }
-    .prog-fill { height: 100%; background: linear-gradient(90deg, #34d399, #10b981); width: 0%; transition: width 1.5s ease; }
-    .prog-label { margin-left: auto; padding-right: 15px; font-weight: bold; color: #374151; font-size: 0.9rem; z-index: 2; position: absolute; right: 0; }
-    
-    /* Admin Table Grid */
-    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .admin-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 15px; overflow: hidden; }
-    
-    /* Common Form Styles */
+    /* LANDING */
+    .landing-wrapper { display: none; width: 100%; max-width: 1000px; margin: 0 auto; }
+    .landing-wrapper.active { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.4s ease-out; }
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
+    .cat-card { background: white; padding: 30px 15px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
+    .cat-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .cat-card i { font-size: 36px; color: var(--primary); margin-bottom: 15px; display: block; }
+    .cat-card span { font-weight: 600; color: var(--text); }
+
+    /* FORM ELEMENTS */
+    h2 { margin-bottom: 20px; color: #111827; font-weight: 700; font-size: 1.5rem; }
     .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9rem; }
-    input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: #f9fafb; font-size: 0.95rem; }
-    .submit-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    label { display: block; margin-bottom: 8px; font-weight: 500; color: #374151; font-size: 0.9rem; }
+    input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #f9fafb; }
+    .submit-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 1rem; }
     .submit-btn:hover { background: var(--primary-dark); }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
-    th, td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; }
-    th { background: #f3f4f6; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.9rem; }
+    th { background: #f3f4f6; }
 
     @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 768px) { .sidebar { transform: translateX(-260px); } .sidebar.mobile-open { transform: translateX(0); } .main-wrapper { margin-left: 0; } .tl-header { flex-direction: column; text-align: center; } .admin-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .sidebar { transform: translateX(-260px); } .sidebar.mobile-open { transform: translateX(0); } .main-wrapper { margin-left: 0; } }
+
+    /* --- NEW ADDITIONS TO SUPPORT YOUR REQUEST --- */
+    
+    /* Login Overlay */
+    #login-overlay { position: fixed; inset: 0; background: var(--sidebar-bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+    .login-box { background: white; padding: 40px; border-radius: var(--radius); width: 90%; max-width: 380px; text-align: center; }
+    
+    /* Team Leader Dashboard Header */
+    .tl-header { display: flex; align-items: center; gap: 20px; background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .tl-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); }
+    .tl-stats { flex: 1; }
+    .progress-bar-bg { height: 25px; background: #e5e7eb; border-radius: 12px; overflow: hidden; position: relative; margin-top: 10px; }
+    .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1s; }
+    .progress-val { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 0.8rem; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN PAGE -->
-  <div id="login-page">
-    <div class="login-card">
+  <!-- LOGIN PAGE (NEW) -->
+  <div id="login-overlay">
+    <div class="login-box">
       <h2>Team Portal Login</h2>
-      <input type="text" id="user" placeholder="Username">
-      <input type="password" id="pass" placeholder="Password">
+      <input type="text" id="login-user" placeholder="Username">
+      <input type="password" id="login-pass" placeholder="Password">
       <button class="submit-btn" onclick="login()">Login</button>
+      <div style="margin-top:15px; font-size:0.8rem; color:#666; cursor:pointer;" onclick="toggleAdminLogin()">or Login as Admin?</div>
     </div>
   </div>
 
-  <!-- SIDEBAR -->
+  <!-- SIDEBAR (ORIGINAL + NEW LINKS) -->
   <div class="sidebar" id="sidebar">
-    <div class="logo-area" onclick="nav('landing')">BON PORTAL <i class="material-icons" onclick="toggleMenu()">menu_open</i></div>
+    <div class="logo-area" onclick="showTab('landing')">
+      BON PORTAL <i class="material-icons" onclick="toggleMenu()" style="cursor:pointer; display:none;" id="sidebar-close-btn">close</i>
+    </div>
     <ul class="nav-links">
-      <!-- TL LINKS -->
-      <li class="nav-item tl-only" onclick="nav('landing')"><i class="material-icons">home</i> Home</li>
-      <li class="nav-item tl-only" onclick="nav('tl-dash')"><i class="material-icons">dashboard</i> My Dashboard</li>
-      <li class="nav-item tl-only" onclick="nav('daily')"><i class="material-icons">today</i> Daily Task</li>
-      <li class="nav-item tl-only" onclick="nav('weekly')"><i class="material-icons">event_note</i> Weekly Task</li>
-      <li class="nav-item tl-only" onclick="nav('problem')"><i class="material-icons">report_problem</i> Report Problem</li>
-      <li class="nav-item tl-only" onclick="nav('vacation')"><i class="material-icons">flight</i> Vacation</li>
-      <li class="nav-item tl-only" onclick="nav('training-dash')"><i class="material-icons">school</i> Training</li>
+      <!-- Common / TL Links -->
+      <li class="nav-item tl-only" onclick="showTab('landing')"><i class="material-icons">home</i> Home</li>
+      <li class="nav-item tl-only" onclick="showTab('tl-dashboard')"><i class="material-icons">dashboard</i> My Dashboard</li>
+      <li class="nav-item tl-only" onclick="showTab('daily')"><i class="material-icons">today</i> Daily Task</li>
+      <li class="nav-item tl-only" onclick="showTab('weekly')"><i class="material-icons">event_note</i> Weekly Task</li>
+      <li class="nav-item tl-only" onclick="showTab('problem')"><i class="material-icons">report_problem</i> Report Problem</li>
+      <li class="nav-item tl-only" onclick="showTab('vacation')"><i class="material-icons">flight</i> Vacation</li>
+      <li class="nav-item tl-only" onclick="showTab('training-dash')"><i class="material-icons">school</i> Training</li>
       
-      <!-- ADMIN LINKS -->
-      <li class="nav-item admin-only" onclick="nav('admin-dash')"><i class="material-icons">analytics</i> Global Dashboard</li>
+      <!-- Admin Only Link -->
+      <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i> Admin Dashboard</li>
       
+      <!-- Logout -->
       <li style="margin-top:auto; border-top:1px solid #374151;" class="nav-item" onclick="logout()"><i class="material-icons">logout</i> Logout</li>
     </ul>
   </div>
 
   <div class="main-wrapper" id="main-wrapper">
     <div class="top-bar">
-      <i class="material-icons" style="cursor:pointer;" onclick="toggleMenu()">menu</i>
-      <h3 id="pg-title">Home</h3>
-      <div id="user-badge" style="font-weight:600; color:var(--text-light);"></div>
+      <i class="material-icons menu-btn" onclick="toggleMenu()">menu</i>
+      <h3 id="page-title">Home</h3>
+      <div id="user-display" style="font-weight:600;"></div>
     </div>
 
     <div class="content-area">
       
-      <!-- TL DASHBOARD -->
-      <div id="tl-dash" class="form-section">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-           <h2>My Performance</h2>
-           <div style="display:flex; gap:10px;">
-             <input type="date" id="t-start" style="width:auto;">
-             <input type="date" id="t-end" style="width:auto;">
-             <button class="submit-btn" style="width:auto; padding:0 15px;" onclick="loadTLData()">Filter</button>
-           </div>
-        </div>
-        
-        <div class="tl-header">
-           <img id="tl-pic" src="" class="tl-img" onerror="this.src='https://via.placeholder.com/90'">
-           <div class="tl-info">
-             <h2 id="tl-name">Loading...</h2>
-             <p id="tl-id" style="color:grey;">ID: --</p>
-           </div>
-           <div class="graph-area">
-             <label style="margin-bottom:5px; display:block; color:var(--text-light); font-size:0.8rem;">Daily & Weekly Overall Average</label>
-             <div class="prog-track">
-                <div id="tl-bar" class="prog-fill"></div>
-                <div id="tl-score" class="prog-label">0%</div>
-             </div>
-           </div>
-        </div>
-
-        <h3>Submission History</h3>
-        <table><thead><tr><th>Date</th><th>Type</th><th>Status</th></tr></thead><tbody id="tl-history"></tbody></table>
-      </div>
-
-      <!-- ADMIN DASHBOARD -->
-      <div id="admin-dash" class="form-section" style="max-width:1200px;">
-        <h2>Admin Dashboard</h2>
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-             <input type="date" id="a-start">
-             <input type="date" id="a-end">
-             <button class="submit-btn" style="width:auto;" onclick="loadAdminData()">Load Data</button>
-        </div>
-        
-        <div class="admin-grid">
-           <div class="admin-card">
-              <h3>Daily Tasks</h3>
-              <div style="max-height:200px; overflow-y:auto;">
-                 <table><thead><tr><th>Date</th><th>Name</th><th>Branch</th></tr></thead><tbody id="ad-daily"></tbody></table>
-              </div>
-           </div>
-           <div class="admin-card">
-              <h3>Weekly Tasks</h3>
-              <div style="max-height:200px; overflow-y:auto;">
-                 <table><thead><tr><th>Date</th><th>Name</th><th>Branch</th></tr></thead><tbody id="ad-weekly"></tbody></table>
-              </div>
-           </div>
-           <div class="admin-card">
-              <h3>Reported Problems</h3>
-              <div style="max-height:200px; overflow-y:auto;">
-                 <table><thead><tr><th>Date</th><th>Issue</th><th>Urgency</th></tr></thead><tbody id="ad-probs"></tbody></table>
-              </div>
-           </div>
-           <div class="admin-card">
-              <h3>Vacations</h3>
-              <div style="max-height:200px; overflow-y:auto;">
-                 <table><thead><tr><th>Name</th><th>Start Date</th></tr></thead><tbody id="ad-vacs"></tbody></table>
-              </div>
-           </div>
-        </div>
-      </div>
-
-      <!-- REPORT PROBLEM -->
-      <div id="problem" class="form-section">
-        <h2>Report Problem</h2>
-        <form onsubmit="handleProblem(event)">
-           <div class="form-group"><label>Supervisor</label><select id="p-sup" name="supervisor" required></select></div>
-           <div class="form-group"><label>Branch</label><select id="p-br" name="branch" required></select></div>
-           <div class="form-group"><label>Area Manager</label><select id="p-am" name="areaManager" required></select></div>
-           
-           <div class="form-group">
-              <label>Issue Type</label>
-              <select name="issueType" onchange="checkIssue(this)">
-                 <option value="Maintenance">Maintenance</option>
-                 <option value="Team Member">Team Member</option>
-                 <option value="Customer Complaint">Customer Complaint</option>
-                 <option value="Others">Others</option>
-              </select>
-           </div>
-           <div class="form-group" id="div-other" style="display:none;">
-              <label>Specify Other Issue</label><input type="text" name="issueTypeOther">
-           </div>
-           
-           <div class="form-group"><label>Urgency (Auto-Label)</label><input type="text" id="urg-lbl" name="urgency" value="High Priority" readonly style="background:#eee;"></div>
-           <div class="form-group"><label>Description</label><textarea name="description" rows="3" required></textarea></div>
-           
-           <div class="form-group" style="border:2px dashed #ccc; padding:20px; text-align:center; border-radius:8px;">
-              <label style="cursor:pointer;">
-                 <i class="material-icons" style="font-size:30px; color:grey;">cloud_upload</i><br>
-                 Click to Upload Image Evidence
-                 <input type="file" id="p-img" accept="image/*" style="display:none;" onchange="this.nextElementSibling.innerText = this.files[0].name">
-                 <div style="margin-top:5px; color:var(--primary); font-size:0.8rem;"></div>
-              </label>
-           </div>
-           
-           <button class="submit-btn">Submit Report</button>
-        </form>
-      </div>
-
-      <!-- Landing & Other Forms (Preserved) -->
+      <!-- LANDING (ORIGINAL) -->
       <div id="landing" class="landing-wrapper active">
-         <!-- Added logic to hide menu cards for admin -->
-         <h2 style="text-align:center;">Welcome to Team Portal</h2>
+         <!-- Only showing buttons relevant to user role -->
+         <h2 style="text-align:center;">Welcome Back</h2>
          <div class="category-grid tl-only">
-            <div class="cat-card" onclick="nav('daily')"><i class="material-icons">today</i><span>Daily</span></div>
-            <div class="cat-card" onclick="nav('weekly')"><i class="material-icons">event_note</i><span>Weekly</span></div>
-            <div class="cat-card" onclick="nav('problem')"><i class="material-icons">report_problem</i><span>Problem</span></div>
-            <div class="cat-card" onclick="nav('tl-dash')"><i class="material-icons">dashboard</i><span>My Dash</span></div>
+            <div class="cat-card" onclick="showTab('tl-dashboard')"><i class="material-icons">dashboard</i><span>My Dash</span></div>
+            <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily</span></div>
+            <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly</span></div>
+            <div class="cat-card" onclick="showTab('problem')"><i class="material-icons">report_problem</i><span>Problem</span></div>
+         </div>
+         <div class="category-grid admin-only" style="display:none;">
+            <div class="cat-card" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i><span>Global Dashboard</span></div>
          </div>
       </div>
 
-      <div id="daily" class="form-section">
-         <h2>Daily Task</h2>
-         <form onsubmit="handleForm(event, 'Daily Task')">
-            <div id="q-daily">Loading...</div><button class="submit-btn">Submit</button>
-         </form>
+      <!-- NEW TEAM LEADER DASHBOARD -->
+      <div id="tl-dashboard" class="form-section">
+         <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+            <h2>My Performance</h2>
+            <div style="display:flex; gap:10px;">
+               <input type="date" id="t-start" style="width:auto;">
+               <input type="date" id="t-end" style="width:auto;">
+               <button class="submit-btn" style="width:auto; padding:0 20px;" onclick="loadTLData()">Filter</button>
+            </div>
+         </div>
+         
+         <div class="tl-header">
+            <img id="tl-img" src="" class="tl-img" onerror="this.src='https://via.placeholder.com/90'">
+            <div class="tl-stats">
+               <h2 id="tl-name">User Name</h2>
+               <p id="tl-id" style="color:#6b7280;">ID: ---</p>
+               <label style="margin-top:10px;">Daily & Weekly Progress Average</label>
+               <div class="progress-bar-bg">
+                  <div id="tl-bar" class="progress-bar-fill"></div>
+                  <div id="tl-score" class="progress-val">0%</div>
+               </div>
+            </div>
+         </div>
+
+         <h3>Submission History</h3>
+         <div style="overflow-x:auto;">
+           <table><thead><tr><th>Date</th><th>Type</th><th>Status</th></tr></thead><tbody id="tl-history"></tbody></table>
+         </div>
       </div>
 
-      <div id="weekly" class="form-section">
-         <h2>Weekly Task</h2>
-         <form onsubmit="handleForm(event, 'Weekly Task')">
-            <div class="form-group"><label>Week Ending</label><input type="date" name="weekDate" required></div>
-            <div id="q-weekly">Loading...</div><button class="submit-btn">Submit</button>
-         </form>
+      <!-- ADMIN DASHBOARD (Renamed from Report Dashboard) -->
+      <div id="admin-dash" class="form-section" style="max-width:1100px;">
+         <h2>Admin Performance Dashboard</h2>
+         <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <input type="date" id="a-start">
+            <input type="date" id="a-end">
+            <button class="submit-btn" style="width:auto;" onclick="loadAdminData()">Load Data</button>
+         </div>
+         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div>
+               <h3>Daily Tasks</h3>
+               <div style="max-height:300px; overflow-y:auto; border:1px solid #eee;">
+                  <table><thead><tr><th>Date</th><th>Name</th><th>Branch</th></tr></thead><tbody id="ad-daily"></tbody></table>
+               </div>
+            </div>
+            <div>
+               <h3>Weekly Tasks</h3>
+               <div style="max-height:300px; overflow-y:auto; border:1px solid #eee;">
+                   <table><thead><tr><th>Date</th><th>Name</th><th>Branch</th></tr></thead><tbody id="ad-weekly"></tbody></table>
+               </div>
+            </div>
+         </div>
+         <h3 style="margin-top:20px;">Reported Problems</h3>
+         <div style="max-height:300px; overflow-y:auto; border:1px solid #eee;">
+            <table><thead><tr><th>Date</th><th>Name</th><th>Issue</th><th>Urgency</th></tr></thead><tbody id="ad-probs"></tbody></table>
+         </div>
+      </div>
+
+      <!-- REPORT PROBLEM (UPDATED) -->
+      <div id="problem" class="form-section">
+        <h2>Report Problem</h2>
+        <form onsubmit="handleSubmit(event, 'Report Problem')">
+          <!-- Auto-filled by Login but Selectable -->
+          <div class="form-group"><label>Supervisor</label><select id="p-sup" name="supervisor" required></select></div>
+          <div class="form-group"><label>Branch</label><select id="p-br" name="branch" required></select></div>
+          <div class="form-group"><label>Area Manager</label><select id="p-am" name="areaManager" required></select></div>
+
+          <div class="form-group">
+             <label>Issue Type</label>
+             <select name="issueType" onchange="checkIssue(this)">
+                <option value="Maintenance">Maintenance</option>
+                <option value="Team Member">Team Member</option>
+                <option value="Customer Complaint">Customer Complaint</option>
+                <option value="Others">Others</option>
+             </select>
+          </div>
+          <div class="form-group" id="div-other" style="display:none;">
+             <label>Specify Other Issue</label><input type="text" name="issueTypeOther">
+          </div>
+
+          <!-- Auto Urgency -->
+          <div class="form-group"><label>Urgency (Auto)</label><input id="urg-lbl" name="urgency" value="High Priority" readonly style="background:#eee;"></div>
+          
+          <div class="form-group"><label>Description</label><textarea name="description" rows="3" required></textarea></div>
+          
+          <!-- Image Upload -->
+          <div class="form-group">
+             <label>Upload Image</label>
+             <input type="file" id="p-file" accept="image/*">
+          </div>
+
+          <button class="submit-btn">Submit Report</button>
+        </form>
+      </div>
+
+      <!-- DAILY (ORIGINAL) -->
+      <div id="daily" class="form-section">
+        <h2>Daily Task Checklist</h2>
+        <form onsubmit="handleSubmit(event, 'Daily Task')">
+          <div id="daily-qs">Loading...</div>
+          <button class="submit-btn">Submit</button>
+        </form>
       </div>
       
-      <!-- Simplified Training / Vacation Placeholders -->
-      <div id="vacation" class="form-section"><h2>Vacation</h2><form onsubmit="handleForm(event, 'Vacation')"><input type="date" name="startDate"><input type="date" name="endDate"><input name="reason" placeholder="Reason"><button class="submit-btn">Submit</button></form></div>
-      <div id="training-dash" class="form-section"><h2>Training</h2><p>Select Day 1-9</p></div>
+      <!-- WEEKLY (ORIGINAL) -->
+      <div id="weekly" class="form-section">
+        <h2>Weekly Task Report</h2>
+        <form onsubmit="handleSubmit(event, 'Weekly Task')">
+          <div class="form-group"><label>Week Ending</label><input type="date" name="weekDate" required></div>
+          <div id="weekly-qs">Loading...</div>
+          <button class="submit-btn">Submit</button>
+        </form>
+      </div>
+      
+      <!-- VACATION (ORIGINAL) -->
+      <div id="vacation" class="form-section"><h2>Vacation</h2><form onsubmit="handleSubmit(event, 'Vacation')"><input type="date" name="startDate"><input type="date" name="endDate"><input name="reason" placeholder="Reason"><button class="submit-btn">Submit</button></form></div>
+      
+      <!-- TRAINING PLACEHOLDER -->
+      <div id="training-dash" class="form-section"><h2>Training</h2><p>Training form placeholder...</p></div>
 
     </div>
   </div>
 
   <script>
+    // *** PASTE YOUR DEPLOYED WEB APP URL HERE ***
     const API_URL = "https://script.google.com/macros/s/AKfycbyRtDjSzUxjygsRpcKe20a0m_ytOazLh5_SWuwIfGy456UmGjtFo_4pJqk7e0M41jkKpA/exec"; 
-    
-    let user = null;
+
+    let currentUser = null;
+    let isAdminMode = false;
 
     // --- LOGIN ---
-    async function login() {
-      const u = document.getElementById('user').value;
-      const p = document.getElementById('pass').value;
-      if(!u || !p) return alert("Fill credentials");
-      
-      const btn = document.querySelector('#login-page button');
-      btn.innerText = "Checking...";
-      
-      const res = await fetchAPI('handleLogin', {username:u, password:p});
-      if(res.success) {
-         user = res;
-         document.getElementById('login-page').style.display = 'none';
-         initApp();
-      } else {
-         alert(res.message);
-         btn.innerText = "Login";
-      }
+    function toggleAdminLogin() {
+       isAdminMode = !isAdminMode;
+       document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : "Team Portal Login";
     }
 
-    function logout() { user = null; location.reload(); }
-
-    // --- INIT ---
-    async function initApp() {
-       document.getElementById('user-badge').innerText = user.name;
+    async function login() {
+       const u = document.getElementById('login-user').value;
+       const p = document.getElementById('login-pass').value;
+       const btn = document.querySelector('#login-overlay button');
+       btn.innerText = "Verifying...";
        
-       // ROLE SEPARATION
-       if(user.role === 'Admin') {
+       const res = await fetchAPI('login', {username:u, password:p});
+       if(res.success) {
+          currentUser = res;
+          document.getElementById('login-overlay').style.display = 'none';
+          initApp();
+       } else {
+          alert(res.message);
+          btn.innerText = "Login";
+       }
+    }
+
+    function logout() { currentUser = null; location.reload(); }
+
+    // --- APP INIT ---
+    async function initApp() {
+       document.getElementById('user-display').innerText = currentUser.name;
+       
+       // Handle Roles
+       if(currentUser.role === 'Admin') {
           document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'none');
           document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex');
-          nav('admin-dash');
+          showTab('admin-dash');
+          loadAdminData();
        } else {
           document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
           document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'flex');
-          nav('tl-dash');
+          showTab('tl-dashboard');
+          loadTLData();
        }
 
-       // LOAD DATA
+       // Load Dropdowns
        const d = await fetchAPI('getGlobalDropdowns');
        if(d) {
           fillSelect('p-sup', d.sups); fillSelect('p-br', d.branches); fillSelect('p-am', d.ams);
        }
        
-       if(user.role === 'Admin') {
-          loadAdminData();
-       } else {
-          loadTLData();
-          // Load Qs
-          const dq = await fetchAPI('getQuestions', {sheetName:'Daily Config'});
-          renderChecklist('q-daily', dq, 'daily');
-          const wq = await fetchAPI('getQuestions', {sheetName:'Weekly Config'});
-          renderChecklist('q-weekly', wq, 'weekly');
-       }
+       // Load Questions
+       const dq = await fetchAPI('getQuestions', {sheetName:'Daily Config'});
+       renderChecklist('daily-qs', dq, 'daily');
+       const wq = await fetchAPI('getQuestions', {sheetName:'Weekly Config'});
+       renderChecklist('weekly-qs', wq, 'weekly');
     }
 
     // --- TL DASHBOARD ---
     async function loadTLData() {
-       document.getElementById('tl-name').innerText = user.name;
-       document.getElementById('tl-id').innerText = "ID: " + user.id;
-       document.getElementById('tl-pic').src = user.image || "https://via.placeholder.com/90";
-
+       document.getElementById('tl-name').innerText = currentUser.name;
+       document.getElementById('tl-id').innerText = "ID: " + currentUser.id;
+       document.getElementById('tl-img').src = currentUser.image || "https://via.placeholder.com/90";
+       
        const s = document.getElementById('t-start').value;
        const e = document.getElementById('t-end').value;
-
+       
        const res = await fetchAPI('getDashboardData', {
-          viewerId: user.id, role: 'User', start: s, end: e
+          viewerId: currentUser.id, role: 'User', start: s, end: e
        });
-
-       // Calc Score (Simple logic: Max 50 daily + Max 50 weekly)
+       
+       // Calc Score (Example: count of reports)
        const score = Math.min(100, (res.daily.length * 5) + (res.weekly.length * 10));
        document.getElementById('tl-bar').style.width = score + "%";
        document.getElementById('tl-score').innerText = score + "%";
-
-       const tbody = document.getElementById('tl-history');
-       tbody.innerHTML = res.daily.map(r=>`<tr><td>${r.date}</td><td>Daily</td><td>${r.status}</td></tr>`).join('') +
-                         res.weekly.map(r=>`<tr><td>${r.date}</td><td>Weekly</td><td>${r.status}</td></tr>`).join('');
+       
+       document.getElementById('tl-history').innerHTML = res.daily.map(r=>`<tr><td>${r.date}</td><td>Daily</td><td>${r.status}</td></tr>`).join('') + res.weekly.map(r=>`<tr><td>${r.date}</td><td>Weekly</td><td>${r.status}</td></tr>`).join('');
     }
 
     // --- ADMIN DASHBOARD ---
     async function loadAdminData() {
        const s = document.getElementById('a-start').value;
        const e = document.getElementById('a-end').value;
-       
-       // Ensure Admin requests EVERYTHING (role=Admin)
        const res = await fetchAPI('getDashboardData', {role: 'Admin', start: s, end: e});
-
-       const mkRow = (r) => `<tr><td>${r.date}</td><td>${r.name}</td><td>${r.branch || r.issue || r.start}</td></tr>`;
+       
+       const mkRow = (r) => `<tr><td>${r.date}</td><td>${r.name}</td><td>${r.branch||'-'}</td></tr>`;
        document.getElementById('ad-daily').innerHTML = res.daily.map(mkRow).join('');
        document.getElementById('ad-weekly').innerHTML = res.weekly.map(mkRow).join('');
-       document.getElementById('ad-probs').innerHTML = res.problems.map(p => `<tr><td>${p.date}</td><td>${p.issue}</td><td>${p.urgency}</td></tr>`).join('');
-       document.getElementById('ad-vacs').innerHTML = res.vacation.map(v => `<tr><td>${v.name}</td><td>${v.start}</td></tr>`).join('');
+       document.getElementById('ad-probs').innerHTML = res.problems.map(r=>`<tr><td>${r.date}</td><td>${r.issue}</td><td>${r.urgency}</td></tr>`).join('');
     }
 
     // --- REPORT PROBLEM LOGIC ---
@@ -353,66 +387,53 @@
        const v = el.value;
        document.getElementById('div-other').style.display = (v === 'Others') ? 'block' : 'none';
        const map = {"Maintenance":"High Priority", "Team Member":"Low Priority", "Customer Complaint":"Medium Priority", "Others":"Medium Priority"};
-       document.getElementById('urg-lbl').value = map[v] || "Medium Priority";
+       document.getElementById('urg-lbl').value = map[v] || "Low Priority";
     }
 
-    async function handleProblem(e) {
-       e.preventDefault();
-       const btn = e.target.querySelector('button');
-       btn.innerText = "Uploading..."; btn.disabled = true;
-
-       const fd = new FormData(e.target);
-       const obj = { category: "Report Problem", name: user.name, empId: user.id };
-       fd.forEach((v,k) => obj[k] = v);
-
-       // Image File Reader
-       const file = document.getElementById('p-img').files[0];
-       if(file) {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = async () => {
-             obj.imageFile = reader.result;
-             obj.imageName = file.name;
-             postData(obj, btn, e.target);
-          };
-       } else {
-          postData(obj, btn, e.target);
-       }
-    }
-
-    // --- GENERIC FORM ---
-    async function handleForm(e, cat) {
+    async function handleSubmit(e, cat) {
        e.preventDefault();
        const btn = e.target.querySelector('button');
        btn.innerText = "Saving..."; btn.disabled = true;
+
        const fd = new FormData(e.target);
-       const obj = { category: cat, name: user.name, empId: user.id };
+       const obj = { category: cat, name: currentUser.name, empId: currentUser.id };
        fd.forEach((v,k) => obj[k] = v);
+
+       // File Upload Logic
+       if(cat === 'Report Problem') {
+           const file = document.getElementById('p-file').files[0];
+           if(file) {
+               const reader = new FileReader();
+               reader.readAsDataURL(file);
+               reader.onload = async () => {
+                   obj.imageFile = reader.result;
+                   obj.imageName = file.name;
+                   postData(obj, btn, e.target);
+               };
+               return; // Stop here, wait for reader
+           }
+       }
        postData(obj, btn, e.target);
     }
 
     async function postData(obj, btn, form) {
-       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json());
+       const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(obj) }).then(r=>r.json());
        alert(res.message);
        btn.innerText = "Submit"; btn.disabled = false;
-       if(res.success) { form.reset(); if(!obj.category.includes("Admin")) loadTLData(); }
+       if(res.success) { form.reset(); if(!obj.category.includes('Admin')) loadTLData(); }
     }
 
-    // --- HELPERS ---
-    function nav(id) {
+    // --- UTILS ---
+    function showTab(id) {
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
-       document.getElementById('pg-title').innerText = id.toUpperCase();
+       document.getElementById('page-title').innerText = id.toUpperCase();
        if(window.innerWidth <= 768) toggleMenu();
     }
-    function toggleMenu() { 
-       document.getElementById('sidebar').classList.toggle('closed'); 
-       document.getElementById('main-wrapper').classList.toggle('full'); 
-    }
-    function fillSelect(id, list) { document.getElementById(id).innerHTML = list.map(i=>`<option>${i}</option>`).join(''); }
-    function renderChecklist(id, qs, p) {
-       document.getElementById(id).innerHTML = qs.map((q,i) => `<div class="form-group">${q}<br><input type="radio" name="${p}_q_${i}" value="Yes"> Yes</div>`).join('');
-    }
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('closed'); document.getElementById('main-wrapper').classList.toggle('full'); }
+    function fillSelect(id, l) { document.getElementById(id).innerHTML = l.map(i=>`<option>${i}</option>`).join(''); }
+    function renderChecklist(id, q, p) { document.getElementById(id).innerHTML = q.map((t,i)=>`<div class="form-group">${t}<br><input type="radio" name="${p}_q_${i}" value="Yes"> Yes</div>`).join(''); }
+    
     async function fetchAPI(act, p={}) {
        const u = new URL(API_URL); u.searchParams.append('action', act);
        for(let k in p) u.searchParams.append(k, p[k]);

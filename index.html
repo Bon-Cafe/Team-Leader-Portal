@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Portal</title>
+  <title>BON Cafe Team Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -230,14 +230,13 @@
   <div id="login-overlay">
     <div class="login-box">
        <h2>BON PORTAL LOGIN</h2>
-       <div class="form-group"><input type="text" id="login-u" placeholder="Username"></div>
-       <div class="form-group"><input type="password" id="login-p" placeholder="Password"></div>
+       <div class="form-group"><input type="text" id="login-u" placeholder="Username" required></div>
+       <div class="form-group"><input type="password" id="login-p" placeholder="Password" required></div>
        <button class="submit-btn" onclick="doLogin()">Login</button>
        <div style="margin-top:20px; font-size:0.9rem; color:#666; cursor:pointer; text-decoration:underline;" onclick="toggleAdmin()">or Login as Admin?</div>
     </div>
   </div>
 
-  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="logo-area" onclick="showTab('landing')">
       <span id="welcome-msg">Welcome</span> 
@@ -260,7 +259,7 @@
   <div class="main-wrapper" id="main-wrapper">
     <div class="content-area">
       
-      <!-- ADDED HEADER: MENU ICON + TITLE -->
+      <!-- HEADER -->
       <div class="content-header">
          <i class="material-icons mobile-menu-btn" onclick="toggleMenu()">menu</i>
          <h1 class="page-header-title" id="dynamic-title">Home</h1>
@@ -284,7 +283,6 @@
             </div>
         </div>
 
-        <!-- STACKED RECTANGLE LIST -->
         <div class="category-list tl-only">
             <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
             <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task Checklist</span></div>
@@ -298,7 +296,6 @@
         </div>
       </div>
 
-      <!-- TL DASHBOARD -->
       <div id="tl-dash" class="form-section">
          <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
             <h2 style="margin:0;">Performance Overview</h2>
@@ -338,7 +335,6 @@
          </div>
       </div>
 
-      <!-- ADMIN DASHBOARD -->
       <div id="admin-dash" class="form-section" style="max-width:1200px;">
          <h2>Overview</h2>
          <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
@@ -353,7 +349,6 @@
          </div>
       </div>
 
-      <!-- DAILY TASK -->
       <div id="daily" class="form-section">
         <h2>Checklist</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Daily Task')">
@@ -369,7 +364,6 @@
         </form>
       </div>
 
-      <!-- WEEKLY TASK -->
       <div id="weekly" class="form-section">
         <h2>Report Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Weekly Task')">
@@ -386,7 +380,6 @@
         </form>
       </div>
 
-      <!-- REPORT PROBLEM -->
       <div id="problem" class="form-section">
         <h2>Report Issue</h2>
         <form onsubmit="handleProblem(event)">
@@ -394,12 +387,12 @@
              <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
              <div class="form-group" style="margin:0;"><label>ID</label><input class="u-id" name="empId" readonly></div>
           </div>
-          <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor"></select></div>
-          <div class="form-group"><label>Branch</label><select class="db-branch" name="branch"></select></div>
-          <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager"></select></div>
+          <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
+          <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
+          <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
           <div class="form-group">
              <label>Issue Type</label>
-             <select name="issueType" onchange="checkIssue(this)">
+             <select name="issueType" onchange="checkIssue(this)" required>
                 <option value="Maintenance">Maintenance</option><option value="Team Member">Team Member</option>
                 <option value="Customer Complaint">Customer Complaint</option><option value="Others">Others</option>
              </select>
@@ -418,7 +411,6 @@
         </form>
       </div>
 
-      <!-- VACATION -->
       <div id="vacation" class="form-section">
         <h2>Request Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Vacation')">
@@ -435,7 +427,6 @@
         </form>
       </div>
 
-      <!-- TRAINING (9-DAY GRID) -->
       <div id="training-dash" class="form-section">
         <h2>9-Days Training</h2>
         <div class="training-grid">
@@ -451,7 +442,7 @@
         </div>
       </div>
 
-      <!-- TRAINING FORM -->
+      <!-- TRAINING FORM (UPDATED) -->
       <div id="training-dynamic" class="form-section">
         <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
         <h2 id="training-title">Training Day</h2>
@@ -459,14 +450,16 @@
           <input type="hidden" name="category" id="train-cat">
           <div class="form-group"><label>Trainee Name</label><input type="text" name="traineeName" required></div>
           <div class="form-group"><label>Trainee ID</label><input type="text" name="traineeId" required></div>
+          <!-- ADDED EMAIL FIELD -->
+          <div class="form-group"><label>Trainee Email</label><input type="email" name="traineeEmail" required></div>
+          
           <div class="form-group"><label>Trainer Name</label><input class="u-name" name="trainerName" readonly></div>
           <div id="questions-container">Loading...</div>
-          <div class="form-group"><label>Notes</label><textarea name="notes" rows="3"></textarea></div>
+          <div class="form-group"><label>Notes</label><textarea name="notes" rows="3" required></textarea></div>
           <button class="submit-btn">Submit Evaluation</button>
         </form>
       </div>
 
-      <!-- TRAINING HISTORY -->
       <div id="history-view" class="form-section" style="max-width:1000px;">
         <h2>Records</h2>
         <div class="filter-bar">
@@ -513,7 +506,6 @@
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
        
-       // Update Header Title
        const titleMap = {
            'landing': 'Home', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task',
            'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation',
@@ -577,7 +569,6 @@
 
        const d = await fetchAPI('getGlobalDropdowns');
        if(d) {
-          // ADDED DEFAULT "Select option"
           const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => {
              sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join('');
           });
@@ -606,7 +597,7 @@
           <div class="question-block">
              <div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
              <div class="q-options">
-               <label><input type="radio" name="daily_q_${i}" value="Yes" onchange="toggleDaily(${i}, 'Yes')"> Yes</label>
+               <label><input type="radio" name="daily_q_${i}" value="Yes" onchange="toggleDaily(${i}, 'Yes')" required> Yes</label>
                <label><input type="radio" name="daily_q_${i}" value="No" onchange="toggleDaily(${i}, 'No')"> No</label>
                <label><input type="radio" name="daily_q_${i}" value="N/A" onchange="toggleDaily(${i}, 'NA')"> N/A</label>
              </div>
@@ -625,13 +616,13 @@
             if(i === 0) {
                 html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
                    <div class="q-options">
-                     <label><input type="radio" name="weekly_q_0" value="Yes" onchange="toggleWeekly(0, 'Yes')"> Yes</label>
+                     <label><input type="radio" name="weekly_q_0" value="Yes" onchange="toggleWeekly(0, 'Yes')" required> Yes</label>
                      <label><input type="radio" name="weekly_q_0" value="No" onchange="toggleWeekly(0, 'No')"> No</label>
                    </div>
                    <div id="weekly_hide_0" class="hidden-input"><input type="text" name="weekly_detail_0" placeholder="Please provide details..."></div>
                 </div>`;
             } else {
-                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><textarea name="weekly_q_${i}" rows="2" placeholder="Your answer here..."></textarea></div>`;
+                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><textarea name="weekly_q_${i}" rows="2" placeholder="Your answer here..." required></textarea></div>`;
             }
         });
         document.getElementById(id).innerHTML = html;

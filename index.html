@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe Team Portal</title>
+  <title>BON Cafe | Team Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -28,9 +28,10 @@
     .sidebar.closed { transform: translateX(-260px); }
     
     .logo-area { 
-        padding: 25px 20px; font-weight: 700; font-size: 1.2rem; 
+        padding: 30px 20px; font-weight: 700; font-size: 1.1rem; 
         border-bottom: 1px solid #374151; display: flex; align-items: center; 
-        justify-content: space-between; cursor: pointer; letter-spacing: 0.5px; 
+        justify-content: space-between; cursor: pointer; letter-spacing: 0.5px;
+        color: var(--primary);
     }
     .nav-links { list-style: none; padding: 20px 10px; overflow-y: auto; flex: 1; }
     .nav-item {
@@ -48,40 +49,32 @@
     }
     .main-wrapper.full { margin-left: 0; }
 
-    /* --- TOP BAR (Fixed Title) --- */
-    .top-bar {
-      background: white; padding: 0 20px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 15px; flex-shrink: 0;
-      position: sticky; top: 0; z-index: 500; height: 70px;
+    /* --- MOBILE MENU TRIGGER (Since Top Bar is Removed) --- */
+    .mobile-menu-btn {
+        display: none; /* Hidden on desktop */
+        padding: 15px 20px;
+        color: var(--text);
+        font-size: 30px;
+        cursor: pointer;
+        background: transparent;
+        width: fit-content;
     }
-    .menu-btn { cursor: pointer; color: var(--text); font-size: 28px; padding: 5px; border-radius: 5px; transition: 0.2s; flex-shrink: 0; }
-    .menu-btn:hover { background: #f3f4f6; color: var(--primary); }
-    
-    /* UPDATED: Title visibility adjustments */
-    #page-title {
-        font-size: 1.1rem; font-weight: 700; color: #111827; 
-        white-space: normal; /* Changed from nowrap */
-        overflow: visible;   /* Changed from hidden */
-        line-height: 1.2;
-        flex: 1;
-    }
-    #user-display { font-size: 0.9rem; font-weight: 600; color: var(--primary); white-space: nowrap; }
 
     /* --- SCROLL AREA --- */
-    .content-area { flex: 1; padding: 20px; overflow-y: auto; overflow-x: hidden; position: relative; }
-    .form-section { display: none; animation: slideUp 0.3s ease-out; max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; }
+    .content-area { flex: 1; padding: 20px 30px; overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; }
+    .form-section { display: none; animation: slideUp 0.3s ease-out; max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; }
     .form-section.active { display: block; }
 
     /* --- LANDING --- */
-    .landing-wrapper { display: none; width: 100%; max-width: 1200px; margin: 0 auto; }
+    .landing-wrapper { display: none; width: 100%; max-width: 1200px; margin: 0 auto; flex: 1; }
     .landing-wrapper.active { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.3s ease-out; }
 
     /* Carousel */
-    .carousel-container { width: 100%; height: 260px; border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); flex-shrink: 0; }
+    .carousel-container { width: 100%; height: 280px; border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); flex-shrink: 0; }
     .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; opacity: 0; transition: opacity 1s ease-in-out; transform: scale(1.05); }
     .slide.active-slide { opacity: 1; transform: scale(1); }
 
-    /* Role Section (Collapsible) */
+    /* Role Section */
     .role-section { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); flex-shrink: 0; }
     .role-header { padding: 18px 20px; background: white; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; user-select: none; }
     .role-header:hover { background: #f9fafb; color: var(--primary); }
@@ -89,24 +82,26 @@
     .role-content.open { max-height: 600px; padding: 20px; border-top: 1px solid var(--border); }
     .role-content p { margin-bottom: 10px; line-height: 1.5; color: #4b5563; font-size: 0.95rem; }
 
-    /* --- CATEGORY CARDS (UPDATED FOR SQUARE SIZE) --- */
+    /* --- CATEGORY CARDS (SQUARE & RESPONSIVE) --- */
     .category-grid { 
         display: grid; 
-        /* Desktop: Strictly 4 Columns */
+        /* Desktop: 4 Columns */
         grid-template-columns: repeat(4, 1fr); 
         gap: 20px; 
         padding-bottom: 20px;
+        width: 100%;
     }
     .cat-card { 
         background: white; 
-        padding: 10px; 
+        padding: 15px; 
         border-radius: var(--radius); 
         text-align: center; 
         box-shadow: var(--shadow); 
         cursor: pointer; 
         transition: 0.2s; 
         border: 1px solid transparent; 
-        /* UPDATED: Force Square Shape */
+        
+        /* Force Square Ratio */
         aspect-ratio: 1 / 1;
         width: 100%;
         display: flex; 
@@ -116,7 +111,18 @@
     }
     .cat-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
     .cat-card i { font-size: 42px; color: var(--primary); margin-bottom: 12px; display: block; }
-    .cat-card span { font-weight: 600; color: var(--text); font-size: 0.95rem; line-height: 1.2; }
+    
+    /* Title Visibility Fix */
+    .cat-card span { 
+        font-weight: 600; 
+        color: var(--text); 
+        font-size: 0.95rem; 
+        line-height: 1.3; 
+        display: block;
+        width: 100%;
+        word-wrap: break-word; /* Ensure text wraps */
+        white-space: normal;   /* Prevent single line cutting */
+    }
 
     /* --- FORM ELEMENTS --- */
     h2 { margin-bottom: 20px; color: #111827; font-weight: 700; font-size: 1.5rem; }
@@ -178,6 +184,17 @@
     .day-card:active { transform: scale(0.95); background: #ecfdf5; border-color: var(--primary); }
     .day-num { font-size: 1.5rem; color: var(--primary); display: block; margin-bottom: 5px; }
 
+    /* FOOTER */
+    .footer {
+        text-align: center;
+        padding: 20px 0 0 0;
+        margin-top: auto;
+        color: #9ca3af;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border-top: 1px solid transparent;
+    }
+
     /* --- MOBILE RESPONSIVE STYLES --- */
     @media (max-width: 768px) {
       /* Sidebar Hidden by Default */
@@ -187,20 +204,21 @@
       
       /* Main Content takes full width */
       .main-wrapper { margin-left: 0; width: 100%; }
-      .top-bar { padding: 0 15px; }
+      
+      /* Show Mobile Menu Trigger */
+      .mobile-menu-btn { display: block; margin-left: -20px; margin-top: -10px; }
       
       /* Content Padding */
-      .content-area { padding: 15px; }
+      .content-area { padding: 20px 15px; }
       .form-section { padding: 20px 15px; }
       
-      /* UPDATED: 2 Columns for Cards on Mobile */
+      /* 2 COLUMNS FOR CARDS (Fixed) */
       .category-grid { 
           grid-template-columns: 1fr 1fr; /* Exactly 2 columns */
           gap: 12px; 
       }
-      /* Ensure Square aspect on mobile too */
-      .cat-card { padding: 15px 10px; }
-      .cat-card i { font-size: 32px; margin-bottom: 8px; }
+      .cat-card { padding: 10px; }
+      .cat-card i { font-size: 36px; margin-bottom: 8px; }
       .cat-card span { font-size: 0.85rem; }
       
       /* Carousel Height */
@@ -237,7 +255,9 @@
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="logo-area" onclick="showTab('landing')">
-      BON PORTAL <i class="material-icons" onclick="toggleMenu()" style="cursor:pointer; display:none;" id="mobile-close-btn">close</i>
+      <!-- UPDATED: WELCOME MSG -->
+      <span id="welcome-msg">Welcome</span> 
+      <i class="material-icons" onclick="toggleMenu()" style="cursor:pointer; display:none; color:white;" id="mobile-close-btn">close</i>
     </div>
     <ul class="nav-links">
       <li class="nav-item tl-only active" onclick="showTab('landing')"><i class="material-icons">home</i> Home</li>
@@ -254,14 +274,12 @@
   </div>
 
   <div class="main-wrapper" id="main-wrapper">
-    <div class="top-bar">
-      <!-- SANDWICH MENU -->
-      <i class="material-icons menu-btn" onclick="toggleMenu()">menu</i>
-      <h3 id="page-title">Home</h3>
-      <div id="user-display" style="font-weight:600; font-size:0.9rem;"></div>
-    </div>
-
+    <!-- REMOVED TOP BAR -->
+    
     <div class="content-area">
+      <!-- ADDED MOBILE MENU TRIGGER ICON -->
+      <i class="material-icons mobile-menu-btn" onclick="toggleMenu()">menu</i>
+
       <!-- LANDING -->
       <div id="landing" class="landing-wrapper active">
         <div class="carousel-container">
@@ -270,7 +288,7 @@
             <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80" class="slide">
         </div>
         
-        <!-- ROLES AND DUTIES (RESTORED) -->
+        <!-- ROLES AND DUTIES -->
         <div class="role-section">
             <div class="role-header" onclick="document.getElementById('role-text').classList.toggle('open')"><span>Role and Duties of Team Leaders</span><i class="material-icons">expand_more</i></div>
             <div class="role-content" id="role-text">
@@ -284,11 +302,11 @@
 
         <div class="category-grid tl-only">
             <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
-            <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task</span></div>
-            <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task</span></div>
+            <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task Checklist</span></div>
+            <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task Report</span></div>
             <div class="cat-card" onclick="showTab('problem')"><i class="material-icons">report_problem</i><span>Report Problem</span></div>
-            <div class="cat-card" onclick="showTab('vacation')"><i class="material-icons">flight</i><span>Vacation</span></div>
-            <div class="cat-card" onclick="confirmTraining()"><i class="material-icons">school</i><span>Training</span></div>
+            <div class="cat-card" onclick="showTab('vacation')"><i class="material-icons">flight</i><span>Vacation Request</span></div>
+            <div class="cat-card" onclick="confirmTraining()"><i class="material-icons">school</i><span>Training Program</span></div>
         </div>
         <div class="category-grid admin-only" style="display:none;">
             <div class="cat-card" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i><span>Global Dashboard</span></div>
@@ -318,7 +336,6 @@
             </div>
          </div>
          
-         <!-- UPDATED: Separated Tables -->
          <h3>Daily Tasks</h3>
          <div class="table-responsive">
              <table class="history-table">
@@ -486,6 +503,9 @@
         </div>
       </div>
 
+      <!-- FOOTER -->
+      <div class="footer">Created by the Training-Coordinator | Bon Cafe</div>
+
     </div>
   </div>
   
@@ -510,7 +530,6 @@
     function showTab(id, pushState = true) {
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
-       document.getElementById('page-title').innerText = id.replace('-dash', ' Dashboard').replace('tl-', 'My ').replace('admin-', 'Admin ').toUpperCase();
        
        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
        const btn = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(id));
@@ -555,7 +574,7 @@
 
     // INIT
     async function initApp() {
-       document.getElementById('user-display').innerText = currentUser.name;
+       document.getElementById('welcome-msg').innerText = "Welcome, " + currentUser.name.split(' ')[0]; // Show First Name
        document.querySelectorAll('.u-name').forEach(el => el.value = currentUser.name);
        document.querySelectorAll('.u-id').forEach(el => el.value = currentUser.id);
 
@@ -566,7 +585,7 @@
           loadAdminData();
        } else {
           document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
-          document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'flex'); // Flex enables grid layout
+          document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'flex'); 
           showTab('landing', false);
           loadTLData();
        }

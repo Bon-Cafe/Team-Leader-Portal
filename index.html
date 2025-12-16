@@ -3,186 +3,92 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe Team Leaders</title>
+  <title>BON Cafe | Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    /* --- CORE VARIABLES --- */
-    :root {
-      --primary: #10b981; --primary-dark: #059669;
-      --bg: #f3f4f6; --surface: #ffffff; --sidebar-bg: #111827;
-      --text: #1f2937; --text-light: #6b7280; --border: #e5e7eb; --radius: 12px;
-      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-      --danger: #ef4444; --warning: #f59e0b; --success: #10b981;
-    }
+    /* --- SAME STYLES AS BEFORE (Keep original styles) --- */
+    :root { --primary: #10b981; --primary-dark: #059669; --bg: #f3f4f6; --surface: #ffffff; --sidebar-bg: #111827; --text: #1f2937; --text-light: #6b7280; --border: #e5e7eb; --radius: 12px; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); --danger: #ef4444; --warning: #f59e0b; --success: #10b981; }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; display: flex; }
-    
-    /* --- SIDEBAR --- */
-    .sidebar {
-      width: 260px; background: var(--sidebar-bg); color: white;
-      height: 100vh; position: fixed; left: 0; top: 0;
-      transition: transform 0.3s ease; z-index: 1000;
-      display: flex; flex-direction: column;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    }
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; height: 100vh; position: fixed; left: 0; top: 0; transition: transform 0.3s ease; z-index: 1000; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
     .sidebar.closed { transform: translateX(-260px); }
-    
-    .logo-area { 
-        padding: 30px 20px; font-weight: 700; font-size: 1.1rem; 
-        border-bottom: 1px solid #374151; display: flex; align-items: center; 
-        justify-content: space-between; cursor: pointer; letter-spacing: 0.5px;
-        color: var(--primary);
-    }
+    .logo-area { padding: 30px 20px; font-weight: 700; font-size: 1.1rem; border-bottom: 1px solid #374151; display: flex; align-items: center; justify-content: space-between; cursor: pointer; letter-spacing: 0.5px; color: var(--primary); }
     .nav-links { list-style: none; padding: 20px 10px; overflow-y: auto; flex: 1; }
-    .nav-item {
-      padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;
-      display: flex; align-items: center; gap: 12px; color: #d1d5db; transition: all 0.2s;
-    }
+    .nav-item { padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #d1d5db; transition: all 0.2s; }
     .nav-item:hover { background: rgba(255,255,255,0.08); color: white; transform: translateX(3px); }
     .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
     .nav-item i { font-size: 22px; }
-
-    /* --- MAIN CONTENT --- */
-    .main-wrapper {
-      flex: 1; margin-left: 260px; height: 100vh; display: flex; flex-direction: column;
-      transition: margin-left 0.3s ease; width: 100%;
-    }
+    .main-wrapper { flex: 1; margin-left: 260px; height: 100vh; display: flex; flex-direction: column; transition: margin-left 0.3s ease; width: 100%; }
     .main-wrapper.full { margin-left: 0; }
-
-    /* --- CONTENT HEADER --- */
-    .content-header {
-        display: flex; align-items: center; gap: 15px;
-        margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb;
-    }
-    .mobile-menu-btn {
-        padding: 5px; color: var(--text); font-size: 32px; cursor: pointer;
-        border-radius: 4px; transition: 0.2s;
-    }
+    .content-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb; }
+    .mobile-menu-btn { padding: 5px; color: var(--text); font-size: 32px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
     .mobile-menu-btn:hover { background: #e5e7eb; color: var(--primary); }
     .page-header-title { font-size: 1.4rem; font-weight: 800; color: #111827; margin: 0; flex: 1; }
-    
-    /* Bell Notification */
     .bell-wrapper { position: relative; cursor: pointer; margin-right: 10px; }
     .bell-icon { font-size: 28px; color: var(--text); }
-    .bell-badge {
-        position: absolute; top: -5px; right: -5px;
-        background: var(--danger); color: white;
-        border-radius: 50%; font-size: 0.7rem; font-weight: 700;
-        width: 18px; height: 18px; display: flex;
-        justify-content: center; align-items: center;
-        border: 2px solid white; display: none;
-    }
-
-    /* --- SCROLL AREA --- */
+    .bell-badge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; font-size: 0.7rem; font-weight: 700; width: 18px; height: 18px; display: flex; justify-content: center; align-items: center; border: 2px solid white; display: none; }
     .content-area { flex: 1; padding: 20px 30px; overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; }
     .form-section { display: none; animation: slideUp 0.3s ease-out; max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; }
     .form-section.active { display: block; }
-
-    /* --- CUSTOM MODAL --- */
-    .custom-modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000;
-        display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
-    }
+    .custom-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; }
     .custom-modal-overlay.open { display: flex; opacity: 1; }
-    .custom-modal-box {
-        background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 16px;
-        text-align: center; transform: scale(0.9); transition: transform 0.3s;
-        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    }
+    .custom-modal-box { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 16px; text-align: center; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
     .custom-modal-overlay.open .custom-modal-box { transform: scale(1); }
     .c-modal-icon { font-size: 50px; margin-bottom: 15px; }
     .c-modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
     .c-modal-msg { font-size: 1rem; color: var(--text-light); margin-bottom: 25px; line-height: 1.5; }
     .c-modal-btns { display: flex; gap: 10px; justify-content: center; }
-    .c-btn {
-        padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; flex: 1;
-        transition: 0.2s; font-size: 1rem;
-    }
+    .c-btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; flex: 1; transition: 0.2s; font-size: 1rem; }
     .c-btn-primary { background: var(--primary); color: white; }
     .c-btn-primary:hover { background: var(--primary-dark); }
     .c-btn-cancel { background: #e5e7eb; color: var(--text); }
     .c-btn-cancel:hover { background: #d1d5db; }
-    
-    /* Modal Colors */
     .mod-success .c-modal-icon { color: var(--success); }
     .mod-error .c-modal-icon { color: var(--danger); }
     .mod-warning .c-modal-icon { color: var(--warning); }
     .mod-confirm .c-modal-icon { color: #3b82f6; }
-
-    /* --- ANNOUNCEMENT CARDS --- */
-    .announce-card {
-        border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px;
-        background: #fff; border-left: 5px solid var(--primary);
-    }
+    .announce-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; background: #fff; border-left: 5px solid var(--primary); }
     .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
     .ac-date { font-size: 0.85rem; color: #9ca3af; font-weight: 600; }
     .ac-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
     .ac-msg { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 15px; white-space: pre-wrap; }
-    .ac-btn-read {
-        background: var(--primary); color: white; border: none; padding: 8px 16px;
-        border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600;
-    }
-    .ac-read-badge {
-        background: #e5e7eb; color: #6b7280; padding: 5px 12px; border-radius: 20px;
-        font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
-    }
-
-    /* --- LANDING --- */
+    .ac-btn-read { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+    .ac-read-badge { background: #e5e7eb; color: #6b7280; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
     .landing-wrapper { display: none; width: 100%; max-width: 800px; margin: 0 auto; flex: 1; }
     .landing-wrapper.active { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.3s ease-out; }
-
     .carousel-container { width: 100%; height: 250px; border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); flex-shrink: 0; }
     .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; opacity: 0; transition: opacity 1s ease-in-out; transform: scale(1.05); }
     .slide.active-slide { opacity: 1; transform: scale(1); }
-
     .role-section { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); flex-shrink: 0; }
     .role-header { padding: 18px 20px; background: white; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; user-select: none; }
     .role-header:hover { background: #f9fafb; color: var(--primary); }
     .role-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0 20px; background: #fff; }
     .role-content.open { max-height: 600px; padding: 20px; border-top: 1px solid var(--border); }
     .role-content p { margin-bottom: 10px; line-height: 1.5; color: #4b5563; font-size: 0.95rem; }
-
-    /* --- CATEGORY LIST --- */
     .category-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; width: 100%; }
-    .cat-card { 
-        background: white; padding: 20px 25px; border-radius: var(--radius); box-shadow: var(--shadow); 
-        cursor: pointer; transition: 0.2s; border: 1px solid transparent; width: 100%;
-        display: flex; align-items: center; gap: 20px; text-align: left;
-    }
+    .cat-card { background: white; padding: 20px 25px; border-radius: var(--radius); box-shadow: var(--shadow); cursor: pointer; transition: 0.2s; border: 1px solid transparent; width: 100%; display: flex; align-items: center; gap: 20px; text-align: left; }
     .cat-card:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .cat-card i { font-size: 32px; color: var(--primary); margin: 0; flex-shrink: 0; background: #ecfdf5; padding: 10px; border-radius: 50%; }
     .cat-card span { font-weight: 700; color: var(--text); font-size: 1.05rem; line-height: 1.3; }
-
-    /* --- FORM ELEMENTS --- */
     h2 { margin-bottom: 20px; color: #111827; font-weight: 700; font-size: 1.5rem; }
     .form-group { margin-bottom: 20px; }
     label { display: block; margin-bottom: 8px; font-weight: 500; color: #374151; font-size: 0.95rem; }
     input, select, textarea { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: #f9fafb; transition: 0.2s; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
     input[readonly] { background: #e5e7eb; color: #6b7280; cursor: not-allowed; }
-    
     .submit-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 1.05rem; letter-spacing: 0.5px; }
     .submit-btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    
-    .action-btn { 
-      background: var(--bg); color: var(--text); border: 2px solid var(--border); 
-      padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px;
-    }
+    .action-btn { background: var(--bg); color: var(--text); border: 2px solid var(--border); padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px; }
     .action-btn:hover { background: white; border-color: var(--primary); color: var(--primary); }
-
-    /* --- TABLES --- */
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; }
     .history-table { width: 100%; border-collapse: collapse; min-width: 600px; }
     .history-table th, .history-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
     .history-table th { background: #f9fafb; font-weight: 600; color: #374151; white-space: nowrap; }
     .history-table tr:last-child td { border-bottom: none; }
-
     #login-overlay { position: fixed; inset: 0; background: var(--sidebar-bg); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
     .login-box { background: white; padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
     .login-box h2 { font-size: 1.8rem; margin-bottom: 30px; }
-    
     .tl-header { display: flex; align-items: center; gap: 30px; background: #f9fafb; padding: 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); }
     .tl-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 5px solid var(--primary); box-shadow: var(--shadow); }
     .tl-info h2 { font-size: 1.6rem; margin: 0 0 5px 0; }
@@ -190,16 +96,13 @@
     .prog-track { height: 20px; background: #e5e7eb; border-radius: 10px; margin-top: 15px; overflow: hidden; position: relative; }
     .prog-fill { height: 100%; background: linear-gradient(90deg, #10b981, #059669); width: 0%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
     .prog-txt { font-size: 1.5rem; font-weight: 800; color: var(--primary); display: block; margin-top: 5px; text-align: right; }
-
     .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
     .admin-box { border: 1px solid var(--border); padding: 20px; border-radius: 12px; background: #ffffff; max-height: 350px; overflow-y: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
     .admin-box h3 { margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
-
     .question-block { background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
     .q-options { display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap; }
     .q-options label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; margin: 0; font-weight: 400; }
     .hidden-input { display: none; margin-top: 15px; animation: fadeIn 0.3s; }
-    
     .progress-section { margin-top: 30px; }
     .progress-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 15px; }
     .progress-card { background: white; border: 1px solid var(--border); padding: 20px; border-radius: 12px; box-shadow: var(--shadow); }
@@ -209,22 +112,11 @@
     .p-fill-history { height: 100%; background: var(--primary); border-radius: 6px; width: 0%; position: relative; transition: width 1s; }
     .coffee-marker { position: absolute; right: -12px; top: -16px; color: #78350f; font-size: 24px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
     .p-text-history { text-align: right; font-size: 0.8rem; font-weight: 600; margin-top: 5px; color: var(--primary); }
-
     .training-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
     .day-card { border: 2px solid var(--border); padding: 20px 10px; text-align: center; border-radius: 12px; cursor: pointer; background: white; font-weight: 600; }
     .day-card:active { transform: scale(0.95); background: #ecfdf5; border-color: var(--primary); }
     .day-num { font-size: 1.5rem; color: var(--primary); display: block; margin-bottom: 5px; }
-
-    .footer {
-        text-align: center;
-        padding: 20px 0 0 0;
-        margin-top: auto;
-        color: #9ca3af;
-        font-size: 0.8rem;
-        font-weight: 500;
-        border-top: 1px solid transparent;
-    }
-
+    .footer { text-align: center; padding: 20px 0 0 0; margin-top: auto; color: #9ca3af; font-size: 0.8rem; font-weight: 500; border-top: 1px solid transparent; }
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%); width: 280px; }
       .sidebar.mobile-open { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
@@ -237,14 +129,13 @@
       .admin-grid { grid-template-columns: 1fr; }
       .table-responsive { border-left: none; border-right: none; border-radius: 0; margin-left: -15px; width: calc(100% + 30px); }
     }
-
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
 
-  <!-- MODERN CUSTOM MODAL -->
+  <!-- MODAL SYSTEM -->
   <div class="custom-modal-overlay" id="c-modal">
     <div class="custom-modal-box" id="c-modal-box">
        <i class="material-icons c-modal-icon" id="c-icon">check_circle</i>
@@ -282,20 +173,16 @@
       <li class="nav-item tl-only" onclick="confirmTraining()"><i class="material-icons">school</i> 9-Days Training</li>
       <li class="nav-item tl-only" onclick="showHistory()"><i class="material-icons">history</i> Training History</li>
       <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i> Global Dashboard</li>
-      <!-- ADMIN POST ANNOUNCEMENT MENU -->
       <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-post-ann')"><i class="material-icons">campaign</i> Post Announcement</li>
-      
       <li style="margin-top:auto; border-top:1px solid #374151;" class="nav-item" onclick="confirmLogout()"><i class="material-icons">logout</i> Logout</li>
     </ul>
   </div>
 
   <div class="main-wrapper" id="main-wrapper">
     <div class="content-area">
-      
       <div class="content-header">
          <i class="material-icons mobile-menu-btn" onclick="toggleMenu()">menu</i>
          <h1 class="page-header-title" id="dynamic-title">Home</h1>
-         <!-- BELL ICON -->
          <div class="bell-wrapper" onclick="showTab('announce-view')">
             <i class="material-icons bell-icon">notifications_none</i>
             <span class="bell-badge" id="bell-count">0</span>
@@ -308,7 +195,6 @@
             <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1000&q=80" class="slide">
             <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80" class="slide">
         </div>
-        
         <div class="role-section">
             <div class="role-header" onclick="document.getElementById('role-text').classList.toggle('open')"><span>Role and Duties of Team Leaders</span><i class="material-icons">expand_more</i></div>
             <div class="role-content" id="role-text">
@@ -319,7 +205,6 @@
                 <p><strong>5. Performance:</strong> Monitor team KPIs and ensure quality standards are met.</p>
             </div>
         </div>
-
         <div class="category-list tl-only">
             <div class="cat-card" onclick="showTab('announce-view')"><i class="material-icons">campaign</i><span>Announcements</span></div>
             <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
@@ -335,13 +220,11 @@
         </div>
       </div>
 
-      <!-- ANNOUNCEMENTS VIEW -->
       <div id="announce-view" class="form-section">
          <h2>Team Announcements</h2>
          <div id="announcement-list">Loading...</div>
       </div>
 
-      <!-- ADMIN POST ANNOUNCEMENT -->
       <div id="admin-post-ann" class="form-section">
          <h2>Create New Announcement</h2>
          <form onsubmit="handleDynamicSubmit(event, 'Announcements')">
@@ -476,7 +359,6 @@
         <h2 style="display:flex; justify-content:space-between; align-items:center;">
            9-Days Training
         </h2>
-        <!-- NEW ADD TEAM MEMBER BUTTON -->
         <button class="action-btn" onclick="showTab('trainee-reg-view')">
            <i class="material-icons" style="color:var(--primary);">person_add</i>
            Add New Team Member
@@ -495,44 +377,29 @@
         </div>
       </div>
 
-      <!-- NEW TRAINEE REGISTRATION FORM -->
       <div id="trainee-reg-view" class="form-section">
         <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
         <h2>Register Team Member</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Trainee Registration')">
            <div class="form-group"><label>Team Leader (You)</label><input class="u-name" name="teamLeader" readonly></div>
-           
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
               <div class="form-group"><label>Employee ID</label><input type="text" name="traineeId" required></div>
               <div class="form-group"><label>Full Name</label><input type="text" name="traineeName" required></div>
            </div>
-           
            <div class="form-group"><label>Email</label><input type="email" name="traineeEmail" required></div>
-           
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
               <div class="form-group"><label>Nationality</label><input type="text" name="nationality" required></div>
-              <div class="form-group"><label>Status</label>
-                  <select name="empStatus" required>
-                      <option value="New">New</option>
-                      <option value="Old">Old</option>
-                  </select>
-              </div>
+              <div class="form-group"><label>Status</label><select name="empStatus" required><option value="New">New</option><option value="Old">Old</option></select></div>
            </div>
-           
            <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
            <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
            <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
-           
            <div class="form-group"><label>Area</label>
               <select name="area" required>
                  <option value="" disabled selected>Select Area</option>
-                 <option value="Jeddah">Jeddah</option>
-                 <option value="Makkah">Makkah</option>
-                 <option value="Taif">Taif</option>
-                 <option value="Madinah">Madinah</option>
+                 <option value="Jeddah">Jeddah</option><option value="Makkah">Makkah</option><option value="Taif">Taif</option><option value="Madinah">Madinah</option>
               </select>
            </div>
-           
            <button class="submit-btn">Save Team Member</button>
         </form>
       </div>
@@ -542,17 +409,12 @@
         <h2 id="training-title">Training Day</h2>
         <form id="dynamic-form" onsubmit="handleDynamicSubmit(event, 'Training')">
           <input type="hidden" name="category" id="train-cat">
-          
-          <!-- UPDATED: Trainee ID Dropdown & Auto-fill -->
           <div class="form-group">
             <label>Trainee ID</label>
-            <select id="trainee-dropdown" name="traineeId" required onchange="onTraineeSelect(this)">
-               <option value="" disabled selected>Select Trainee ID</option>
-            </select>
+            <select id="trainee-dropdown" name="traineeId" required onchange="onTraineeSelect(this)"><option value="" disabled selected>Select Trainee ID</option></select>
           </div>
           <div class="form-group"><label>Trainee Name</label><input type="text" id="t-name-auto" name="traineeName" readonly required></div>
           <div class="form-group"><label>Trainee Email</label><input type="email" id="t-email-auto" name="traineeEmail" readonly required></div>
-          
           <div class="form-group"><label>Trainer Name</label><input class="u-name" name="trainerName" readonly></div>
           <div id="questions-container">Loading...</div>
           <div class="form-group"><label>Notes</label><textarea name="notes" rows="3" required></textarea></div>
@@ -590,9 +452,8 @@
     let currentUser = null;
     let isAdminMode = false;
     let activeAnnouncements = [];
-    let globalTraineeList = []; // Store trainees locally to speed up dropdown
+    let globalTraineeList = [];
 
-    // --- MODERN MODAL SYSTEM ---
     function showModal(type, title, msg, onConfirm = null) {
         const modal = document.getElementById('c-modal');
         const box = document.getElementById('c-modal-box');
@@ -600,278 +461,112 @@
         const t = document.getElementById('c-title');
         const m = document.getElementById('c-msg');
         const btns = document.getElementById('c-btns');
-
-        // Reset classes
         box.classList.remove('mod-success', 'mod-error', 'mod-warning', 'mod-confirm');
         btns.innerHTML = '';
-
-        t.innerText = title;
-        m.innerText = msg;
-
-        if(type === 'success') {
-            box.classList.add('mod-success'); icon.innerText = 'check_circle';
-            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">OK</button>';
-        } else if(type === 'error') {
-            box.classList.add('mod-error'); icon.innerText = 'error';
-            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Close</button>';
-        } else if(type === 'warning') {
-            box.classList.add('mod-warning'); icon.innerText = 'warning';
-            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Understood</button>';
-        } else if(type === 'confirm') {
-            box.classList.add('mod-confirm'); icon.innerText = 'help';
-            const yes = document.createElement('button'); yes.className = 'c-btn c-btn-primary'; yes.innerText = 'Yes';
-            const no = document.createElement('button'); no.className = 'c-btn c-btn-cancel'; no.innerText = 'Cancel';
-            yes.onclick = () => { closeModal(); if(onConfirm) onConfirm(); };
-            no.onclick = closeModal;
-            btns.append(no, yes);
-        }
-
+        t.innerText = title; m.innerText = msg;
+        if(type === 'success') { box.classList.add('mod-success'); icon.innerText = 'check_circle'; btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">OK</button>'; }
+        else if(type === 'error') { box.classList.add('mod-error'); icon.innerText = 'error'; btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Close</button>'; }
+        else if(type === 'warning') { box.classList.add('mod-warning'); icon.innerText = 'warning'; btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Understood</button>'; }
+        else if(type === 'confirm') { box.classList.add('mod-confirm'); icon.innerText = 'help'; const yes = document.createElement('button'); yes.className = 'c-btn c-btn-primary'; yes.innerText = 'Yes'; const no = document.createElement('button'); no.className = 'c-btn c-btn-cancel'; no.innerText = 'Cancel'; yes.onclick = () => { closeModal(); if(onConfirm) onConfirm(); }; no.onclick = closeModal; btns.append(no, yes); }
         modal.classList.add('open');
     }
-
     function closeModal() { document.getElementById('c-modal').classList.remove('open'); }
 
-    // --- NAVIGATION SECURITY ---
     window.onpopstate = function(event) {
-        if(event.state && event.state.tab) {
-            showTab(event.state.tab, false);
-        } else {
-            // BACK BUTTON PRESSED ON LANDING -> CONFIRM EXIT
-            showModal('confirm', 'Exit Portal?', 'Are you sure you want to log out?', () => {
-                location.reload();
-            });
-            // Push state back so they stay if they cancel
-            window.history.pushState({tab: 'landing'}, "", "#landing");
-        }
+        if(event.state && event.state.tab) showTab(event.state.tab, false);
+        else showModal('confirm', 'Exit Portal?', 'Are you sure you want to log out?', () => location.reload());
     };
 
     function showTab(id, pushState = true) {
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
-       
-       const titleMap = {
-           'landing': 'Home', 'announce-view': 'Announcements', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task',
-           'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation',
-           'training-dash': 'Training Grid', 'training-dynamic': 'Training Form', 'trainee-reg-view': 'Team Member Registration',
-           'history-view': 'History', 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement'
-       };
+       const titleMap = { 'landing': 'Home', 'announce-view': 'Announcements', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task', 'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation', 'training-dash': 'Training Grid', 'training-dynamic': 'Training Form', 'trainee-reg-view': 'Team Member Registration', 'history-view': 'History', 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement' };
        document.getElementById('dynamic-title').innerText = titleMap[id] || 'Bon Portal';
-
        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
        const btn = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(id));
        if(btn) btn.classList.add('active');
-
-       if(window.innerWidth <= 768) {
-           document.getElementById('sidebar').classList.remove('mobile-open');
-           document.getElementById('mobile-close-btn').style.display = 'none';
-       }
-
-       if(pushState) {
-           window.history.pushState({tab: id}, "", "#" + id);
-       }
-       
+       if(window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('mobile-close-btn').style.display = 'none'; }
+       if(pushState) window.history.pushState({tab: id}, "", "#" + id);
        if(id === 'announce-view') fetchAnnouncements();
     }
 
-    // --- AUTH ---
-    function toggleAdmin() {
-       isAdminMode = !isAdminMode;
-       document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : "Team Portal Login";
-    }
+    function toggleAdmin() { isAdminMode = !isAdminMode; document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : "Team Portal Login"; }
     async function doLogin() {
-       const u = document.getElementById('login-u').value;
-       const p = document.getElementById('login-p').value;
+       const u = document.getElementById('login-u').value; const p = document.getElementById('login-p').value;
        const btn = document.querySelector('#login-overlay button');
        if(!u || !p) { showModal('warning', 'Input Missing', 'Please enter username and password'); return; }
-
        btn.innerText = "Checking...";
        const res = await fetchAPI('handleLogin', {username:u, password:p});
        if(res.success) {
-           currentUser = res;
-           document.getElementById('login-overlay').style.display = 'none';
+           currentUser = res; document.getElementById('login-overlay').style.display = 'none';
            if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('mobile-open');
-           initApp();
-           window.history.replaceState({tab: 'landing'}, "", "#landing");
-           fetchAnnouncements(); // Initial Check
-       } else {
-           showModal('error', 'Login Failed', res.message); btn.innerText = "Login";
-       }
+           initApp(); window.history.replaceState({tab: 'landing'}, "", "#landing"); fetchAnnouncements();
+       } else { showModal('error', 'Login Failed', res.message); btn.innerText = "Login"; }
     }
-    
-    function confirmLogout() {
-        showModal('confirm', 'Confirm Logout', 'Are you sure you want to log out?', () => {
-            currentUser = null; location.reload();
-        });
-    }
+    function confirmLogout() { showModal('confirm', 'Confirm Logout', 'Are you sure you want to log out?', () => { currentUser = null; location.reload(); }); }
 
     async function initApp() {
        document.getElementById('welcome-msg').innerText = "Welcome, " + currentUser.name.split(' ')[0]; 
        document.querySelectorAll('.u-name').forEach(el => el.value = currentUser.name);
        document.querySelectorAll('.u-id').forEach(el => el.value = currentUser.id);
-
        if(currentUser.role === 'Admin') {
           document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'none');
           document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex');
-          showTab('admin-dash', false);
-          loadAdminData();
+          showTab('admin-dash', false); loadAdminData();
        } else {
           document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
           document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'flex'); 
-          showTab('landing', false);
-          loadTLData();
+          showTab('landing', false); loadTLData();
        }
-
        const d = await fetchAPI('getGlobalDropdowns');
        if(d) {
-          const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => {
-             sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join('');
-          });
+          const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => { sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join(''); });
           fills('.db-branch', d.branches); fills('.db-sup', d.sups); fills('.db-am', d.ams);
        }
-       
-       const dq = await fetchAPI('getQuestions', {sheetName:'Daily Config'});
-       renderDailyQuestions('daily-questions', dq);
-       const wq = await fetchAPI('getQuestions', {sheetName:'Weekly Config'});
-       renderWeeklyQuestions('weekly-questions', wq);
+       const dq = await fetchAPI('getQuestions', {sheetName:'Daily Config'}); renderDailyQuestions('daily-questions', dq);
+       const wq = await fetchAPI('getQuestions', {sheetName:'Weekly Config'}); renderWeeklyQuestions('weekly-questions', wq);
     }
+    function toggleMenu() { const sb = document.getElementById('sidebar'); if(window.innerWidth <= 768) { sb.classList.toggle('mobile-open'); document.getElementById('mobile-close-btn').style.display = sb.classList.contains('mobile-open') ? 'block' : 'none'; } else { sb.classList.toggle('closed'); document.getElementById('main-wrapper').classList.toggle('full'); } }
 
-    function toggleMenu() { 
-        const sb = document.getElementById('sidebar');
-        if(window.innerWidth <= 768) {
-            sb.classList.toggle('mobile-open');
-            document.getElementById('mobile-close-btn').style.display = sb.classList.contains('mobile-open') ? 'block' : 'none';
-        } else {
-            sb.classList.toggle('closed'); 
-            document.getElementById('main-wrapper').classList.toggle('full'); 
-        }
-    }
-
-    // --- ANNOUNCEMENT SYSTEM ---
     async function fetchAnnouncements() {
-        const listDiv = document.getElementById('announcement-list');
-        const badge = document.getElementById('bell-count');
-        
-        const res = await fetchAPI('getAnnouncements', {userId: currentUser.id});
-        activeAnnouncements = res;
-
-        // Calc unread
+        const listDiv = document.getElementById('announcement-list'); const badge = document.getElementById('bell-count');
+        const res = await fetchAPI('getAnnouncements', {userId: currentUser.id}); activeAnnouncements = res;
         const unread = res.filter(a => !a.isRead).length;
-        if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } 
-        else { badge.style.display = 'none'; }
-
+        if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } else { badge.style.display = 'none'; }
         if(res.length === 0) { listDiv.innerHTML = '<p style="text-align:center;color:#666;">No active announcements.</p>'; return; }
+        listDiv.innerHTML = res.map(a => `<div class="announce-card"><div class="ac-header"><span class="ac-date">${a.date}</span>${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}</div><div class="ac-title">${a.title}</div><div class="ac-msg">${a.message}</div>${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}</div>`).join('');
+    }
+    async function readAnnouncement(id, btn) { btn.innerText = "Processing..."; const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json()); if(res.success) fetchAnnouncements(); }
 
-        listDiv.innerHTML = res.map(a => `
-           <div class="announce-card">
-              <div class="ac-header">
-                  <span class="ac-date">${a.date}</span>
-                  ${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}
-              </div>
-              <div class="ac-title">${a.title}</div>
-              <div class="ac-msg">${a.message}</div>
-              ${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}
-           </div>
-        `).join('');
-    }
+    function renderDailyQuestions(id, qs) { document.getElementById(id).innerHTML = qs.map((q,i) => `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><div class="q-options"><label><input type="radio" name="daily_q_${i}" value="Yes" onchange="toggleDaily(${i}, 'Yes')" required> Yes</label><label><input type="radio" name="daily_q_${i}" value="No" onchange="toggleDaily(${i}, 'No')"> No</label><label><input type="radio" name="daily_q_${i}" value="N/A" onchange="toggleDaily(${i}, 'NA')"> N/A</label></div><div id="daily_hide_${i}" class="hidden-input"><input type="text" name="daily_reason_${i}" placeholder="Explain why No..."></div></div>`).join(''); }
+    function toggleDaily(i, val) { document.getElementById(`daily_hide_${i}`).style.display = (val === 'No') ? 'block' : 'none'; const inp = document.querySelector(`#daily_hide_${i} input`); if(inp) inp.required = (val === 'No'); }
+    function renderWeeklyQuestions(id, qs) { let html = ''; qs.forEach((q, i) => { if(i === 0) { html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><div class="q-options"><label><input type="radio" name="weekly_q_0" value="Yes" onchange="toggleWeekly(0, 'Yes')" required> Yes</label><label><input type="radio" name="weekly_q_0" value="No" onchange="toggleWeekly(0, 'No')"> No</label></div><div id="weekly_hide_0" class="hidden-input"><input type="text" name="weekly_detail_0" placeholder="Please provide details..."></div></div>`; } else { html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><textarea name="weekly_q_${i}" rows="2" placeholder="Your answer here..." required></textarea></div>`; } }); document.getElementById(id).innerHTML = html; }
+    function toggleWeekly(i, val) { document.getElementById(`weekly_hide_${i}`).style.display = (val === 'Yes') ? 'block' : 'none'; const inp = document.querySelector(`#weekly_hide_${i} input`); if(inp) inp.required = (val === 'Yes'); }
 
-    async function readAnnouncement(id, btn) {
-        btn.innerText = "Processing...";
-        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json());
-        if(res.success) {
-            fetchAnnouncements();
-        }
-    }
-
-    function renderDailyQuestions(id, qs) {
-        document.getElementById(id).innerHTML = qs.map((q,i) => `
-          <div class="question-block">
-             <div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-             <div class="q-options">
-               <label><input type="radio" name="daily_q_${i}" value="Yes" onchange="toggleDaily(${i}, 'Yes')" required> Yes</label>
-               <label><input type="radio" name="daily_q_${i}" value="No" onchange="toggleDaily(${i}, 'No')"> No</label>
-               <label><input type="radio" name="daily_q_${i}" value="N/A" onchange="toggleDaily(${i}, 'NA')"> N/A</label>
-             </div>
-             <div id="daily_hide_${i}" class="hidden-input"><input type="text" name="daily_reason_${i}" placeholder="Explain why No..."></div>
-          </div>`).join('');
-    }
-    function toggleDaily(i, val) {
-        document.getElementById(`daily_hide_${i}`).style.display = (val === 'No') ? 'block' : 'none';
-        const inp = document.querySelector(`#daily_hide_${i} input`);
-        if(inp) inp.required = (val === 'No');
-    }
-
-    function renderWeeklyQuestions(id, qs) {
-        let html = '';
-        qs.forEach((q, i) => {
-            if(i === 0) {
-                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-                   <div class="q-options">
-                     <label><input type="radio" name="weekly_q_0" value="Yes" onchange="toggleWeekly(0, 'Yes')" required> Yes</label>
-                     <label><input type="radio" name="weekly_q_0" value="No" onchange="toggleWeekly(0, 'No')"> No</label>
-                   </div>
-                   <div id="weekly_hide_0" class="hidden-input"><input type="text" name="weekly_detail_0" placeholder="Please provide details..."></div>
-                </div>`;
-            } else {
-                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><textarea name="weekly_q_${i}" rows="2" placeholder="Your answer here..." required></textarea></div>`;
-            }
-        });
-        document.getElementById(id).innerHTML = html;
-    }
-    function toggleWeekly(i, val) {
-        document.getElementById(`weekly_hide_${i}`).style.display = (val === 'Yes') ? 'block' : 'none';
-        const inp = document.querySelector(`#weekly_hide_${i} input`);
-        if(inp) inp.required = (val === 'Yes');
-    }
-
-    // --- TRAINING LOGIC UPDATED ---
     async function loadTraineesAndOpenDay(day) {
-        // Fetch trainees list first
         showTab('training-dynamic');
-        document.getElementById('training-title').innerText = "Training Day " + day;
-        document.getElementById('train-cat').value = "Training Day " + day;
-        
-        // Reset fields
+        document.getElementById('training-title').innerText = "Training Day " + day; document.getElementById('train-cat').value = "Training Day " + day;
         document.getElementById('trainee-dropdown').innerHTML = '<option value="" disabled selected>Loading IDs...</option>';
-        document.getElementById('t-name-auto').value = "";
-        document.getElementById('t-email-auto').value = "";
-        
-        // Fetch Trainee List
+        document.getElementById('t-name-auto').value = ""; document.getElementById('t-email-auto').value = "";
         globalTraineeList = await fetchAPI('getTraineeList');
-        
-        // Populate Dropdown
         const dd = document.getElementById('trainee-dropdown');
-        if(globalTraineeList.length > 0) {
-           dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + 
-                          globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join('');
-        } else {
-           dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
-        }
-
-        // Load questions
-        const div = document.getElementById('questions-container');
-        div.innerHTML = 'Loading...';
+        if(globalTraineeList.length > 0) { dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join(''); } else { dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>'; }
+        const div = document.getElementById('questions-container'); div.innerHTML = 'Loading...';
         const qs = await fetchAPI('getTrainingQuestions', {day: day});
-        div.innerHTML = qs.map((q,i) => `
-           <div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-           <div class="q-options">
-             <label><input type="radio" name="q_${i}" value="Pass" required> Pass</label>
-             <label><input type="radio" name="q_${i}" value="Fail"> Fail</label>
-             <label><input type="radio" name="q_${i}" value="Retrain"> Retrain</label>
-           </div></div>`).join('');
+        div.innerHTML = qs.map((q,i) => `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><div class="q-options"><label><input type="radio" name="q_${i}" value="Pass" required> Pass</label><label><input type="radio" name="q_${i}" value="Fail"> Fail</label><label><input type="radio" name="q_${i}" value="Retrain"> Retrain</label></div></div>`).join('');
     }
-
-    function onTraineeSelect(el) {
-       const selectedId = el.value;
-       const trainee = globalTraineeList.find(t => String(t.id) === String(selectedId));
-       if (trainee) {
-          document.getElementById('t-name-auto').value = trainee.name;
-          document.getElementById('t-email-auto').value = trainee.email;
-       }
-    }
+    function onTraineeSelect(el) { const selectedId = el.value; const trainee = globalTraineeList.find(t => String(t.id) === String(selectedId)); if (trainee) { document.getElementById('t-name-auto').value = trainee.name; document.getElementById('t-email-auto').value = trainee.email; } }
 
     async function fetchHistory() {
       const id = document.getElementById('hist-id').value;
-      const data = await fetchAPI('getTrainingHistory', {id:id, start:document.getElementById('hist-start').value, end:document.getElementById('hist-end').value});
+      // UPDATED: Pass currentUser Name and Role for security filtering
+      const data = await fetchAPI('getTrainingHistory', {
+          id:id, 
+          start:document.getElementById('hist-start').value, 
+          end:document.getElementById('hist-end').value,
+          viewerName: currentUser.name,
+          role: currentUser.role
+      });
       
       document.getElementById('history-body').innerHTML = data.length ? data.map(r=>`<tr><td>${r.date}</td><td><span class="done-tag">${r.day}</span></td><td>${r.name}</td><td>${r.id}</td><td>${r.trainer}</td><td>${r.notes}</td></tr>`).join('') : '<tr><td colspan="6">No records</td></tr>';
       
@@ -881,38 +576,21 @@
       let pHTML = '';
       for (const [tid, info] of Object.entries(trainees)) {
          const pct = Math.min((info.days.size / 9)*100, 100);
-         pHTML += `
-         <div class="progress-card">
-            <div class="p-header"><span>${info.name}</span><span>${info.days.size}/9</span></div>
-            <div class="p-sub">ID: ${tid}</div>
-            <div class="p-track-history">
-               <div class="p-fill-history" style="width:${pct}%">
-                  <i class="material-icons coffee-marker">local_cafe</i>
-               </div>
-            </div>
-            <div class="p-text-history">${Math.round(pct)}% Completed</div>
-         </div>`;
+         pHTML += `<div class="progress-card"><div class="p-header"><span>${info.name}</span><span>${info.days.size}/9</span></div><div class="p-sub">ID: ${tid}</div><div class="p-track-history"><div class="p-fill-history" style="width:${pct}%"><i class="material-icons coffee-marker">local_cafe</i></div></div><div class="p-text-history">${Math.round(pct)}% Completed</div></div>`;
       }
       document.getElementById('progress-grid').innerHTML = pHTML;
       document.getElementById('progress-section').style.display = pHTML ? 'block' : 'none';
     }
 
     async function loadTLData() {
-       document.getElementById('tl-name').innerText = currentUser.name;
-       document.getElementById('tl-id').innerText = "ID: " + currentUser.id;
+       document.getElementById('tl-name').innerText = currentUser.name; document.getElementById('tl-id').innerText = "ID: " + currentUser.id;
        document.getElementById('tl-pic').src = currentUser.image || "https://via.placeholder.com/100";
-       
        const res = await fetchAPI('getDashboardData', {viewerId:currentUser.id, role:'User', start:document.getElementById('tl-start').value, end:document.getElementById('tl-end').value});
-       
        const score = Math.min(100, (res.daily.length * 5) + (res.weekly.length * 10));
-       document.getElementById('tl-bar').style.width = score + "%";
-       document.getElementById('tl-score').innerText = score + "%";
-       
+       document.getElementById('tl-bar').style.width = score + "%"; document.getElementById('tl-score').innerText = score + "%";
        const dailyHTML = res.daily.length ? res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
        const weeklyHTML = res.weekly.length ? res.weekly.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
-
-       document.getElementById('tl-daily-body').innerHTML = dailyHTML;
-       document.getElementById('tl-weekly-body').innerHTML = weeklyHTML;
+       document.getElementById('tl-daily-body').innerHTML = dailyHTML; document.getElementById('tl-weekly-body').innerHTML = weeklyHTML;
     }
 
     async function loadAdminData() {
@@ -924,63 +602,14 @@
        document.getElementById('ad-vacs').innerHTML = res.vacation.map(r=>`<tr><td>${r.name}</td><td>${r.start}</td></tr>`).join('');
     }
 
-    function checkIssue(el) {
-       const v = el.value;
-       document.getElementById('div-oth').style.display = (v === 'Others') ? 'block' : 'none';
-       const map = {"Maintenance":"High Priority", "Team Member":"Low Priority", "Customer Complaint":"Medium Priority", "Others":"Medium Priority"};
-       document.getElementById('urg-lbl').value = map[v] || "Low Priority";
-    }
-
-    async function handleProblem(e) {
-       e.preventDefault();
-       const btn = e.target.querySelector('button');
-       btn.innerText = "Uploading..."; btn.disabled = true;
-       const fd = new FormData(e.target);
-       const obj = { category: "Report Problem", name: currentUser.name, empId: currentUser.id };
-       fd.forEach((v,k) => obj[k] = v);
-       const file = document.getElementById('p-img').files[0];
-       if(file) {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = async () => { obj.imageFile = reader.result; obj.imageName = file.name; postData(obj, btn, e.target); };
-       } else { postData(obj, btn, e.target); }
-    }
-
-    async function handleDynamicSubmit(e, cat) {
-       e.preventDefault();
-       const btn = e.target.querySelector('button');
-       btn.innerText = "Saving..."; btn.disabled = true;
-       const fd = new FormData(e.target);
-       const obj = { category: cat, name: currentUser.name, empId: currentUser.id };
-       fd.forEach((v,k) => obj[k] = v);
-       postData(obj, btn, e.target);
-    }
-
-    async function postData(obj, btn, form) {
-       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json());
-       btn.innerText = (obj.category === 'Trainee Registration') ? "Save Team Member" : "Submit"; 
-       btn.disabled = false;
-       if(res.success) { 
-           showModal('success', 'Success', res.message);
-           form.reset(); 
-           // If we just registered a trainee, go back to dash
-           if(obj.category === 'Trainee Registration') {
-             showTab('training-dash');
-           }
-           if(!obj.category.includes('Admin')) loadTLData();
-       } else {
-           showModal('error', 'Error', res.message);
-       }
-    }
-
+    function checkIssue(el) { const v = el.value; document.getElementById('div-oth').style.display = (v === 'Others') ? 'block' : 'none'; const map = {"Maintenance":"High Priority", "Team Member":"Low Priority", "Customer Complaint":"Medium Priority", "Others":"Medium Priority"}; document.getElementById('urg-lbl').value = map[v] || "Low Priority"; }
+    async function handleProblem(e) { e.preventDefault(); const btn = e.target.querySelector('button'); btn.innerText = "Uploading..."; btn.disabled = true; const fd = new FormData(e.target); const obj = { category: "Report Problem", name: currentUser.name, empId: currentUser.id }; fd.forEach((v,k) => obj[k] = v); const file = document.getElementById('p-img').files[0]; if(file) { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = async () => { obj.imageFile = reader.result; obj.imageName = file.name; postData(obj, btn, e.target); }; } else { postData(obj, btn, e.target); } }
+    async function handleDynamicSubmit(e, cat) { e.preventDefault(); const btn = e.target.querySelector('button'); btn.innerText = "Saving..."; btn.disabled = true; const fd = new FormData(e.target); const obj = { category: cat, name: currentUser.name, empId: currentUser.id }; fd.forEach((v,k) => obj[k] = v); postData(obj, btn, e.target); }
+    async function postData(obj, btn, form) { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json()); btn.innerText = (obj.category === 'Trainee Registration') ? "Save Team Member" : "Submit"; btn.disabled = false; if(res.success) { showModal('success', 'Success', res.message); form.reset(); if(obj.category === 'Trainee Registration') { showTab('training-dash'); } if(!obj.category.includes('Admin')) loadTLData(); } else { showModal('error', 'Error', res.message); } }
     function confirmTraining() { showTab('training-dash'); }
     function showHistory() { showTab('history-view'); fetchHistory(); }
     let slideIndex=0; function showSlides(){let s=document.getElementsByClassName("slide"); if(!s.length)return; for(let i=0;i<s.length;i++)s[i].classList.remove("active-slide"); slideIndex++; if(slideIndex>s.length)slideIndex=1; s[slideIndex-1].classList.add("active-slide"); setTimeout(showSlides, 4000);} showSlides();
-    async function fetchAPI(act, p={}) {
-       const u = new URL(API_URL); u.searchParams.append('action', act);
-       for(let k in p) u.searchParams.append(k, p[k]);
-       return await fetch(u).then(r=>r.json());
-    }
+    async function fetchAPI(act, p={}) { const u = new URL(API_URL); u.searchParams.append('action', act); for(let k in p) u.searchParams.append(k, p[k]); return await fetch(u).then(r=>r.json()); }
   </script>
 </body>
 </html>

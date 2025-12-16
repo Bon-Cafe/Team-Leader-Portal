@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leaders</title>
+  <title>BON Cafe Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
@@ -165,6 +165,13 @@
     .submit-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 1.05rem; letter-spacing: 0.5px; }
     .submit-btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     
+    .action-btn { 
+      background: var(--bg); color: var(--text); border: 2px solid var(--border); 
+      padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px;
+    }
+    .action-btn:hover { background: white; border-color: var(--primary); color: var(--primary); }
+
     /* --- TABLES --- */
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; }
     .history-table { width: 100%; border-collapse: collapse; min-width: 600px; }
@@ -466,18 +473,68 @@
       </div>
 
       <div id="training-dash" class="form-section">
-        <h2>9-Days Training</h2>
+        <h2 style="display:flex; justify-content:space-between; align-items:center;">
+           9-Days Training
+        </h2>
+        <!-- NEW ADD TEAM MEMBER BUTTON -->
+        <button class="action-btn" onclick="showTab('trainee-reg-view')">
+           <i class="material-icons" style="color:var(--primary);">person_add</i>
+           Add New Team Member
+        </button>
+        
         <div class="training-grid">
-          <div class="day-card" onclick="loadTrainingDay(1)"><span class="day-num">1</span> Day One</div>
-          <div class="day-card" onclick="loadTrainingDay(2)"><span class="day-num">2</span> Day Two</div>
-          <div class="day-card" onclick="loadTrainingDay(3)"><span class="day-num">3</span> Day Three</div>
-          <div class="day-card" onclick="loadTrainingDay(4)"><span class="day-num">4</span> Day Four</div>
-          <div class="day-card" onclick="loadTrainingDay(5)"><span class="day-num">5</span> Day Five</div>
-          <div class="day-card" onclick="loadTrainingDay(6)"><span class="day-num">6</span> Day Six</div>
-          <div class="day-card" onclick="loadTrainingDay(7)"><span class="day-num">7</span> Day Seven</div>
-          <div class="day-card" onclick="loadTrainingDay(8)"><span class="day-num">8</span> Day Eight</div>
-          <div class="day-card" onclick="loadTrainingDay(9)"><span class="day-num">9</span> Day Nine</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(1)"><span class="day-num">1</span> Day One</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(2)"><span class="day-num">2</span> Day Two</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(3)"><span class="day-num">3</span> Day Three</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(4)"><span class="day-num">4</span> Day Four</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(5)"><span class="day-num">5</span> Day Five</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(6)"><span class="day-num">6</span> Day Six</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(7)"><span class="day-num">7</span> Day Seven</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(8)"><span class="day-num">8</span> Day Eight</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(9)"><span class="day-num">9</span> Day Nine</div>
         </div>
+      </div>
+
+      <!-- NEW TRAINEE REGISTRATION FORM -->
+      <div id="trainee-reg-view" class="form-section">
+        <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
+        <h2>Register Team Member</h2>
+        <form onsubmit="handleDynamicSubmit(event, 'Trainee Registration')">
+           <div class="form-group"><label>Team Leader (You)</label><input class="u-name" name="teamLeader" readonly></div>
+           
+           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+              <div class="form-group"><label>Employee ID</label><input type="text" name="traineeId" required></div>
+              <div class="form-group"><label>Full Name</label><input type="text" name="traineeName" required></div>
+           </div>
+           
+           <div class="form-group"><label>Email</label><input type="email" name="traineeEmail" required></div>
+           
+           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+              <div class="form-group"><label>Nationality</label><input type="text" name="nationality" required></div>
+              <div class="form-group"><label>Status</label>
+                  <select name="empStatus" required>
+                      <option value="New">New</option>
+                      <option value="Old">Old</option>
+                  </select>
+              </div>
+           </div>
+           
+           <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
+           <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
+           <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
+           
+           <div class="form-group"><label>Area</label>
+              <select name="area" required>
+                 <option value="" disabled selected>Select Area</option>
+                 <option value="Jeddah">Jeddah</option>
+                 <option value="Makkah">Makkah</option>
+                 <option value="Taif">Taif</option>
+                 <option value="Madinah">Madinah</option>
+              </select>
+           </div>
+           
+           <button class="submit-btn">Save Team Member</button>
+        </form>
       </div>
 
       <div id="training-dynamic" class="form-section">
@@ -485,9 +542,16 @@
         <h2 id="training-title">Training Day</h2>
         <form id="dynamic-form" onsubmit="handleDynamicSubmit(event, 'Training')">
           <input type="hidden" name="category" id="train-cat">
-          <div class="form-group"><label>Trainee Name</label><input type="text" name="traineeName" required></div>
-          <div class="form-group"><label>Trainee ID</label><input type="text" name="traineeId" required></div>
-          <div class="form-group"><label>Trainee Email</label><input type="email" name="traineeEmail" required></div>
+          
+          <!-- UPDATED: Trainee ID Dropdown & Auto-fill -->
+          <div class="form-group">
+            <label>Trainee ID</label>
+            <select id="trainee-dropdown" name="traineeId" required onchange="onTraineeSelect(this)">
+               <option value="" disabled selected>Select Trainee ID</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Trainee Name</label><input type="text" id="t-name-auto" name="traineeName" readonly required></div>
+          <div class="form-group"><label>Trainee Email</label><input type="email" id="t-email-auto" name="traineeEmail" readonly required></div>
           
           <div class="form-group"><label>Trainer Name</label><input class="u-name" name="trainerName" readonly></div>
           <div id="questions-container">Loading...</div>
@@ -526,6 +590,7 @@
     let currentUser = null;
     let isAdminMode = false;
     let activeAnnouncements = [];
+    let globalTraineeList = []; // Store trainees locally to speed up dropdown
 
     // --- MODERN MODAL SYSTEM ---
     function showModal(type, title, msg, onConfirm = null) {
@@ -587,7 +652,7 @@
        const titleMap = {
            'landing': 'Home', 'announce-view': 'Announcements', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task',
            'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation',
-           'training-dash': 'Training Grid', 'training-dynamic': 'Training Form',
+           'training-dash': 'Training Grid', 'training-dynamic': 'Training Form', 'trainee-reg-view': 'Team Member Registration',
            'history-view': 'History', 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement'
        };
        document.getElementById('dynamic-title').innerText = titleMap[id] || 'Bon Portal';
@@ -758,20 +823,50 @@
         if(inp) inp.required = (val === 'Yes');
     }
 
-    async function loadTrainingDay(day) {
-      showTab('training-dynamic');
-      document.getElementById('training-title').innerText = "Training Day " + day;
-      document.getElementById('train-cat').value = "Training Day " + day;
-      const div = document.getElementById('questions-container');
-      div.innerHTML = 'Loading...';
-      const qs = await fetchAPI('getTrainingQuestions', {day: day});
-      div.innerHTML = qs.map((q,i) => `
-         <div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-         <div class="q-options">
-           <label><input type="radio" name="q_${i}" value="Pass" required> Pass</label>
-           <label><input type="radio" name="q_${i}" value="Fail"> Fail</label>
-           <label><input type="radio" name="q_${i}" value="Retrain"> Retrain</label>
-         </div></div>`).join('');
+    // --- TRAINING LOGIC UPDATED ---
+    async function loadTraineesAndOpenDay(day) {
+        // Fetch trainees list first
+        showTab('training-dynamic');
+        document.getElementById('training-title').innerText = "Training Day " + day;
+        document.getElementById('train-cat').value = "Training Day " + day;
+        
+        // Reset fields
+        document.getElementById('trainee-dropdown').innerHTML = '<option value="" disabled selected>Loading IDs...</option>';
+        document.getElementById('t-name-auto').value = "";
+        document.getElementById('t-email-auto').value = "";
+        
+        // Fetch Trainee List
+        globalTraineeList = await fetchAPI('getTraineeList');
+        
+        // Populate Dropdown
+        const dd = document.getElementById('trainee-dropdown');
+        if(globalTraineeList.length > 0) {
+           dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + 
+                          globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join('');
+        } else {
+           dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
+        }
+
+        // Load questions
+        const div = document.getElementById('questions-container');
+        div.innerHTML = 'Loading...';
+        const qs = await fetchAPI('getTrainingQuestions', {day: day});
+        div.innerHTML = qs.map((q,i) => `
+           <div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
+           <div class="q-options">
+             <label><input type="radio" name="q_${i}" value="Pass" required> Pass</label>
+             <label><input type="radio" name="q_${i}" value="Fail"> Fail</label>
+             <label><input type="radio" name="q_${i}" value="Retrain"> Retrain</label>
+           </div></div>`).join('');
+    }
+
+    function onTraineeSelect(el) {
+       const selectedId = el.value;
+       const trainee = globalTraineeList.find(t => String(t.id) === String(selectedId));
+       if (trainee) {
+          document.getElementById('t-name-auto').value = trainee.name;
+          document.getElementById('t-email-auto').value = trainee.email;
+       }
     }
 
     async function fetchHistory() {
@@ -863,10 +958,15 @@
 
     async function postData(obj, btn, form) {
        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json());
-       btn.innerText = "Submit"; btn.disabled = false;
+       btn.innerText = (obj.category === 'Trainee Registration') ? "Save Team Member" : "Submit"; 
+       btn.disabled = false;
        if(res.success) { 
            showModal('success', 'Success', res.message);
            form.reset(); 
+           // If we just registered a trainee, go back to dash
+           if(obj.category === 'Trainee Registration') {
+             showTab('training-dash');
+           }
            if(!obj.category.includes('Admin')) loadTLData();
        } else {
            showModal('error', 'Error', res.message);

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leaders</title>
+  <title>BON Cafe | Team Leader</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- NEW: Include html2canvas for Save as Image feature -->
@@ -1247,24 +1247,45 @@
     }
 
     // --- NEW: PROBLEM POPUP & SAVE AS IMAGE ---
-    function showProblemPop(r) {
+    async function showProblemPop(r) {
        document.getElementById('pop-title').innerText = r.issue;
        document.getElementById('pop-date').innerText = "Reported on: " + r.date;
        document.getElementById('pop-tl').innerText = r.tl;
        document.getElementById('pop-br').innerText = r.branch;
        document.getElementById('pop-urg').innerText = r.urg;
        document.getElementById('pop-desc').innerText = r.desc;
+       
        const imgCont = document.getElementById('pop-img-container');
-       imgCont.innerHTML = (r.img && r.img !== 'No Image') ? `<img src="${r.img}" class="pop-img">` : '<p style="margin-top:10px; color:#999;">No image attached.</p>';
+       imgCont.innerHTML = "Loading image...";
        document.getElementById('problem-pop').classList.add('open');
+
+       // [FIXED] Fetch image as Base64 from server to prevent CORS "broken image" and "save failure"
+       if(r.img && r.img !== 'No Image') {
+          try {
+             const resp = await fetchAPI('getBase64Image', { url: r.img });
+             if(resp.base64) {
+                imgCont.innerHTML = `<img src="${resp.base64}" class="pop-img">`;
+             } else {
+                imgCont.innerHTML = '<p style="color:#999;">Image load failed.</p>';
+             }
+          } catch(e) { imgCont.innerHTML = "Error loading image."; }
+       } else {
+          imgCont.innerHTML = '<p style="margin-top:10px; color:#999;">No image attached.</p>';
+       }
     }
 
     function saveAsImage() {
        const area = document.getElementById('pop-capture-area');
-       html2canvas(area, { useCORS: true }).then(canvas => {
+       // [FIXED] Optimized html2canvas parameters for better quality
+       html2canvas(area, { 
+          useCORS: true, 
+          allowTaint: true,
+          scale: 2,
+          backgroundColor: "#ffffff"
+       }).then(canvas => {
           const link = document.createElement('a');
-          link.download = 'Problem_Report.png';
-          link.href = canvas.toDataURL();
+          link.download = 'Problem_Report_' + new Date().getTime() + '.png';
+          link.href = canvas.toDataURL("image/png");
           link.click();
        });
     }

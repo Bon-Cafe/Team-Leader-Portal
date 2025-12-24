@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leader</title>
+  <title>BON Cafe | Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- NEW: Include html2canvas for Save as Image feature -->
@@ -84,6 +84,7 @@
     /* --- NEW ADMIN PANEL STYLES --- */
     .admin-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
     .admin-tab-btn {
+        position: relative; /* Needed for badge */
         padding: 10px 20px; border-radius: 20px; border: 1px solid var(--border);
         background: white; cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.2s;
     }
@@ -149,6 +150,7 @@
     .announce-card {
         border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px;
         background: #fff; border-left: 5px solid var(--primary);
+        transition: all 0.3s ease;
     }
     .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
     .ac-date { font-size: 0.85rem; color: #9ca3af; font-weight: 600; }
@@ -161,6 +163,26 @@
     .ac-read-badge {
         background: #e5e7eb; color: #6b7280; padding: 5px 12px; border-radius: 20px;
         font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
+    }
+
+    /* --- NEW FEATURES CSS: GLOWING AND NOTIFICATIONS --- */
+    @keyframes taskGlow {
+      0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; }
+      50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); border-color: #fca5a5; }
+      100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; }
+    }
+    .glowing-task {
+      border: 2px solid #ef4444 !important;
+      border-left: 8px solid #ef4444 !important;
+      animation: taskGlow 1.5s infinite ease-in-out;
+    }
+
+    .tab-notify {
+      position: absolute; top: -5px; right: -5px;
+      background: var(--danger); color: white; border-radius: 50%;
+      width: 18px; height: 18px; font-size: 0.65rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     /* --- NEW: Task Specific UI --- */
@@ -524,11 +546,11 @@
          <div class="admin-nav">
              <button class="admin-tab-btn active" onclick="switchAdminTab('Daily Task')">Daily Task</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Weekly Task')">Weekly Task</button>
-             <button class="admin-tab-btn" onclick="switchAdminTab('Problems')">Problems</button>
+             <button class="admin-tab-btn" id="tab-Problems" onclick="switchAdminTab('Problems')">Problems</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Vacation')">Vacations</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Trainings')">Trainings</button>
              <!-- New Tab: Task History -->
-             <button class="admin-tab-btn" onclick="switchAdminTab('Task History')">Task History</button>
+             <button class="admin-tab-btn" id="tab-TaskHistory" onclick="switchAdminTab('Task History')">Task History</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Announcement')">Announcement</button>
          </div>
          <div class="admin-filters">
@@ -842,7 +864,10 @@
        
        if(id === 'announce-view') fetchAnnouncements();
        if(id === 'training-course-view') loadTrainingCourses();
-       if(id === 'admin-dash' && isAdminMode) loadAdminData();
+       if(id === 'admin-dash' && isAdminMode) {
+          loadAdminData();
+          updateAdminTabBadges(); // NEW: Check for notifications
+       }
     }
 
     // --- AUTH ---
@@ -938,8 +963,10 @@
 
         listDiv.innerHTML = res.map(a => {
             if(a.type === 'task') {
+               // FEATURE 1: Glow red if Pending
+               const isGlow = a.status === 'Pending' ? 'glowing-task' : '';
                return `
-               <div class="announce-card" style="border-left-color:red;">
+               <div class="announce-card ${isGlow}" style="border-left-color:red;">
                   <span class="tagged-badge">Tagged Task</span>
                   <div class="ac-header"><span class="ac-date">${a.date}</span></div>
                   <div class="ac-title">Direct Task from Admin</div>
@@ -1181,6 +1208,31 @@
             btn.classList.toggle('active', btn.innerText === tab);
         });
         loadAdminData();
+        updateAdminTabBadges(); // NEW: Clear badges when clicking the tab
+    }
+
+    // FEATURE 2: Admin Notification Badges
+    async function updateAdminTabBadges() {
+       // Check for Problems reported today
+       const probRes = await fetchAPI('getDashboardData', { role:'Admin', category:'Problems' });
+       const today = new Date().toLocaleDateString();
+       const newProbs = probRes.categoryData.filter(r => r.date === today).length;
+       const probTab = document.getElementById('tab-Problems');
+       if(probTab) {
+          const oldBadge = probTab.querySelector('.tab-notify');
+          if(oldBadge) oldBadge.remove();
+          if(newProbs > 0 && currentAdminTab !== 'Problems') probTab.innerHTML += `<span class="tab-notify">${newProbs}</span>`;
+       }
+
+       // Check for Tasks that have a Reply
+       const taskHistory = await fetchAPI('getAdminTasks');
+       const newReplies = taskHistory.filter(t => t.status === 'Replied').length;
+       const historyTab = document.getElementById('tab-TaskHistory');
+       if(historyTab) {
+          const oldBadge = historyTab.querySelector('.tab-notify');
+          if(oldBadge) oldBadge.remove();
+          if(newReplies > 0 && currentAdminTab !== 'Task History') historyTab.innerHTML += `<span class="tab-notify">${newReplies}</span>`;
+       }
     }
 
     async function loadAdminData() {
@@ -1195,7 +1247,7 @@
            tbody.innerHTML = tasks.map(t => `
               <tr>
                  <td>${t.date}</td><td>${t.tlName}</td><td>${t.task}</td>
-                 <td><span class="status-badge" style="background:${t.status==='Pending'?'#fee2e2':'#d1fae5'}">${t.status}</span></td>
+                 <td><span class="status-badge" style="background:${t.status==='Replied'?'#3b82f6':(t.status==='Pending'?'#fee2e2':'#d1fae5')}; color:${t.status==='Replied'?'white':''};">${t.status}</span></td>
                  <td>${t.reply || '-'}</td>
                  <td>${t.reply ? `<button class="ac-btn-read" style="padding:4px 8px; font-size:10px;" onclick="showModal('success', 'Team Leader Response', '${t.tlName} replied: ${t.reply}')">View Reply</button>` : ''}</td>
               </tr>
@@ -1259,7 +1311,6 @@
        imgCont.innerHTML = "Loading image...";
        document.getElementById('problem-pop').classList.add('open');
 
-       // [FIXED] Fetch image as Base64 from server to prevent CORS "broken image" and "save failure"
        if(r.img && r.img !== 'No Image') {
           try {
              const resp = await fetchAPI('getBase64Image', { url: r.img });
@@ -1276,7 +1327,6 @@
 
     function saveAsImage() {
        const area = document.getElementById('pop-capture-area');
-       // [FIXED] Optimized html2canvas parameters for better quality
        html2canvas(area, { 
           useCORS: true, 
           allowTaint: true,

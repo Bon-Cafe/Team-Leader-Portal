@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leader</title>
+  <title>BON Cafe | Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- NEW: Include html2canvas for Save as Image feature -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     /* --- CORE VARIABLES --- */
     :root {
@@ -161,6 +163,10 @@
         font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
     }
 
+    /* --- NEW: Task Specific UI --- */
+    .tagged-badge { background: #fee2e2; color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; display: inline-block; }
+    .reply-area { margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
+
     /* --- LANDING --- */
     .landing-wrapper { display: none; width: 100%; max-width: 800px; margin: 0 auto; flex: 1; }
     .landing-wrapper.active { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.3s ease-out; }
@@ -215,6 +221,13 @@
     .history-table th, .history-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
     .history-table th { background: #f9fafb; font-weight: 600; color: #374151; white-space: nowrap; }
     .history-table tr:last-child td { border-bottom: none; }
+
+    /* NEW: Modern Table Logic Styles */
+    .clickable-row { cursor: pointer; transition: 0.2s; }
+    .clickable-row:hover { background-color: #f0fdf4 !important; }
+    .table-img-icon { width: 32px; height: 32px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto; border: 1px solid #ddd; }
+    .modern-pop-card { text-align: left; }
+    .pop-img { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; margin: 15px 0; border: 1px solid #eee; background: #f9f9f9; }
 
     #login-overlay { position: fixed; inset: 0; background: var(--sidebar-bg); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
     .login-box { background: white; padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
@@ -293,6 +306,48 @@
 </head>
 <body>
 
+  <!-- MODAL: PROBLEM DETAIL -->
+  <div class="custom-modal-overlay" id="problem-pop">
+    <div class="custom-modal-box" style="max-width: 600px;" id="pop-capture-area">
+       <div class="modern-pop-card">
+          <h2 id="pop-title" style="margin-bottom:5px;">Issue Details</h2>
+          <p id="pop-date" style="color:#888; font-size:0.8rem; margin-bottom:15px;"></p>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.9rem;">
+             <p><strong>Team Leader:</strong> <span id="pop-tl"></span></p>
+             <p><strong>Branch:</strong> <span id="pop-br"></span></p>
+             <p><strong>Urgency:</strong> <span id="pop-urg"></span></p>
+          </div>
+          <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
+          <p><strong>Description:</strong></p>
+          <p id="pop-desc" style="white-space:pre-wrap; background:#f9fafb; padding:10px; border-radius:8px; margin-top:5px;"></p>
+          <div id="pop-img-container"></div>
+       </div>
+       <div class="c-modal-btns" style="margin-top:20px;">
+         <button class="c-btn c-btn-cancel" onclick="document.getElementById('problem-pop').classList.remove('open')">Close</button>
+         <button class="c-btn c-btn-primary" onclick="saveAsImage()">Save as Image</button>
+       </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ASSIGN TASK -->
+  <div class="custom-modal-overlay" id="assign-task-pop">
+    <div class="custom-modal-box" style="max-width: 450px;">
+       <h2>Assign New Task</h2>
+       <div class="form-group" style="text-align:left;">
+          <label>Select Team Leader</label>
+          <select id="task-tl-names"></select>
+       </div>
+       <div class="form-group" style="text-align:left;">
+          <label>Task Message</label>
+          <textarea id="task-msg" rows="4" placeholder="Write the task details here..."></textarea>
+       </div>
+       <div class="c-modal-btns">
+         <button class="c-btn c-btn-cancel" onclick="document.getElementById('assign-task-pop').classList.remove('open')">Cancel</button>
+         <button class="c-btn c-btn-primary" onclick="submitAssignedTask()">Send Task</button>
+       </div>
+    </div>
+  </div>
+
   <!-- MODERN CUSTOM MODAL -->
   <div class="custom-modal-overlay" id="c-modal">
     <div class="custom-modal-box" id="c-modal-box">
@@ -320,7 +375,7 @@
 
   <div id="login-overlay">
     <div class="login-box">
-       <h2>BON PORTAL LOGIN</h2>
+       <h2>BON Cafe - Team Leader</h2>
        <div class="form-group"><input type="text" id="login-u" placeholder="Username" required></div>
        <div class="form-group password-wrapper">
            <input type="password" id="login-p" placeholder="Password" required>
@@ -461,13 +516,19 @@
 
       <!-- NEW ADMIN DASHBOARD -->
       <div id="admin-dash" class="form-section" style="max-width:1400px;">
-         <h2>Global Dashboard</h2>
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 style="margin:0;">Global Dashboard</h2>
+            <!-- Button to open Assign Task modal -->
+            <button class="c-btn c-btn-primary" style="flex:none; width:auto; padding:10px 20px;" onclick="openAssignTaskModal()">Assign Task</button>
+         </div>
          <div class="admin-nav">
              <button class="admin-tab-btn active" onclick="switchAdminTab('Daily Task')">Daily Task</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Weekly Task')">Weekly Task</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Problems')">Problems</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Vacation')">Vacations</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Trainings')">Trainings</button>
+             <!-- New Tab: Task History -->
+             <button class="admin-tab-btn" onclick="switchAdminTab('Task History')">Task History</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Announcement')">Announcement</button>
          </div>
          <div class="admin-filters">
@@ -869,23 +930,41 @@
         const res = await fetchAPI('getAnnouncements', {userId: currentUser.id});
         activeAnnouncements = res;
 
-        const unread = res.filter(a => !a.isRead).length;
+        const unread = res.filter(a => !a.isRead && a.type !== 'task').length;
         if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } 
         else { badge.style.display = 'none'; }
 
         if(res.length === 0) { listDiv.innerHTML = '<p style="text-align:center;color:#666;">No active announcements.</p>'; return; }
 
-        listDiv.innerHTML = res.map(a => `
-           <div class="announce-card">
-              <div class="ac-header">
-                  <span class="ac-date">${a.date}</span>
-                  ${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}
-              </div>
-              <div class="ac-title">${a.title}</div>
-              <div class="ac-msg">${a.message}</div>
-              ${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}
-           </div>
-        `).join('');
+        listDiv.innerHTML = res.map(a => {
+            if(a.type === 'task') {
+               return `
+               <div class="announce-card" style="border-left-color:red;">
+                  <span class="tagged-badge">Tagged Task</span>
+                  <div class="ac-header"><span class="ac-date">${a.date}</span></div>
+                  <div class="ac-title">Direct Task from Admin</div>
+                  <div class="ac-msg" style="font-weight:600;">${a.message}</div>
+                  <div id="reply-box-${a.id}" class="reply-area">
+                     ${a.status === 'Pending' ? `
+                        <input type="text" id="inp-${a.id}" placeholder="Type your reply here..." style="margin-bottom:10px;">
+                        <button class="ac-btn-read" onclick="replyToTask('${a.id}')">Reply to Task</button>
+                        <button class="ac-btn-read" style="background:gray; margin-left:5px;" onclick="taskOk('${a.id}')">Mark as OK</button>
+                     ` : `<span class="ac-read-badge">Status: ${a.status} ${a.reply? '- '+a.reply : ''}</span>`}
+                  </div>
+               </div>`;
+            } else {
+               return `
+               <div class="announce-card">
+                  <div class="ac-header">
+                      <span class="ac-date">${a.date}</span>
+                      ${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}
+                  </div>
+                  <div class="ac-title">${a.title}</div>
+                  <div class="ac-msg">${a.message}</div>
+                  ${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}
+               </div>`;
+            }
+        }).join('');
     }
 
     async function readAnnouncement(id, btn) {
@@ -894,6 +973,21 @@
         if(res.success) {
             fetchAnnouncements();
         }
+    }
+
+    // --- NEW: REPLY AND OK LOGIC FOR TASKS ---
+    async function replyToTask(id) {
+       const rep = document.getElementById('inp-'+id).value;
+       if(!rep) return alert("Please write a reply");
+       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'replyTask', taskId:id, reply:rep})}).then(r=>r.json());
+       if(res.success) {
+          showModal('success', 'Replied', 'Your response has been sent to Admin');
+          fetchAnnouncements();
+       }
+    }
+    async function taskOk(id) {
+       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'taskOk', taskId:id})}).then(r=>r.json());
+       if(res.success) fetchAnnouncements();
     }
 
     // --- TRAINING COURSE SYSTEM (NEW) ---
@@ -921,16 +1015,8 @@
     }
 
     async function handleCourseClick(id, link, title, isDone) {
-        // Open the content in modal
         openViewer(link, title);
-        
-        // If not done, ask to mark as done
         if(!isDone) {
-            // We wait a bit or just assume viewing initiates interest. 
-            // Better UX: Add a button inside modal or trigger after closing? 
-            // For simplicity, we add a "Mark Done" logic call here but maybe confirm after closing?
-            // Let's rely on user clicking "View". We can add a "Mark as Done" button in the modal or auto-mark.
-            // Requirement says "mark as Done after they read".
             setTimeout(() => {
                 showModal('confirm', 'Finish Course?', 'Did you complete reading/watching this material?', async () => {
                     const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({
@@ -944,7 +1030,7 @@
                         showModal('success', 'Great Job!', 'Course marked as completed.');
                     }
                 });
-            }, 3000); // Trigger prompt after 3 seconds of viewing
+            }, 3000);
         }
     }
 
@@ -989,18 +1075,14 @@
         if(inp) inp.required = (val === 'Yes');
     }
 
-    // --- TRAINING LOGIC (NEW) ---
     async function loadTraineesAndOpenDay(day) {
         showTab('training-dynamic');
         document.getElementById('training-title').innerText = "Training Day " + day;
         document.getElementById('train-cat').value = "Training Day " + day;
-        
         document.getElementById('trainee-dropdown').innerHTML = '<option value="" disabled selected>Loading IDs...</option>';
         document.getElementById('t-name-auto').value = "";
         document.getElementById('t-email-auto').value = "";
-        
         globalTraineeList = await fetchAPI('getTraineeList');
-        
         const dd = document.getElementById('trainee-dropdown');
         if(globalTraineeList.length > 0) {
            dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + 
@@ -1008,7 +1090,6 @@
         } else {
            dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
         }
-
         const div = document.getElementById('questions-container');
         div.innerHTML = 'Loading...';
         const qs = await fetchAPI('getTrainingQuestions', {day: day});
@@ -1030,22 +1111,16 @@
        }
     }
 
-    // --- HISTORY (SECURE) ---
     async function fetchHistory() {
       const id = document.getElementById('hist-id').value;
       const data = await fetchAPI('getTrainingHistory', {
-          id:id, 
-          start:document.getElementById('hist-start').value, 
+          id:id, start:document.getElementById('hist-start').value, 
           end:document.getElementById('hist-end').value,
-          viewerName: currentUser.name,
-          role: currentUser.role
+          viewerName: currentUser.name, role: currentUser.role
       });
-      
       document.getElementById('history-body').innerHTML = data.length ? data.map(r=>`<tr><td>${r.date}</td><td><span class="done-tag">${r.day}</span></td><td>${r.name}</td><td>${r.id}</td><td>${r.trainer}</td><td>${r.notes}</td></tr>`).join('') : '<tr><td colspan="6">No records</td></tr>';
-      
       const trainees = {};
       data.forEach(r => { if(!trainees[r.id]) trainees[r.id] = {name:r.name, days:new Set()}; const dNum = r.day.match(/\d+/); if(dNum) trainees[r.id].days.add(parseInt(dNum[0])); });
-      
       let pHTML = '';
       for (const [tid, info] of Object.entries(trainees)) {
          const pct = Math.min((info.days.size / 9)*100, 100);
@@ -1065,30 +1140,45 @@
       document.getElementById('progress-section').style.display = pHTML ? 'block' : 'none';
     }
 
-    // --- TL DASHBOARD ---
     async function loadTLData() {
        document.getElementById('tl-name').innerText = currentUser.name;
        document.getElementById('tl-id').innerText = "ID: " + currentUser.id;
        document.getElementById('tl-pic').src = currentUser.image || "https://via.placeholder.com/100";
-       
        const res = await fetchAPI('getDashboardData', {viewerId:currentUser.id, role:'User', start:document.getElementById('tl-start').value, end:document.getElementById('tl-end').value});
-       
        const score = Math.min(100, (res.daily.length * 5) + (res.weekly.length * 10));
        document.getElementById('tl-bar').style.width = score + "%";
        document.getElementById('tl-score').innerText = score + "%";
-       
        const dailyHTML = res.daily.length ? res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
        const weeklyHTML = res.weekly.length ? res.weekly.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
-
        document.getElementById('tl-daily-body').innerHTML = dailyHTML;
        document.getElementById('tl-weekly-body').innerHTML = weeklyHTML;
+    }
+
+    // --- NEW: ASSIGN TASK MODAL LOGIC ---
+    async function openAssignTaskModal() {
+       const drop = await fetchAPI('getGlobalDropdowns');
+       const sel = document.getElementById('task-tl-names');
+       sel.innerHTML = drop.names.map(n => `<option value="${n}">${n}</option>`).join('');
+       document.getElementById('assign-task-pop').classList.add('open');
+    }
+
+    async function submitAssignedTask() {
+       const tl = document.getElementById('task-tl-names').value;
+       const msg = document.getElementById('task-msg').value;
+       if(!msg) return alert("Please write a task");
+       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'assignTask', tlName:tl, task:msg, adminName:currentUser.name})}).then(r=>r.json());
+       if(res.success) {
+          document.getElementById('assign-task-pop').classList.remove('open');
+          showModal('success', 'Success', 'Task assigned successfully to ' + tl);
+          document.getElementById('task-msg').value = "";
+       }
     }
 
     // --- ADMIN DASHBOARD LOGIC ---
     function switchAdminTab(tab) {
         currentAdminTab = tab;
         document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.innerText === tab || (tab === 'Announcement' && btn.innerText === 'Announcement'));
+            btn.classList.toggle('active', btn.innerText === tab);
         });
         loadAdminData();
     }
@@ -1098,23 +1188,29 @@
         const thead = document.getElementById('ad-thead');
         tbody.innerHTML = '<tr><td colspan="8">Loading data...</td></tr>';
         
+        // Custom Logic for New Task History Tab
+        if(currentAdminTab === 'Task History') {
+           const tasks = await fetchAPI('getAdminTasks');
+           thead.innerHTML = '<tr><th>Date</th><th>TL Name</th><th>Task</th><th>Status</th><th>TL Response</th><th>Action</th></tr>';
+           tbody.innerHTML = tasks.map(t => `
+              <tr>
+                 <td>${t.date}</td><td>${t.tlName}</td><td>${t.task}</td>
+                 <td><span class="status-badge" style="background:${t.status==='Pending'?'#fee2e2':'#d1fae5'}">${t.status}</span></td>
+                 <td>${t.reply || '-'}</td>
+                 <td>${t.reply ? `<button class="ac-btn-read" style="padding:4px 8px; font-size:10px;" onclick="showModal('success', 'Team Leader Response', '${t.tlName} replied: ${t.reply}')">View Reply</button>` : ''}</td>
+              </tr>
+           `).join('');
+           return;
+        }
+
         const filters = {
-            role: 'Admin',
-            category: currentAdminTab,
-            start: document.getElementById('ad-start').value,
-            end: document.getElementById('ad-end').value,
-            tlName: document.getElementById('ad-tl').value,
-            memName: document.getElementById('ad-mem').value,
-            branch: document.getElementById('ad-branch').value,
-            sup: document.getElementById('ad-sup').value,
-            am: document.getElementById('ad-am').value
+            role: 'Admin', category: currentAdminTab, start: document.getElementById('ad-start').value, end: document.getElementById('ad-end').value,
+            tlName: document.getElementById('ad-tl').value, memName: document.getElementById('ad-mem').value,
+            branch: document.getElementById('ad-branch').value, sup: document.getElementById('ad-sup').value, am: document.getElementById('ad-am').value
         };
 
         const res = await fetchAPI('getDashboardData', filters);
         const data = res.categoryData;
-
-        let headHTML = '';
-        let bodyHTML = '';
 
         if (!data || data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>';
@@ -1122,53 +1218,55 @@
         }
 
         if (currentAdminTab === 'Daily Task' || currentAdminTab === 'Weekly Task') {
-            headHTML = `<tr><th>Date</th><th>Team Leader</th><th>Branch</th><th>Supervisor</th><th>Area Manager</th><th>Status</th></tr>`;
-            bodyHTML = data.map(r => `
-                <tr>
-                    <td>${r.date}</td>
-                    <td>${r.tl}</td>
-                    <td>${r.branch}</td>
-                    <td>${r.sup}</td>
-                    <td>${r.am}</td>
-                    <td><span class="status-badge">${r.status}</span></td>
-                </tr>
-            `).join('');
+            thead.innerHTML = `<tr><th>Date</th><th>Team Leader</th><th>Branch</th><th>Supervisor</th><th>Area Manager</th><th>Status</th></tr>`;
+            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.am}</td><td><span class="status-badge">${r.status}</span></td></tr>`).join('');
         } 
         else if (currentAdminTab === 'Problems') {
-            headHTML = `<tr><th>Date</th><th>Team Leader</th><th>Branch</th><th>Sup</th><th>Issue</th><th>Urgency</th><th>Details</th></tr>`;
-            bodyHTML = data.map(r => `
-                <tr>
+            // Updated Problems Table: Icon and Clickable row
+            thead.innerHTML = `<tr><th>Date</th><th>Image</th><th>Team Leader</th><th>Branch</th><th>Sup</th><th>Issue</th><th>Urgency</th></tr>`;
+            tbody.innerHTML = data.map(r => `
+                <tr class="clickable-row" onclick="showProblemPop(${JSON.stringify(r).replace(/"/g, '&quot;')})">
                     <td>${r.date}</td>
-                    <td>${r.tl}</td>
-                    <td>${r.branch}</td>
-                    <td>${r.sup}</td>
-                    <td>${r.issue}</td>
-                    <td>${r.urg}</td>
-                    <td>${r.desc} ${r.img !== 'No Image' ? `<a href="${r.img}" target="_blank">View Image</a>` : ''}</td>
+                    <td style="text-align:center;">${r.img && r.img !== 'No Image' ? `<img src="${r.img}" class="table-img-icon">` : '-'}</td>
+                    <td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.issue}</td><td>${r.urg}</td>
                 </tr>
             `).join('');
         }
         else if (currentAdminTab === 'Vacations') {
-            headHTML = `<tr><th>Req Date</th><th>Team Leader</th><th>Start Date</th><th>End Date</th><th>Reason</th></tr>`;
-            bodyHTML = data.map(r => `
-                <tr><td>${r.date}</td><td>${r.tl}</td><td>${r.start}</td><td>${r.end}</td><td>${r.reason}</td></tr>
-            `).join('');
+            thead.innerHTML = `<tr><th>Req Date</th><th>Team Leader</th><th>Start Date</th><th>End Date</th><th>Reason</th></tr>`;
+            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.start}</td><td>${r.end}</td><td>${r.reason}</td></tr>`).join('');
         }
         else if (currentAdminTab === 'Trainings') {
-            headHTML = `<tr><th>Date</th><th>Day</th><th>Trainer (TL)</th><th>Trainee</th><th>ID</th><th>Notes</th></tr>`;
-            bodyHTML = data.map(r => `
-                <tr><td>${r.date}</td><td>${r.day}</td><td>${r.trainer}</td><td>${r.trainee}</td><td>${r.id}</td><td>${r.notes}</td></tr>
-            `).join('');
+            thead.innerHTML = `<tr><th>Date</th><th>Day</th><th>Trainer (TL)</th><th>Trainee</th><th>ID</th><th>Notes</th></tr>`;
+            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.day}</td><td>${r.trainer}</td><td>${r.trainee}</td><td>${r.id}</td><td>${r.notes}</td></tr>`).join('');
         }
         else if (currentAdminTab === 'Announcement') {
-            headHTML = `<tr><th>ID</th><th>Date</th><th>Title</th><th>Message</th><th>By</th></tr>`;
-            bodyHTML = data.map(r => `
-                <tr><td>${r.id}</td><td>${r.date}</td><td>${r.title}</td><td>${r.msg}</td><td>${r.by}</td></tr>
-            `).join('');
+            thead.innerHTML = `<tr><th>ID</th><th>Date</th><th>Title</th><th>Message</th><th>By</th></tr>`;
+            tbody.innerHTML = data.map(r => `<tr><td>${r.id}</td><td>${r.date}</td><td>${r.title}</td><td>${r.msg}</td><td>${r.by}</td></tr>`).join('');
         }
+    }
 
-        thead.innerHTML = headHTML;
-        tbody.innerHTML = bodyHTML;
+    // --- NEW: PROBLEM POPUP & SAVE AS IMAGE ---
+    function showProblemPop(r) {
+       document.getElementById('pop-title').innerText = r.issue;
+       document.getElementById('pop-date').innerText = "Reported on: " + r.date;
+       document.getElementById('pop-tl').innerText = r.tl;
+       document.getElementById('pop-br').innerText = r.branch;
+       document.getElementById('pop-urg').innerText = r.urg;
+       document.getElementById('pop-desc').innerText = r.desc;
+       const imgCont = document.getElementById('pop-img-container');
+       imgCont.innerHTML = (r.img && r.img !== 'No Image') ? `<img src="${r.img}" class="pop-img">` : '<p style="margin-top:10px; color:#999;">No image attached.</p>';
+       document.getElementById('problem-pop').classList.add('open');
+    }
+
+    function saveAsImage() {
+       const area = document.getElementById('pop-capture-area');
+       html2canvas(area, { useCORS: true }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'Problem_Report.png';
+          link.href = canvas.toDataURL();
+          link.click();
+       });
     }
 
     function checkIssue(el) {

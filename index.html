@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leaders</title>
+  <title>BON Cafe | Team Leader</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- NEW: Include html2canvas for Save as Image feature -->
@@ -165,18 +165,18 @@
         font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
     }
 
-    /* --- NEW FEATURES CSS: GLOWING AND NOTIFICATIONS --- */
-    @keyframes taskGlow {
-      0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; }
-      50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); border-color: #fca5a5; }
-      100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; }
+    /* --- GLOWING EFFECTS --- */
+    @keyframes taskPulseGlow {
+      0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.3); border-color: #ef4444; }
+      50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.7); border-color: #fca5a5; }
+      100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.3); border-color: #ef4444; }
     }
-    .glowing-task {
+    .glow-alert {
+      animation: taskPulseGlow 1.5s infinite ease-in-out !important;
       border: 2px solid #ef4444 !important;
-      border-left: 8px solid #ef4444 !important;
-      animation: taskGlow 1.5s infinite ease-in-out;
     }
 
+    /* Admin Tab Badge style */
     .tab-notify {
       position: absolute; top: -5px; right: -5px;
       background: var(--danger); color: white; border-radius: 50%;
@@ -465,7 +465,8 @@
         </div>
 
         <div class="category-list tl-only">
-            <div class="cat-card" onclick="showTab('announce-view')"><i class="material-icons">campaign</i><span>Announcements</span></div>
+            <!-- Homepage card ID for glowing red effect -->
+            <div class="cat-card" id="home-announce-card" onclick="showTab('announce-view')"><i class="material-icons">campaign</i><span>Announcements</span></div>
             <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
             <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task Checklist</span></div>
             <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task Report</span></div>
@@ -493,11 +494,43 @@
 
       <!-- ANNOUNCEMENTS VIEW -->
       <div id="announce-view" class="form-section">
-         <h2>Team Announcements</h2>
+         <h2>Team Announcements & Tasks</h2>
          <div id="announcement-list">Loading...</div>
       </div>
 
-      <!-- ADMIN POST ANNOUNCEMENT -->
+      <!-- ADMIN DASHBOARD -->
+      <div id="admin-dash" class="form-section" style="max-width:1400px;">
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 style="margin:0;">Global Dashboard</h2>
+            <!-- Button to open Assign Task modal -->
+            <button class="c-btn c-btn-primary" style="flex:none; width:auto; padding:10px 20px;" onclick="openAssignTaskModal()">Assign Task</button>
+         </div>
+         <div class="admin-nav">
+             <button class="admin-tab-btn active" onclick="switchAdminTab('Daily Task')">Daily Task</button>
+             <button class="admin-tab-btn" onclick="switchAdminTab('Weekly Task')">Weekly Task</button>
+             <!-- Added IDs for notification marks -->
+             <button class="admin-tab-btn" id="tab-Problems" onclick="switchAdminTab('Problems')">Problems</button>
+             <button class="admin-tab-btn" onclick="switchAdminTab('Vacation')">Vacations</button>
+             <button class="admin-tab-btn" onclick="switchAdminTab('Trainings')">Trainings</button>
+             <!-- New Tab: Task History -->
+             <button class="admin-tab-btn" id="tab-TaskHistory" onclick="switchAdminTab('Task History')">Task History</button>
+             <button class="admin-tab-btn" onclick="switchAdminTab('Announcement')">Announcement</button>
+         </div>
+         <div class="admin-filters">
+            <div><label>Start</label><input type="date" id="ad-start"></div>
+            <div><label>End</label><input type="date" id="ad-end"></div>
+            <div><label>TL Name/ID</label><input type="text" id="ad-tl"></div>
+            <div><label>Trainee Name</label><input type="text" id="ad-mem"></div>
+            <div><label>Branch</label><select id="ad-branch" class="db-branch"></select></div>
+            <div><label>Sup</label><select id="ad-sup" class="db-sup"></select></div>
+            <div><label>AM</label><select id="ad-am" class="db-am"></select></div>
+            <div style="display:flex; align-items:end;"><button class="submit-btn" style="margin-top:auto;" onclick="loadAdminData()">Apply</button></div>
+         </div>
+         <div class="table-responsive">
+            <table class="history-table"><thead id="ad-thead"></thead><tbody id="ad-tbody"></tbody></table>
+         </div>
+      </div>
+
       <div id="admin-post-ann" class="form-section">
          <h2>Create New Announcement</h2>
          <form onsubmit="handleDynamicSubmit(event, 'Announcements')">
@@ -534,38 +567,6 @@
          <div class="table-responsive"><table class="history-table"><thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead><tbody id="tl-daily-body"></tbody></table></div>
          <h3 style="margin-top:25px;">Weekly Tasks</h3>
          <div class="table-responsive"><table class="history-table"><thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead><tbody id="tl-weekly-body"></tbody></table></div>
-      </div>
-
-      <!-- NEW ADMIN DASHBOARD -->
-      <div id="admin-dash" class="form-section" style="max-width:1400px;">
-         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 style="margin:0;">Global Dashboard</h2>
-            <!-- Button to open Assign Task modal -->
-            <button class="c-btn c-btn-primary" style="flex:none; width:auto; padding:10px 20px;" onclick="openAssignTaskModal()">Assign Task</button>
-         </div>
-         <div class="admin-nav">
-             <button class="admin-tab-btn active" onclick="switchAdminTab('Daily Task')">Daily Task</button>
-             <button class="admin-tab-btn" onclick="switchAdminTab('Weekly Task')">Weekly Task</button>
-             <button class="admin-tab-btn" id="tab-Problems" onclick="switchAdminTab('Problems')">Problems</button>
-             <button class="admin-tab-btn" onclick="switchAdminTab('Vacation')">Vacations</button>
-             <button class="admin-tab-btn" onclick="switchAdminTab('Trainings')">Trainings</button>
-             <!-- New Tab: Task History -->
-             <button class="admin-tab-btn" id="tab-TaskHistory" onclick="switchAdminTab('Task History')">Task History</button>
-             <button class="admin-tab-btn" onclick="switchAdminTab('Announcement')">Announcement</button>
-         </div>
-         <div class="admin-filters">
-            <div><label>Start</label><input type="date" id="ad-start"></div>
-            <div><label>End</label><input type="date" id="ad-end"></div>
-            <div><label>TL Name/ID</label><input type="text" id="ad-tl"></div>
-            <div><label>Trainee Name</label><input type="text" id="ad-mem"></div>
-            <div><label>Branch</label><select id="ad-branch" class="db-branch"></select></div>
-            <div><label>Sup</label><select id="ad-sup" class="db-sup"></select></div>
-            <div><label>AM</label><select id="ad-am" class="db-am"></select></div>
-            <div style="display:flex; align-items:end;"><button class="submit-btn" style="margin-top:auto;" onclick="loadAdminData()">Apply</button></div>
-         </div>
-         <div class="table-responsive">
-            <table class="history-table"><thead id="ad-thead"></thead><tbody id="ad-tbody"></tbody></table>
-         </div>
       </div>
 
       <div id="daily" class="form-section">
@@ -672,7 +673,6 @@
         </div>
       </div>
 
-      <!-- TRAINEE REGISTRATION FORM -->
       <div id="trainee-reg-view" class="form-section">
         <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
         <h2>Register Team Member</h2>
@@ -855,7 +855,6 @@
 
        if(window.innerWidth <= 768) {
            document.getElementById('sidebar').classList.remove('mobile-open');
-           document.getElementById('mobile-close-btn').style.display = 'none';
        }
 
        if(pushState) {
@@ -866,7 +865,7 @@
        if(id === 'training-course-view') loadTrainingCourses();
        if(id === 'admin-dash' && isAdminMode) {
           loadAdminData();
-          updateAdminTabBadges(); // NEW: Check for notifications
+          updateAdminTabBadges(); // FEATURE: Admin badges check
        }
     }
 
@@ -890,7 +889,7 @@
            
            // WELCOME POPUP
            const firstName = currentUser.name.split(' ')[0];
-           showModal('success', `Welcome, ${firstName}!`, "Start your day with a smile and positivity");
+           showModal('success', `Welcome, ${firstName}!`, "Portal Access Granted");
 
            initApp();
            window.history.replaceState({tab: 'landing'}, "", "#landing");
@@ -940,248 +939,196 @@
         const sb = document.getElementById('sidebar');
         if(window.innerWidth <= 768) {
             sb.classList.toggle('mobile-open');
-            document.getElementById('mobile-close-btn').style.display = sb.classList.contains('mobile-open') ? 'block' : 'none';
         } else {
             sb.classList.toggle('closed'); 
             document.getElementById('main-wrapper').classList.toggle('full'); 
         }
     }
 
-    // --- ANNOUNCEMENT SYSTEM ---
+    // --- ANNOUNCEMENT SYSTEM WITH GLOWING LOGIC ---
     async function fetchAnnouncements() {
         const listDiv = document.getElementById('announcement-list');
         const badge = document.getElementById('bell-count');
+        const homeAnnBtn = document.getElementById('home-announce-card');
         
         const res = await fetchAPI('getAnnouncements', {userId: currentUser.id});
-        activeAnnouncements = res;
 
-        const unread = res.filter(a => !a.isRead && a.type !== 'task').length;
-        if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } 
+        // GLOWING CALCULATIONS
+        const unreadAnn = res.filter(a => a.type === 'ann' && !a.isRead).length;
+        const pendingTasks = res.filter(a => a.type === 'task' && a.status === 'Pending').length;
+        const totalAlerts = unreadAnn + pendingTasks;
+
+        // Toggle Homepage Button Glow
+        if(homeAnnBtn) {
+           if(totalAlerts > 0) homeAnnBtn.classList.add('glow-alert');
+           else homeAnnBtn.classList.remove('glow-alert');
+        }
+
+        // Toggle Sidebar Bell Badge
+        if(totalAlerts > 0) { badge.style.display = 'flex'; badge.innerText = totalAlerts; } 
         else { badge.style.display = 'none'; }
 
-        if(res.length === 0) { listDiv.innerHTML = '<p style="text-align:center;color:#666;">No active announcements.</p>'; return; }
+        if(res.length === 0) { listDiv.innerHTML = '<p style="text-align:center;color:#666;">No active updates.</p>'; return; }
 
         listDiv.innerHTML = res.map(a => {
             if(a.type === 'task') {
-               // FEATURE 1: Glow red if Pending
-               const isGlow = a.status === 'Pending' ? 'glowing-task' : '';
+               // Apply glow class if pending
+               const isGlow = a.status === 'Pending' ? 'glow-alert' : '';
                return `
                <div class="announce-card ${isGlow}" style="border-left-color:red;">
-                  <span class="tagged-badge">Tagged Task</span>
+                  <span class="tagged-badge">Direct Task from Admin</span>
                   <div class="ac-header"><span class="ac-date">${a.date}</span></div>
-                  <div class="ac-title">Direct Task from Admin</div>
                   <div class="ac-msg" style="font-weight:600;">${a.message}</div>
                   <div id="reply-box-${a.id}" class="reply-area">
                      ${a.status === 'Pending' ? `
-                        <input type="text" id="inp-${a.id}" placeholder="Type your reply here..." style="margin-bottom:10px;">
+                        <input type="text" id="inp-${a.id}" placeholder="Type reply here..." style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;">
                         <button class="ac-btn-read" onclick="replyToTask('${a.id}')">Reply to Task</button>
-                        <button class="ac-btn-read" style="background:gray; margin-left:5px;" onclick="taskOk('${a.id}')">Mark as OK</button>
-                     ` : `<span class="ac-read-badge">Status: ${a.status} ${a.reply? '- '+a.reply : ''}</span>`}
+                        <button class="ac-btn-read" style="background:gray; margin-left:5px;" onclick="taskOk('${a.id}')">Mark OK</button>
+                     ` : `<span class="ac-read-badge">Completed: ${a.status} ${a.reply? '- '+a.reply : ''}</span>`}
                   </div>
                </div>`;
             } else {
+               const isGlow = !a.isRead ? 'glow-alert' : '';
                return `
-               <div class="announce-card">
+               <div class="announce-card ${isGlow}">
                   <div class="ac-header">
                       <span class="ac-date">${a.date}</span>
                       ${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}
                   </div>
                   <div class="ac-title">${a.title}</div>
                   <div class="ac-msg">${a.message}</div>
-                  ${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}
+                  ${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark Read</button>` : ''}
                </div>`;
             }
         }).join('');
     }
 
-    async function readAnnouncement(id, btn) {
-        btn.innerText = "Processing...";
-        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json());
-        if(res.success) {
-            fetchAnnouncements();
-        }
-    }
-
-    // --- NEW: REPLY AND OK LOGIC FOR TASKS ---
     async function replyToTask(id) {
        const rep = document.getElementById('inp-'+id).value;
-       if(!rep) return alert("Please write a reply");
+       if(!rep) return alert("Write a reply");
        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'replyTask', taskId:id, reply:rep})}).then(r=>r.json());
-       if(res.success) {
-          showModal('success', 'Replied', 'Your response has been sent to Admin');
-          fetchAnnouncements();
-       }
+       if(res.success) fetchAnnouncements();
     }
     async function taskOk(id) {
        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'taskOk', taskId:id})}).then(r=>r.json());
        if(res.success) fetchAnnouncements();
     }
-
-    // --- TRAINING COURSE SYSTEM (NEW) ---
-    async function loadTrainingCourses() {
-        const listDiv = document.getElementById('course-list');
-        listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Loading courses...</div>';
-        
-        const res = await fetchAPI('getTrainingCourses', {userId: currentUser.id});
-        
-        if(!res || res.length === 0) {
-            listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">No courses available.</div>';
-            return;
-        }
-
-        listDiv.innerHTML = res.map(c => `
-           <div class="course-card">
-              <i class="material-icons course-type-icon">${c.type === 'Video' ? 'play_circle_filled' : 'picture_as_pdf'}</i>
-              <div class="course-title">${c.title}</div>
-              <div class="course-meta">${c.type}</div>
-              <div class="course-btn ${c.isDone ? 'done' : ''}" onclick="handleCourseClick('${c.id}', '${c.link}', '${c.title}', ${c.isDone})">
-                  ${c.isDone ? 'Completed' : 'View Material'}
-              </div>
-           </div>
-        `).join('');
+    async function readAnnouncement(id, btn) {
+        btn.innerText = "Processing...";
+        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json());
+        if(res.success) fetchAnnouncements();
     }
 
-    async function handleCourseClick(id, link, title, isDone) {
-        openViewer(link, title);
-        if(!isDone) {
-            setTimeout(() => {
-                showModal('confirm', 'Finish Course?', 'Did you complete reading/watching this material?', async () => {
-                    const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({
-                        action: 'markCourseDone', 
-                        courseId: id, 
-                        userId: currentUser.id, 
-                        userName: currentUser.name
-                    })}).then(r=>r.json());
-                    if(res.success) {
-                        loadTrainingCourses();
-                        showModal('success', 'Great Job!', 'Course marked as completed.');
-                    }
-                });
-            }, 3000);
-        }
-    }
+    // --- ADMIN NOTIFICATION BADGES ---
+    async function updateAdminTabBadges() {
+       if(currentUser.role !== 'Admin') return;
+       
+       // Problems badge logic (Reports today)
+       const probRes = await fetchAPI('getDashboardData', { role:'Admin', category:'Problems' });
+       const todayStr = new Date().toLocaleDateString();
+       const newProbs = probRes.categoryData.filter(r => r.date === todayStr).length;
+       const probTab = document.getElementById('tab-Problems');
+       if(probTab) {
+          const old = probTab.querySelector('.tab-notify'); if(old) old.remove();
+          if(newProbs > 0 && currentAdminTab !== 'Problems') probTab.innerHTML += `<span class="tab-notify">${newProbs}</span>`;
+       }
 
-    function renderDailyQuestions(id, qs) {
-        document.getElementById(id).innerHTML = qs.map((q,i) => `
-          <div class="question-block">
-             <div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-             <div class="q-options">
-               <label><input type="radio" name="daily_q_${i}" value="Yes" onchange="toggleDaily(${i}, 'Yes')" required> Yes</label>
-               <label><input type="radio" name="daily_q_${i}" value="No" onchange="toggleDaily(${i}, 'No')"> No</label>
-               <label><input type="radio" name="daily_q_${i}" value="N/A" onchange="toggleDaily(${i}, 'NA')"> N/A</label>
-             </div>
-             <div id="daily_hide_${i}" class="hidden-input"><input type="text" name="daily_reason_${i}" placeholder="Explain why No..."></div>
-          </div>`).join('');
-    }
-    function toggleDaily(i, val) {
-        document.getElementById(`daily_hide_${i}`).style.display = (val === 'No') ? 'block' : 'none';
-        const inp = document.querySelector(`#daily_hide_${i} input`);
-        if(inp) inp.required = (val === 'No');
-    }
-
-    function renderWeeklyQuestions(id, qs) {
-        let html = '';
-        qs.forEach((q, i) => {
-            if(i === 0) {
-                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-                   <div class="q-options">
-                     <label><input type="radio" name="weekly_q_0" value="Yes" onchange="toggleWeekly(0, 'Yes')" required> Yes</label>
-                     <label><input type="radio" name="weekly_q_0" value="No" onchange="toggleWeekly(0, 'No')"> No</label>
-                   </div>
-                   <div id="weekly_hide_0" class="hidden-input"><input type="text" name="weekly_detail_0" placeholder="Please provide details..."></div>
-                </div>`;
-            } else {
-                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><textarea name="weekly_q_${i}" rows="2" placeholder="Your answer here..." required></textarea></div>`;
-            }
-        });
-        document.getElementById(id).innerHTML = html;
-    }
-    function toggleWeekly(i, val) {
-        document.getElementById(`weekly_hide_${i}`).style.display = (val === 'Yes') ? 'block' : 'none';
-        const inp = document.querySelector(`#weekly_hide_${i} input`);
-        if(inp) inp.required = (val === 'Yes');
-    }
-
-    async function loadTraineesAndOpenDay(day) {
-        showTab('training-dynamic');
-        document.getElementById('training-title').innerText = "Training Day " + day;
-        document.getElementById('train-cat').value = "Training Day " + day;
-        document.getElementById('trainee-dropdown').innerHTML = '<option value="" disabled selected>Loading IDs...</option>';
-        document.getElementById('t-name-auto').value = "";
-        document.getElementById('t-email-auto').value = "";
-        globalTraineeList = await fetchAPI('getTraineeList');
-        const dd = document.getElementById('trainee-dropdown');
-        if(globalTraineeList.length > 0) {
-           dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + 
-                          globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join('');
-        } else {
-           dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
-        }
-        const div = document.getElementById('questions-container');
-        div.innerHTML = 'Loading...';
-        const qs = await fetchAPI('getTrainingQuestions', {day: day});
-        div.innerHTML = qs.map((q,i) => `
-           <div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-           <div class="q-options">
-             <label><input type="radio" name="q_${i}" value="Pass" required> Pass</label>
-             <label><input type="radio" name="q_${i}" value="Fail"> Fail</label>
-             <label><input type="radio" name="q_${i}" value="Retrain"> Retrain</label>
-           </div></div>`).join('');
-    }
-
-    function onTraineeSelect(el) {
-       const selectedId = el.value;
-       const trainee = globalTraineeList.find(t => String(t.id) === String(selectedId));
-       if (trainee) {
-          document.getElementById('t-name-auto').value = trainee.name;
-          document.getElementById('t-email-auto').value = trainee.email;
+       // Task History badge logic (Replies sent by TL)
+       const tasks = await fetchAPI('getAdminTasks');
+       const newReps = tasks.filter(t => t.status === 'Replied').length;
+       const historyTab = document.getElementById('tab-TaskHistory');
+       if(historyTab) {
+          const old = historyTab.querySelector('.tab-notify'); if(old) old.remove();
+          if(newReps > 0 && currentAdminTab !== 'Task History') historyTab.innerHTML += `<span class="tab-notify">${newReps}</span>`;
        }
     }
 
-    async function fetchHistory() {
-      const id = document.getElementById('hist-id').value;
-      const data = await fetchAPI('getTrainingHistory', {
-          id:id, start:document.getElementById('hist-start').value, 
-          end:document.getElementById('hist-end').value,
-          viewerName: currentUser.name, role: currentUser.role
-      });
-      document.getElementById('history-body').innerHTML = data.length ? data.map(r=>`<tr><td>${r.date}</td><td><span class="done-tag">${r.day}</span></td><td>${r.name}</td><td>${r.id}</td><td>${r.trainer}</td><td>${r.notes}</td></tr>`).join('') : '<tr><td colspan="6">No records</td></tr>';
-      const trainees = {};
-      data.forEach(r => { if(!trainees[r.id]) trainees[r.id] = {name:r.name, days:new Set()}; const dNum = r.day.match(/\d+/); if(dNum) trainees[r.id].days.add(parseInt(dNum[0])); });
-      let pHTML = '';
-      for (const [tid, info] of Object.entries(trainees)) {
-         const pct = Math.min((info.days.size / 9)*100, 100);
-         pHTML += `
-         <div class="progress-card">
-            <div class="p-header"><span>${info.name}</span><span>${info.days.size}/9</span></div>
-            <div class="p-sub">ID: ${tid}</div>
-            <div class="p-track-history">
-               <div class="p-fill-history" style="width:${pct}%">
-                  <i class="material-icons coffee-marker">local_cafe</i>
-               </div>
-            </div>
-            <div class="p-text-history">${Math.round(pct)}% Completed</div>
-         </div>`;
-      }
-      document.getElementById('progress-grid').innerHTML = pHTML;
-      document.getElementById('progress-section').style.display = pHTML ? 'block' : 'none';
+    // --- ADMIN DASHBOARD LOGIC ---
+    function switchAdminTab(tab) {
+        currentAdminTab = tab;
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.toggle('active', btn.innerText === tab));
+        loadAdminData();
+        updateAdminTabBadges();
     }
 
-    async function loadTLData() {
-       document.getElementById('tl-name').innerText = currentUser.name;
-       document.getElementById('tl-id').innerText = "ID: " + currentUser.id;
-       document.getElementById('tl-pic').src = currentUser.image || "https://via.placeholder.com/100";
-       const res = await fetchAPI('getDashboardData', {viewerId:currentUser.id, role:'User', start:document.getElementById('tl-start').value, end:document.getElementById('tl-end').value});
-       const score = Math.min(100, (res.daily.length * 5) + (res.weekly.length * 10));
-       document.getElementById('tl-bar').style.width = score + "%";
-       document.getElementById('tl-score').innerText = score + "%";
-       const dailyHTML = res.daily.length ? res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
-       const weeklyHTML = res.weekly.length ? res.weekly.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
-       document.getElementById('tl-daily-body').innerHTML = dailyHTML;
-       document.getElementById('tl-weekly-body').innerHTML = weeklyHTML;
+    async function loadAdminData() {
+        const tbody = document.getElementById('ad-tbody');
+        const thead = document.getElementById('ad-thead');
+        tbody.innerHTML = '<tr><td colspan="8">Loading data...</td></tr>';
+        
+        if(currentAdminTab === 'Task History') {
+           const tasks = await fetchAPI('getAdminTasks');
+           thead.innerHTML = '<tr><th>Date</th><th>TL Name</th><th>Task</th><th>Status</th><th>TL Response</th><th>Action</th></tr>';
+           tbody.innerHTML = tasks.map(t => `
+              <tr>
+                 <td>${t.date}</td><td>${t.tlName}</td><td>${t.task}</td>
+                 <td><span class="status-badge" style="background:${t.status==='Replied'?'#3b82f6':(t.status==='Pending'?'#fee2e2':'#d1fae5')}; color:${t.status==='Replied'?'white':''};">${t.status}</span></td>
+                 <td>${t.reply || '-'}</td>
+                 <td>${t.reply ? `<button class="submit-btn" style="padding:4px 8px; font-size:10px; width:auto;" onclick="showModal('success', 'Response', '${t.tlName} replied: ${t.reply}')">View</button>` : ''}</td>
+              </tr>
+           `).join('');
+           return;
+        }
+
+        const filters = {
+            role: 'Admin', category: currentAdminTab, 
+            start: document.getElementById('ad-start').value, end: document.getElementById('ad-end').value,
+            tlName: document.getElementById('ad-tl').value,
+            branch: document.getElementById('ad-branch').value,
+            sup: document.getElementById('ad-sup').value,
+            am: document.getElementById('ad-am').value
+        };
+
+        const res = await fetchAPI('getDashboardData', filters);
+        const data = res.categoryData;
+
+        if (currentAdminTab === 'Problems') {
+           thead.innerHTML = '<tr><th>Date</th><th>Image</th><th>TL</th><th>Branch</th><th>Issue</th><th>Urgency</th></tr>';
+           tbody.innerHTML = data.map(r => `
+              <tr class="clickable-row" onclick="showProblemPop(${JSON.stringify(r).replace(/"/g, '&quot;')})">
+                 <td>${r.date}</td>
+                 <td style="text-align:center;">${r.img && r.img !== 'No Image' ? `<img src="${r.img}" class="table-img-icon">` : '-'}</td>
+                 <td>${r.tl}</td><td>${r.branch}</td><td>${r.issue}</td><td>${r.urg}</td>
+              </tr>
+           `).join('');
+        } else {
+           thead.innerHTML = '<tr><th>Date</th><th>TL</th><th>Branch</th><th>Supervisor</th><th>Status</th></tr>';
+           tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>Submitted</td></tr>`).join('');
+        }
     }
 
-    // --- NEW: ASSIGN TASK MODAL LOGIC ---
+    // --- POP-UP & SAVE AS IMAGE FIX ---
+    async function showProblemPop(r) {
+       document.getElementById('pop-title').innerText = r.issue;
+       document.getElementById('pop-tl').innerText = r.tl;
+       document.getElementById('pop-br').innerText = r.branch;
+       document.getElementById('pop-urg').innerText = r.urg;
+       document.getElementById('pop-desc').innerText = r.desc;
+       document.getElementById('pop-date').innerText = "Reported: " + r.date;
+       const imgCont = document.getElementById('pop-img-container');
+       imgCont.innerHTML = "Loading image...";
+       document.getElementById('problem-pop').classList.add('open');
+
+       if(r.img && r.img !== 'No Image') {
+          try {
+             const resp = await fetchAPI('getBase64Image', { url: r.img });
+             if(resp.base64) imgCont.innerHTML = `<img src="${resp.base64}" class="pop-img">`;
+             else imgCont.innerHTML = 'Image failed.';
+          } catch(e) { imgCont.innerHTML = "Error."; }
+       } else { imgCont.innerHTML = 'No image attached.'; }
+    }
+
+    function saveAsImage() {
+       const area = document.getElementById('pop-capture-area');
+       html2canvas(area, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'Report_' + new Date().getTime() + '.png';
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+       });
+    }
+
+    // --- TASK ASSIGNMENT UI ---
     async function openAssignTaskModal() {
        const drop = await fetchAPI('getGlobalDropdowns');
        const sel = document.getElementById('task-tl-names');
@@ -1192,154 +1139,16 @@
     async function submitAssignedTask() {
        const tl = document.getElementById('task-tl-names').value;
        const msg = document.getElementById('task-msg').value;
-       if(!msg) return alert("Please write a task");
+       if(!msg) return alert("Write a task");
        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'assignTask', tlName:tl, task:msg, adminName:currentUser.name})}).then(r=>r.json());
        if(res.success) {
           document.getElementById('assign-task-pop').classList.remove('open');
-          showModal('success', 'Success', 'Task assigned successfully to ' + tl);
+          showModal('success', 'Assigned', 'Task sent to ' + tl);
           document.getElementById('task-msg').value = "";
        }
     }
 
-    // --- ADMIN DASHBOARD LOGIC ---
-    function switchAdminTab(tab) {
-        currentAdminTab = tab;
-        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.innerText === tab);
-        });
-        loadAdminData();
-        updateAdminTabBadges(); // NEW: Clear badges when clicking the tab
-    }
-
-    // FEATURE 2: Admin Notification Badges
-    async function updateAdminTabBadges() {
-       // Check for Problems reported today
-       const probRes = await fetchAPI('getDashboardData', { role:'Admin', category:'Problems' });
-       const today = new Date().toLocaleDateString();
-       const newProbs = probRes.categoryData.filter(r => r.date === today).length;
-       const probTab = document.getElementById('tab-Problems');
-       if(probTab) {
-          const oldBadge = probTab.querySelector('.tab-notify');
-          if(oldBadge) oldBadge.remove();
-          if(newProbs > 0 && currentAdminTab !== 'Problems') probTab.innerHTML += `<span class="tab-notify">${newProbs}</span>`;
-       }
-
-       // Check for Tasks that have a Reply
-       const taskHistory = await fetchAPI('getAdminTasks');
-       const newReplies = taskHistory.filter(t => t.status === 'Replied').length;
-       const historyTab = document.getElementById('tab-TaskHistory');
-       if(historyTab) {
-          const oldBadge = historyTab.querySelector('.tab-notify');
-          if(oldBadge) oldBadge.remove();
-          if(newReplies > 0 && currentAdminTab !== 'Task History') historyTab.innerHTML += `<span class="tab-notify">${newReplies}</span>`;
-       }
-    }
-
-    async function loadAdminData() {
-        const tbody = document.getElementById('ad-tbody');
-        const thead = document.getElementById('ad-thead');
-        tbody.innerHTML = '<tr><td colspan="8">Loading data...</td></tr>';
-        
-        // Custom Logic for New Task History Tab
-        if(currentAdminTab === 'Task History') {
-           const tasks = await fetchAPI('getAdminTasks');
-           thead.innerHTML = '<tr><th>Date</th><th>TL Name</th><th>Task</th><th>Status</th><th>TL Response</th><th>Action</th></tr>';
-           tbody.innerHTML = tasks.map(t => `
-              <tr>
-                 <td>${t.date}</td><td>${t.tlName}</td><td>${t.task}</td>
-                 <td><span class="status-badge" style="background:${t.status==='Replied'?'#3b82f6':(t.status==='Pending'?'#fee2e2':'#d1fae5')}; color:${t.status==='Replied'?'white':''};">${t.status}</span></td>
-                 <td>${t.reply || '-'}</td>
-                 <td>${t.reply ? `<button class="ac-btn-read" style="padding:4px 8px; font-size:10px;" onclick="showModal('success', 'Team Leader Response', '${t.tlName} replied: ${t.reply}')">View Reply</button>` : ''}</td>
-              </tr>
-           `).join('');
-           return;
-        }
-
-        const filters = {
-            role: 'Admin', category: currentAdminTab, start: document.getElementById('ad-start').value, end: document.getElementById('ad-end').value,
-            tlName: document.getElementById('ad-tl').value, memName: document.getElementById('ad-mem').value,
-            branch: document.getElementById('ad-branch').value, sup: document.getElementById('ad-sup').value, am: document.getElementById('ad-am').value
-        };
-
-        const res = await fetchAPI('getDashboardData', filters);
-        const data = res.categoryData;
-
-        if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>';
-            return;
-        }
-
-        if (currentAdminTab === 'Daily Task' || currentAdminTab === 'Weekly Task') {
-            thead.innerHTML = `<tr><th>Date</th><th>Team Leader</th><th>Branch</th><th>Supervisor</th><th>Area Manager</th><th>Status</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.am}</td><td><span class="status-badge">${r.status}</span></td></tr>`).join('');
-        } 
-        else if (currentAdminTab === 'Problems') {
-            // Updated Problems Table: Icon and Clickable row
-            thead.innerHTML = `<tr><th>Date</th><th>Image</th><th>Team Leader</th><th>Branch</th><th>Sup</th><th>Issue</th><th>Urgency</th></tr>`;
-            tbody.innerHTML = data.map(r => `
-                <tr class="clickable-row" onclick="showProblemPop(${JSON.stringify(r).replace(/"/g, '&quot;')})">
-                    <td>${r.date}</td>
-                    <td style="text-align:center;">${r.img && r.img !== 'No Image' ? `<img src="${r.img}" class="table-img-icon">` : '-'}</td>
-                    <td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.issue}</td><td>${r.urg}</td>
-                </tr>
-            `).join('');
-        }
-        else if (currentAdminTab === 'Vacations') {
-            thead.innerHTML = `<tr><th>Req Date</th><th>Team Leader</th><th>Start Date</th><th>End Date</th><th>Reason</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.start}</td><td>${r.end}</td><td>${r.reason}</td></tr>`).join('');
-        }
-        else if (currentAdminTab === 'Trainings') {
-            thead.innerHTML = `<tr><th>Date</th><th>Day</th><th>Trainer (TL)</th><th>Trainee</th><th>ID</th><th>Notes</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.day}</td><td>${r.trainer}</td><td>${r.trainee}</td><td>${r.id}</td><td>${r.notes}</td></tr>`).join('');
-        }
-        else if (currentAdminTab === 'Announcement') {
-            thead.innerHTML = `<tr><th>ID</th><th>Date</th><th>Title</th><th>Message</th><th>By</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.id}</td><td>${r.date}</td><td>${r.title}</td><td>${r.msg}</td><td>${r.by}</td></tr>`).join('');
-        }
-    }
-
-    // --- NEW: PROBLEM POPUP & SAVE AS IMAGE ---
-    async function showProblemPop(r) {
-       document.getElementById('pop-title').innerText = r.issue;
-       document.getElementById('pop-date').innerText = "Reported on: " + r.date;
-       document.getElementById('pop-tl').innerText = r.tl;
-       document.getElementById('pop-br').innerText = r.branch;
-       document.getElementById('pop-urg').innerText = r.urg;
-       document.getElementById('pop-desc').innerText = r.desc;
-       
-       const imgCont = document.getElementById('pop-img-container');
-       imgCont.innerHTML = "Loading image...";
-       document.getElementById('problem-pop').classList.add('open');
-
-       if(r.img && r.img !== 'No Image') {
-          try {
-             const resp = await fetchAPI('getBase64Image', { url: r.img });
-             if(resp.base64) {
-                imgCont.innerHTML = `<img src="${resp.base64}" class="pop-img">`;
-             } else {
-                imgCont.innerHTML = '<p style="color:#999;">Image load failed.</p>';
-             }
-          } catch(e) { imgCont.innerHTML = "Error loading image."; }
-       } else {
-          imgCont.innerHTML = '<p style="margin-top:10px; color:#999;">No image attached.</p>';
-       }
-    }
-
-    function saveAsImage() {
-       const area = document.getElementById('pop-capture-area');
-       html2canvas(area, { 
-          useCORS: true, 
-          allowTaint: true,
-          scale: 2,
-          backgroundColor: "#ffffff"
-       }).then(canvas => {
-          const link = document.createElement('a');
-          link.download = 'Problem_Report_' + new Date().getTime() + '.png';
-          link.href = canvas.toDataURL("image/png");
-          link.click();
-       });
-    }
-
+    // --- OTHER LOGIC ---
     function checkIssue(el) {
        const v = el.value;
        document.getElementById('div-oth').style.display = (v === 'Others') ? 'block' : 'none';
@@ -1349,8 +1158,7 @@
 
     async function handleProblem(e) {
        e.preventDefault();
-       const btn = e.target.querySelector('button');
-       btn.innerText = "Uploading..."; btn.disabled = true;
+       const btn = e.target.querySelector('button'); btn.innerText = "Uploading..."; btn.disabled = true;
        const fd = new FormData(e.target);
        const obj = { category: "Report Problem", name: currentUser.name, empId: currentUser.id };
        fd.forEach((v,k) => obj[k] = v);
@@ -1364,8 +1172,7 @@
 
     async function handleDynamicSubmit(e, cat) {
        e.preventDefault();
-       const btn = e.target.querySelector('button');
-       btn.innerText = "Saving..."; btn.disabled = true;
+       const btn = e.target.querySelector('button'); btn.innerText = "Saving..."; btn.disabled = true;
        const fd = new FormData(e.target);
        const obj = { category: cat, name: currentUser.name, empId: currentUser.id };
        fd.forEach((v,k) => obj[k] = v);
@@ -1374,26 +1181,66 @@
 
     async function postData(obj, btn, form) {
        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json());
-       btn.innerText = (obj.category === 'Trainee Registration') ? "Save Team Member" : "Submit"; 
-       btn.disabled = false;
-       if(res.success) { 
-           showModal('success', 'Success', res.message);
-           form.reset(); 
-           if(obj.category === 'Trainee Registration') showTab('training-dash');
-           if(!obj.category.includes('Admin')) loadTLData();
-       } else {
-           showModal('error', 'Error', res.message);
-       }
+       btn.innerText = "Submit"; btn.disabled = false;
+       if(res.success) { showModal('success', 'Success', res.message); form.reset(); if(!obj.category.includes('Admin')) loadTLData(); }
+       else { showModal('error', 'Error', res.message); }
     }
 
-    function confirmTraining() { showTab('training-dash'); }
-    function showHistory() { showTab('history-view'); fetchHistory(); }
-    let slideIndex=0; function showSlides(){let s=document.getElementsByClassName("slide"); if(!s.length)return; for(let i=0;i<s.length;i++)s[i].classList.remove("active-slide"); slideIndex++; if(slideIndex>s.length)slideIndex=1; s[slideIndex-1].classList.add("active-slide"); setTimeout(showSlides, 4000);} showSlides();
+    async function loadTrainingCourses() {
+        const listDiv = document.getElementById('course-list'); listDiv.innerHTML = 'Loading...';
+        const res = await fetchAPI('getTrainingCourses', {userId: currentUser.id});
+        listDiv.innerHTML = res.map(c => `
+           <div class="course-card">
+              <i class="material-icons course-type-icon">${c.type === 'Video' ? 'play_circle' : 'picture_as_pdf'}</i>
+              <div class="course-title">${c.title}</div>
+              <div class="course-btn ${c.isDone ? 'done' : ''}" onclick="handleCourseClick('${c.id}', '${c.link}', '${c.title}', ${c.isDone})">${c.isDone ? 'Done' : 'View'}</div>
+           </div>`).join('');
+    }
+
+    async function handleCourseClick(id, link, title, isDone) {
+        openViewer(link, title);
+        if(!isDone) {
+            setTimeout(() => {
+                showModal('confirm', 'Done?', 'Did you finish?', async () => {
+                    await fetch(API_URL, {method:'POST', body:JSON.stringify({action: 'markCourseDone', courseId: id, userId: currentUser.id, userName: currentUser.name})}).then(r=>r.json());
+                    loadTrainingCourses();
+                });
+            }, 3000);
+        }
+    }
+
+    function renderDailyQuestions(id, qs) {
+        document.getElementById(id).innerHTML = qs.map((q,i) => `
+          <div class="question-block">
+             <div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
+             <div class="q-options">
+               <label><input type="radio" name="daily_q_${i}" value="Yes" required> Yes</label>
+               <label><input type="radio" name="daily_q_${i}" value="No"> No</label>
+               <label><input type="radio" name="daily_q_${i}" value="N/A"> N/A</label>
+             </div>
+          </div>`).join('');
+    }
+
+    async function loadTLData() {
+       const res = await fetchAPI('getDashboardData', {viewerId:currentUser.id, role:'User'});
+       document.getElementById('tl-daily-body').innerHTML = res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch}</td><td>${r.status}</td></tr>`).join('');
+    }
+
+    async function fetchHistory() {
+      const id = document.getElementById('hist-id').value;
+      const data = await fetchAPI('getTrainingHistory', { id:id, viewerName: currentUser.name, role: currentUser.role });
+      document.getElementById('history-body').innerHTML = data.map(r=>`<tr><td>${r.date}</td><td>${r.day}</td><td>${r.name}</td><td>${r.id}</td><td>${r.trainer}</td><td>${r.notes}</td></tr>`).join('');
+    }
+
     async function fetchAPI(act, p={}) {
        const u = new URL(API_URL); u.searchParams.append('action', act);
        for(let k in p) u.searchParams.append(k, p[k]);
        return await fetch(u).then(r=>r.json());
     }
+
+    function confirmTraining() { showTab('training-dash'); }
+    function showHistory() { showTab('history-view'); fetchHistory(); }
+    let slideIndex=0; function showSlides(){let s=document.getElementsByClassName("slide"); if(!s.length)return; for(let i=0;i<s.length;i++)s[i].classList.remove("active-slide"); slideIndex++; if(slideIndex>s.length)slideIndex=1; s[slideIndex-1].classList.add("active-slide"); setTimeout(showSlides, 4000);} showSlides();
   </script>
 </body>
 </html>

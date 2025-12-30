@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leaders</title>
+  <title>BON Cafe | Team Leader</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* --- CORE VARIABLES --- */
+    /* --- CORE VARIABLES (Updated to Orange) --- */
     :root {
-      --primary: #10b981; --primary-dark: #059669;
+      --primary: #f97316; /* Orange-500 */
+      --primary-dark: #c2410c; /* Orange-700 */
       --bg: #f3f4f6; --surface: #ffffff; --sidebar-bg: #111827;
       --text: #1f2937; --text-light: #6b7280; --border: #e5e7eb; --radius: 12px;
       --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
@@ -19,6 +20,19 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; display: flex; }
     
+    /* RTL Support */
+    body.is-rtl { direction: rtl; }
+    body.is-rtl .sidebar { left: auto; right: 0; transform: translateX(260px); }
+    body.is-rtl .sidebar.closed { transform: translateX(260px); }
+    body.is-rtl .sidebar.mobile-open { transform: translateX(0); }
+    body.is-rtl .main-wrapper { margin-left: 0; margin-right: 260px; }
+    body.is-rtl .main-wrapper.full { margin-right: 0; }
+    body.is-rtl .nav-item { flex-direction: row-reverse; }
+    body.is-rtl .nav-item i { margin-left: 10px; margin-right: 0; }
+    body.is-rtl .cat-card { text-align: right; flex-direction: row-reverse; }
+    body.is-rtl .prog-track { transform: scaleX(-1); } /* Flip progress bar */
+    body.is-rtl .bell-wrapper { margin-right: 0; margin-left: 10px; }
+
     /* --- SIDEBAR --- */
     .sidebar {
       width: 260px; background: var(--sidebar-bg); color: white;
@@ -41,8 +55,15 @@
       display: flex; align-items: center; gap: 12px; color: #d1d5db; transition: all 0.2s;
     }
     .nav-item:hover { background: rgba(255,255,255,0.08); color: white; transform: translateX(3px); }
-    .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+    .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); }
     .nav-item i { font-size: 22px; }
+
+    /* Language Switcher in Sidebar */
+    .lang-switcher-sidebar { padding: 10px 15px; border-top: 1px solid #374151; }
+    .lang-select {
+        width: 100%; padding: 8px; background: #374151; color: white; 
+        border: none; border-radius: 6px; outline: none; cursor: pointer;
+    }
 
     /* --- MAIN CONTENT --- */
     .main-wrapper {
@@ -51,7 +72,6 @@
     }
     .main-wrapper.full { margin-left: 0; }
 
-    /* --- CONTENT HEADER --- */
     .content-header {
         display: flex; align-items: center; gap: 15px;
         margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb;
@@ -63,7 +83,6 @@
     .mobile-menu-btn:hover { background: #e5e7eb; color: var(--primary); }
     .page-header-title { font-size: 1.4rem; font-weight: 800; color: #111827; margin: 0; flex: 1; }
     
-    /* Bell Notification */
     .bell-wrapper { position: relative; cursor: pointer; margin-right: 10px; }
     .bell-icon { font-size: 28px; color: var(--text); }
     .bell-badge {
@@ -75,49 +94,36 @@
         border: 2px solid white; display: none;
     }
 
-    /* --- SCROLL AREA --- */
     .content-area { flex: 1; padding: 20px 30px; overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; }
     .form-section { display: none; animation: slideUp 0.3s ease-out; max-width: 1400px; margin: 0 auto; background: white; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; }
     .form-section.active { display: block; }
 
-    /* --- NEW ADMIN PANEL STYLES --- */
-    .admin-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
-    .admin-tab-btn {
-        position: relative;
-        padding: 10px 20px; border-radius: 20px; border: 1px solid var(--border);
-        background: white; cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.2s;
-    }
-    .admin-tab-btn:hover { background: #f3f4f6; color: var(--primary); }
-    .admin-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 6px rgba(16,185,129,0.3); }
+    /* Login Overlay & Logo */
+    #login-overlay { position: fixed; inset: 0; background: var(--sidebar-bg); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    .login-box { background: white; padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+    .company-logo { width: 100px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; }
+    .login-box h2 { font-size: 1.8rem; margin-bottom: 20px; }
+    .login-lang { margin-bottom: 20px; text-align: right; }
+    .login-lang select { width: auto; padding: 5px; font-size: 0.85rem; }
 
+    /* --- OTHER STYLES (Retained) --- */
+    .admin-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
+    .admin-tab-btn { position: relative; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--border); background: white; cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.2s; }
+    .admin-tab-btn:hover { background: #f3f4f6; color: var(--primary); }
+    .admin-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 6px rgba(249, 115, 22, 0.3); }
     .admin-filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
     .admin-filters input, .admin-filters select { width: 100%; margin: 0; padding: 10px; font-size: 0.9rem; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
     
-    .status-badge {
-        display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;
-        background: #d1fae5; color: #065f46; border: 1px solid #34d399;
-    }
-
-    /* --- CUSTOM MODAL --- */
-    .custom-modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000;
-        display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
-    }
+    .custom-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; }
     .custom-modal-overlay.open { display: flex; opacity: 1; }
-    .custom-modal-box {
-        background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 16px;
-        text-align: center; transform: scale(0.9); transition: transform 0.3s;
-        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    }
+    .custom-modal-box { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 16px; text-align: center; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
     .custom-modal-overlay.open .custom-modal-box { transform: scale(1); }
     .c-modal-icon { font-size: 50px; margin-bottom: 15px; }
     .c-modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
     .c-modal-msg { font-size: 1rem; color: var(--text-light); margin-bottom: 25px; line-height: 1.5; }
     .c-modal-btns { display: flex; gap: 10px; justify-content: center; }
-    .c-btn {
-        padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; flex: 1;
-        transition: 0.2s; font-size: 1rem;
-    }
+    .c-btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; flex: 1; transition: 0.2s; font-size: 1rem; }
     .c-btn-primary { background: var(--primary); color: white; }
     .c-btn-primary:hover { background: var(--primary-dark); }
     .c-btn-cancel { background: #e5e7eb; color: var(--text); }
@@ -127,137 +133,67 @@
     .mod-warning .c-modal-icon { color: var(--warning); }
     .mod-confirm .c-modal-icon { color: #3b82f6; }
 
-    /* --- VIEWER MODAL --- */
-    .viewer-modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000;
-        display: none; justify-content: center; align-items: center;
-    }
-    .viewer-modal-box {
-        background: white; width: 90%; height: 90%; max-width: 1200px; border-radius: 12px;
-        display: flex; flex-direction: column; overflow: hidden; position: relative;
-    }
-    .viewer-header {
-        padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;
-        background: #f9fafb;
-    }
-    .viewer-close { cursor: pointer; font-size: 24px; padding: 5px; border-radius: 50%; transition: 0.2s; }
-    .viewer-close:hover { background: #fee2e2; color: #ef4444; }
-    .viewer-content { flex: 1; background: #e5e7eb; }
-    .viewer-content iframe { width: 100%; height: 100%; border: none; }
-
-    /* --- ANNOUNCEMENT CARDS --- */
-    .announce-card {
-        border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px;
-        background: #fff; border-left: 5px solid var(--primary);
-        transition: all 0.3s ease;
-    }
+    .announce-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; background: #fff; border-left: 5px solid var(--primary); transition: all 0.3s ease; }
     .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
     .ac-date { font-size: 0.85rem; color: #9ca3af; font-weight: 600; }
     .ac-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
     .ac-msg { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 15px; white-space: pre-wrap; }
-    .ac-btn-read {
-        background: var(--primary); color: white; border: none; padding: 8px 16px;
-        border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600;
-    }
-    .ac-read-badge {
-        background: #e5e7eb; color: #6b7280; padding: 5px 12px; border-radius: 20px;
-        font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
-    }
+    .ac-btn-read { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+    .ac-read-badge { background: #e5e7eb; color: #6b7280; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
 
-    /* --- GLOWING AND NOTIFICATIONS --- */
-    @keyframes taskGlow {
-      0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; }
-      50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); border-color: #fca5a5; }
-      100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; }
-    }
-    .glowing-task {
-      border: 2px solid #ef4444 !important;
-      border-left: 8px solid #ef4444 !important;
-      animation: taskGlow 1.5s infinite ease-in-out;
-    }
-
-    .tab-notify {
-      position: absolute; top: -5px; right: -5px;
-      background: var(--danger); color: white; border-radius: 50%;
-      width: 18px; height: 18px; font-size: 0.65rem; font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+    @keyframes taskGlow { 0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; } 50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); border-color: #fca5a5; } 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; } }
+    .glowing-task { border: 2px solid #ef4444 !important; border-left: 8px solid #ef4444 !important; animation: taskGlow 1.5s infinite ease-in-out; }
+    .tab-notify { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .tagged-badge { background: #fee2e2; color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; display: inline-block; }
-    .reply-area { margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
-
-    /* --- LANDING --- */
+    
     .landing-wrapper { display: none; width: 100%; max-width: 800px; margin: 0 auto; flex: 1; }
     .landing-wrapper.active { display: flex; flex-direction: column; gap: 20px; animation: slideUp 0.3s ease-out; }
-
     .carousel-container { width: 100%; height: 250px; border-radius: var(--radius); overflow: hidden; position: relative; box-shadow: var(--shadow); flex-shrink: 0; }
     .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; opacity: 0; transition: opacity 1s ease-in-out; transform: scale(1.05); }
     .slide.active-slide { opacity: 1; transform: scale(1); }
-
     .role-section { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); flex-shrink: 0; }
     .role-header { padding: 18px 20px; background: white; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; user-select: none; }
     .role-header:hover { background: #f9fafb; color: var(--primary); }
     .role-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0 20px; background: #fff; }
     .role-content.open { max-height: 600px; padding: 20px; border-top: 1px solid var(--border); }
     .role-content p { margin-bottom: 10px; line-height: 1.5; color: #4b5563; font-size: 0.95rem; }
-
-    /* --- CATEGORY LIST --- */
     .category-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; width: 100%; }
-    .cat-card { 
-        background: white; padding: 20px 25px; border-radius: var(--radius); box-shadow: var(--shadow); 
-        cursor: pointer; transition: 0.2s; border: 1px solid transparent; width: 100%;
-        display: flex; align-items: center; gap: 20px; text-align: left;
-    }
+    .cat-card { background: white; padding: 20px 25px; border-radius: var(--radius); box-shadow: var(--shadow); cursor: pointer; transition: 0.2s; border: 1px solid transparent; width: 100%; display: flex; align-items: center; gap: 20px; text-align: left; }
     .cat-card:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .cat-card i { font-size: 32px; color: var(--primary); margin: 0; flex-shrink: 0; background: #ecfdf5; padding: 10px; border-radius: 50%; }
+    .cat-card i { font-size: 32px; color: var(--primary); margin: 0; flex-shrink: 0; background: #fff7ed; padding: 10px; border-radius: 50%; }
     .cat-card span { font-weight: 700; color: var(--text); font-size: 1.05rem; line-height: 1.3; }
 
-    /* --- FORM ELEMENTS --- */
     h2 { margin-bottom: 20px; color: #111827; font-weight: 700; font-size: 1.5rem; }
     .form-group { margin-bottom: 20px; }
     label { display: block; margin-bottom: 8px; font-weight: 500; color: #374151; font-size: 0.95rem; }
     input, select, textarea { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: #f9fafb; transition: 0.2s; outline: none; }
-    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); }
     input[readonly] { background: #e5e7eb; color: #6b7280; cursor: not-allowed; }
-    
     .password-wrapper { position: relative; }
     .password-wrapper input { padding-right: 40px; }
     .password-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6b7280; user-select: none; }
-
     .submit-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 1.05rem; letter-spacing: 0.5px; }
     .submit-btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    
-    .action-btn { 
-      background: var(--bg); color: var(--text); border: 2px solid var(--border); 
-      padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px;
-    }
+    .action-btn { background: var(--bg); color: var(--text); border: 2px solid var(--border); padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px; }
     .action-btn:hover { background: white; border-color: var(--primary); color: var(--primary); }
 
-    /* --- TABLES --- */
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; }
     .history-table { width: 100%; border-collapse: collapse; min-width: 600px; }
     .history-table th, .history-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
     .history-table th { background: #f9fafb; font-weight: 600; color: #374151; white-space: nowrap; }
     .history-table tr:last-child td { border-bottom: none; }
-
-    /* NEW: Modern Table Logic Styles */
     .clickable-row { cursor: pointer; transition: 0.2s; }
-    .clickable-row:hover { background-color: #f0fdf4 !important; }
+    .clickable-row:hover { background-color: #fff7ed !important; }
     .table-img-icon { width: 32px; height: 32px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto; border: 1px solid #ddd; }
     .modern-pop-card { text-align: left; }
     .pop-img { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; margin: 15px 0; border: 1px solid #eee; background: #f9f9f9; }
 
-    #login-overlay { position: fixed; inset: 0; background: var(--sidebar-bg); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
-    .login-box { background: white; padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-    .login-box h2 { font-size: 1.8rem; margin-bottom: 30px; }
-    
     .tl-header { display: flex; align-items: center; gap: 30px; background: #f9fafb; padding: 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); }
     .tl-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 5px solid var(--primary); box-shadow: var(--shadow); }
     .tl-info h2 { font-size: 1.6rem; margin: 0 0 5px 0; }
     .tl-graph-box { flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
     .prog-track { height: 20px; background: #e5e7eb; border-radius: 10px; margin-top: 15px; overflow: hidden; position: relative; }
-    .prog-fill { height: 100%; background: linear-gradient(90deg, #10b981, #059669); width: 0%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    .prog-fill { height: 100%; background: linear-gradient(90deg, #f97316, #c2410c); width: 0%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
     .prog-txt { font-size: 1.5rem; font-weight: 800; color: var(--primary); display: block; margin-top: 5px; text-align: right; }
 
     .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
@@ -281,10 +217,9 @@
 
     .training-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
     .day-card { border: 2px solid var(--border); padding: 20px 10px; text-align: center; border-radius: 12px; cursor: pointer; background: white; font-weight: 600; }
-    .day-card:active { transform: scale(0.95); background: #ecfdf5; border-color: var(--primary); }
+    .day-card:active { transform: scale(0.95); background: #fff7ed; border-color: var(--primary); }
     .day-num { font-size: 1.5rem; color: var(--primary); display: block; margin-bottom: 5px; }
 
-    /* --- COURSE GRID STYLES --- */
     .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
     .course-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: 0.2s; }
     .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
@@ -295,20 +230,21 @@
     .course-btn:hover { background: var(--text); color: white; }
     .course-btn.done { background: #d1fae5; color: #065f46; border-color: #34d399; cursor: default; }
 
-    .footer {
-        text-align: center;
-        padding: 20px 0 0 0;
-        margin-top: auto;
-        color: #9ca3af;
-        font-size: 0.8rem;
-        font-weight: 500;
-        border-top: 1px solid transparent;
-    }
+    .footer { text-align: center; padding: 20px 0 0 0; margin-top: auto; color: #9ca3af; font-size: 0.8rem; font-weight: 500; border-top: 1px solid transparent; }
+    .viewer-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000; display: none; justify-content: center; align-items: center; }
+    .viewer-modal-box { background: white; width: 90%; height: 90%; max-width: 1200px; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .viewer-header { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; }
+    .viewer-close { cursor: pointer; font-size: 24px; padding: 5px; border-radius: 50%; transition: 0.2s; }
+    .viewer-close:hover { background: #fee2e2; color: #ef4444; }
+    .viewer-content { flex: 1; background: #e5e7eb; }
+    .viewer-content iframe { width: 100%; height: 100%; border: none; }
 
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%); width: 280px; }
+      body.is-rtl .sidebar { transform: translateX(100%); }
       .sidebar.mobile-open { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
-      .main-wrapper { margin-left: 0; width: 100%; }
+      body.is-rtl .sidebar.mobile-open { transform: translateX(0); }
+      .main-wrapper { margin-left: 0; margin-right: 0; width: 100%; }
       .content-area { padding: 20px 15px; }
       .form-section { padding: 20px 15px; }
       .carousel-container { height: 180px; }
@@ -318,14 +254,13 @@
       .table-responsive { border-left: none; border-right: none; border-radius: 0; margin-left: -15px; width: calc(100% + 30px); }
       .admin-filters { grid-template-columns: 1fr; }
     }
-
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
 
-  <!-- MODALS and OVERLAYS (No changes here, standard structure) -->
+  <!-- MODALS -->
   <div class="custom-modal-overlay" id="problem-pop">
     <div class="custom-modal-box" style="max-width: 600px;" id="pop-capture-area">
        <div class="modern-pop-card">
@@ -342,8 +277,8 @@
           <div id="pop-img-container"></div>
        </div>
        <div class="c-modal-btns" style="margin-top:20px;">
-         <button class="c-btn c-btn-cancel" onclick="document.getElementById('problem-pop').classList.remove('open')">Close</button>
-         <button class="c-btn c-btn-primary" onclick="saveAsImage()">Save as Image</button>
+         <button class="c-btn c-btn-cancel" onclick="document.getElementById('problem-pop').classList.remove('open')" data-i18n="close">Close</button>
+         <button class="c-btn c-btn-primary" onclick="saveAsImage()" data-i18n="save_image">Save as Image</button>
        </div>
     </div>
   </div>
@@ -389,16 +324,29 @@
      </div>
   </div>
 
+  <!-- LOGIN SCREEN -->
   <div id="login-overlay">
     <div class="login-box">
-       <h2>BON Cafe - Team Leader</h2>
+       <!-- COMPANY LOGO HERE -->
+       <img src="https://github.com/Bon-Cafe/TEAM-IMAGE/blob/main/NBC%20LOGO.jpg.png?raw=true" class="company-logo" alt="BON Cafe">
+       
+       <div class="login-lang">
+         <select onchange="updateLanguage(this.value)" class="lang-select" style="border:1px solid #ccc; background:#fff; color:#333;">
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+            <option value="id">Indonesia</option>
+            <option value="in">India (Hindi)</option>
+         </select>
+       </div>
+
+       <h2 data-i18n="login_title">BON Cafe - Team Leader</h2>
        <div class="form-group"><input type="text" id="login-u" placeholder="Username" required></div>
        <div class="form-group password-wrapper">
            <input type="password" id="login-p" placeholder="Password" required>
            <i class="material-icons password-eye" onclick="togglePass()">visibility</i>
        </div>
-       <button class="submit-btn" onclick="doLogin()">Login</button>
-       <div style="margin-top:20px; font-size:0.9rem; color:#666; cursor:pointer; text-decoration:underline;" onclick="toggleAdmin()">or Login as Admin?</div>
+       <button class="submit-btn" onclick="doLogin()" data-i18n="login_btn">Login</button>
+       <div style="margin-top:20px; font-size:0.9rem; color:#666; cursor:pointer; text-decoration:underline;" onclick="toggleAdmin()" data-i18n="admin_login_link">or Login as Admin?</div>
     </div>
   </div>
 
@@ -407,20 +355,34 @@
       <span id="welcome-msg">Welcome</span> 
       <i class="material-icons" onclick="toggleMenu()" style="cursor:pointer; display:none; color:white;" id="mobile-close-btn">close</i>
     </div>
+    
+    <!-- Sidebar Language Switcher (Visible when logged in) -->
+    <div class="lang-switcher-sidebar tl-only">
+         <select onchange="updateLanguage(this.value)" class="lang-select" id="sidebar-lang-select">
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+            <option value="id">Indonesia</option>
+            <option value="in">India</option>
+         </select>
+    </div>
+
     <ul class="nav-links">
-      <li class="nav-item tl-only active" onclick="showTab('landing')"><i class="material-icons">home</i> Home</li>
-      <li class="nav-item tl-only" onclick="showTab('announce-view')"><i class="material-icons">campaign</i> Announcements</li>
-      <li class="nav-item tl-only" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i> My Dashboard</li>
-      <li class="nav-item tl-only" onclick="showTab('daily')"><i class="material-icons">today</i> Daily Task</li>
-      <li class="nav-item tl-only" onclick="showTab('weekly')"><i class="material-icons">event_note</i> Weekly Task</li>
-      <li class="nav-item tl-only" onclick="showTab('problem')"><i class="material-icons">report_problem</i> Report Problem</li>
-      <li class="nav-item tl-only" onclick="showTab('vacation')"><i class="material-icons">flight</i> Vacation</li>
-      <li class="nav-item tl-only" onclick="showTab('training-course-view')"><i class="material-icons">menu_book</i> Training Courses</li>
-      <li class="nav-item tl-only" onclick="confirmTraining()"><i class="material-icons">school</i> 9-Days Training</li>
-      <li class="nav-item tl-only" onclick="showHistory()"><i class="material-icons">history</i> Training History</li>
+      <li class="nav-item tl-only active" onclick="showTab('landing')"><i class="material-icons">home</i> <span data-i18n="nav_home">Home</span></li>
+      <li class="nav-item tl-only" onclick="showTab('announce-view')"><i class="material-icons">campaign</i> <span data-i18n="nav_announcements">Announcements</span></li>
+      <li class="nav-item tl-only" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i> <span data-i18n="nav_dashboard">My Dashboard</span></li>
+      <li class="nav-item tl-only" onclick="showTab('daily')"><i class="material-icons">today</i> <span data-i18n="nav_daily">Daily Task</span></li>
+      <li class="nav-item tl-only" onclick="showTab('weekly')"><i class="material-icons">event_note</i> <span data-i18n="nav_weekly">Weekly Task</span></li>
+      <li class="nav-item tl-only" onclick="showTab('problem')"><i class="material-icons">report_problem</i> <span data-i18n="nav_problem">Report Problem</span></li>
+      <li class="nav-item tl-only" onclick="showTab('vacation')"><i class="material-icons">flight</i> <span data-i18n="nav_vacation">Vacation</span></li>
+      <li class="nav-item tl-only" onclick="showTab('training-course-view')"><i class="material-icons">menu_book</i> <span data-i18n="nav_courses">Training Courses</span></li>
+      <li class="nav-item tl-only" onclick="confirmTraining()"><i class="material-icons">school</i> <span data-i18n="nav_training">9-Days Training</span></li>
+      <li class="nav-item tl-only" onclick="showHistory()"><i class="material-icons">history</i> <span data-i18n="nav_history">Training History</span></li>
+      
+      <!-- Admin items not translated as per request -->
       <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i> Global Dashboard</li>
       <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-post-ann')"><i class="material-icons">campaign</i> Post Announcement</li>
-      <li style="margin-top:auto; border-top:1px solid #374151;" class="nav-item" onclick="confirmLogout()"><i class="material-icons">logout</i> Logout</li>
+      
+      <li style="margin-top:auto; border-top:1px solid #374151;" class="nav-item" onclick="confirmLogout()"><i class="material-icons">logout</i> <span data-i18n="nav_logout">Logout</span></li>
     </ul>
   </div>
 
@@ -443,8 +405,9 @@
             <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1000&q=80" class="slide">
             <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80" class="slide">
         </div>
+        
         <div class="role-section">
-            <div class="role-header" onclick="document.getElementById('role-text').classList.toggle('open')"><span>Role and Duties of Team Leaders</span><i class="material-icons">expand_more</i></div>
+            <div class="role-header" onclick="document.getElementById('role-text').classList.toggle('open')"><span data-i18n="role_title">Role and Duties of Team Leaders</span><i class="material-icons">expand_more</i></div>
             <div class="role-content" id="role-text">
                 <p><strong>1. Team Management:</strong> Oversee daily operations, ensure attendance, and manage shift schedules.</p>
                 <p><strong>2. Reporting:</strong> Submit daily and weekly task reports promptly to the Area Manager.</p>
@@ -453,15 +416,16 @@
                 <p><strong>5. Performance:</strong> Monitor team KPIs and ensure quality standards are met.</p>
             </div>
         </div>
+
         <div class="category-list tl-only">
-            <div class="cat-card" onclick="showTab('announce-view')"><i class="material-icons">campaign</i><span>Announcements</span></div>
-            <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
-            <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span>Daily Task Checklist</span></div>
-            <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task Report</span></div>
-            <div class="cat-card" onclick="showTab('problem')"><i class="material-icons">report_problem</i><span>Report Problem</span></div>
-            <div class="cat-card" onclick="showTab('vacation')"><i class="material-icons">flight</i><span>Vacation Request</span></div>
-            <div class="cat-card" onclick="showTab('training-course-view')"><i class="material-icons">menu_book</i><span>Training Course</span></div>
-            <div class="cat-card" onclick="confirmTraining()"><i class="material-icons">school</i><span>Training Program</span></div>
+            <div class="cat-card" onclick="showTab('announce-view')"><i class="material-icons">campaign</i><span data-i18n="cat_ann">Announcements</span></div>
+            <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span data-i18n="cat_dash">My Dashboard</span></div>
+            <div class="cat-card" onclick="showTab('daily')"><i class="material-icons">today</i><span data-i18n="cat_daily">Daily Task Checklist</span></div>
+            <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span data-i18n="cat_weekly">Weekly Task Report</span></div>
+            <div class="cat-card" onclick="showTab('problem')"><i class="material-icons">report_problem</i><span data-i18n="cat_problem">Report Problem</span></div>
+            <div class="cat-card" onclick="showTab('vacation')"><i class="material-icons">flight</i><span data-i18n="cat_vacation">Vacation Request</span></div>
+            <div class="cat-card" onclick="showTab('training-course-view')"><i class="material-icons">menu_book</i><span data-i18n="cat_courses">Training Course</span></div>
+            <div class="cat-card" onclick="confirmTraining()"><i class="material-icons">school</i><span data-i18n="cat_training">Training Program</span></div>
         </div>
         <div class="category-list admin-only" style="display:none;">
             <div class="cat-card" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i><span>Global Dashboard</span></div>
@@ -472,26 +436,26 @@
       <!-- Training Course View -->
       <div id="training-course-view" class="form-section">
          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="margin:0;">Training Courses</h2>
-            <button class="submit-btn" style="width:auto; padding:8px 15px;" onclick="loadTrainingCourses()">Refresh</button>
+            <h2 style="margin:0;" data-i18n="title_courses">Training Courses</h2>
+            <button class="submit-btn" style="width:auto; padding:8px 15px;" onclick="loadTrainingCourses()" data-i18n="btn_refresh">Refresh</button>
          </div>
-         <p style="margin-bottom:20px; color:#6b7280;">Click on a course to view the material. Mark as done when finished.</p>
+         <p style="margin-bottom:20px; color:#6b7280;" data-i18n="course_hint">Click on a course to view the material. Mark as done when finished.</p>
          <div id="course-list" class="course-grid">Loading courses...</div>
       </div>
 
       <!-- Announcement View -->
       <div id="announce-view" class="form-section">
-         <h2>Team Announcements</h2>
+         <h2 data-i18n="title_announcements">Team Announcements</h2>
          <div id="announcement-list">Loading...</div>
       </div>
 
-      <!-- Admin Post Announcement -->
+      <!-- Admin Post (Not Translated) -->
       <div id="admin-post-ann" class="form-section">
          <h2>Create New Announcement</h2>
          <form onsubmit="handleDynamicSubmit(event, 'Announcements')">
             <div class="form-group"><label>Creator Name</label><input class="u-name" name="name" readonly></div>
             <div class="form-group"><label>Title</label><input type="text" name="title" required></div>
-            <div class="form-group"><label>Effective Date (Notification Trigger)</label><input type="date" name="effDate" required></div>
+            <div class="form-group"><label>Effective Date</label><input type="date" name="effDate" required></div>
             <div class="form-group"><label>Message Details</label><textarea name="message" rows="5" required></textarea></div>
             <button class="submit-btn">Post Announcement</button>
          </form>
@@ -500,8 +464,8 @@
       <!-- TL Dashboard -->
       <div id="tl-dash" class="form-section">
          <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
-            <h2 style="margin:0;">Performance Overview</h2>
-            <button class="submit-btn" style="width:auto; padding:10px 20px; font-size:0.9rem;" onclick="loadTLData()">Refresh</button>
+            <h2 style="margin:0;" data-i18n="title_dashboard">Performance Overview</h2>
+            <button class="submit-btn" style="width:auto; padding:10px 20px; font-size:0.9rem;" onclick="loadTLData()" data-i18n="btn_refresh">Refresh</button>
          </div>
          <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
             <input type="date" id="tl-start" style="width:auto; flex:1;"> 
@@ -514,18 +478,18 @@
                <p id="tl-id" style="color:#666; margin:5px 0;">ID: ---</p>
             </div>
             <div class="tl-graph-box">
-               <label>Daily & Weekly Completion</label>
+               <label data-i18n="lbl_completion">Daily & Weekly Completion</label>
                <div class="prog-track"><div id="tl-bar" class="prog-fill"></div></div>
                <div id="tl-score" class="prog-txt">0%</div>
             </div>
          </div>
-         <h3>Daily Tasks</h3>
-         <div class="table-responsive"><table class="history-table"><thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead><tbody id="tl-daily-body"></tbody></table></div>
-         <h3 style="margin-top:25px;">Weekly Tasks</h3>
-         <div class="table-responsive"><table class="history-table"><thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead><tbody id="tl-weekly-body"></tbody></table></div>
+         <h3 data-i18n="title_daily_history">Daily Tasks</h3>
+         <div class="table-responsive"><table class="history-table"><thead><tr><th data-i18n="th_date">Date</th><th data-i18n="th_branch">Branch</th><th data-i18n="th_status">Status</th></tr></thead><tbody id="tl-daily-body"></tbody></table></div>
+         <h3 style="margin-top:25px;" data-i18n="title_weekly_history">Weekly Tasks</h3>
+         <div class="table-responsive"><table class="history-table"><thead><tr><th data-i18n="th_date">Date</th><th data-i18n="th_branch">Branch</th><th data-i18n="th_status">Status</th></tr></thead><tbody id="tl-weekly-body"></tbody></table></div>
       </div>
 
-      <!-- Admin Dashboard -->
+      <!-- Admin Dash (Not Translated) -->
       <div id="admin-dash" class="form-section" style="max-width:1400px;">
          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <h2 style="margin:0;">Global Dashboard</h2>
@@ -557,91 +521,85 @@
 
       <!-- Daily Task -->
       <div id="daily" class="form-section">
-        <h2>Checklist</h2>
+        <h2 data-i18n="title_daily_check">Checklist</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Daily Task')">
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-             <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
-             <div class="form-group" style="margin:0;"><label>ID</label><input class="u-id" name="empId" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_name">Name</label><input class="u-name" name="name" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_id">ID</label><input class="u-id" name="empId" readonly></div>
            </div>
-           <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
-           <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
-           <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
-           
-           <!-- DYNAMIC DAILY QUESTIONS -->
+           <div class="form-group"><label data-i18n="lbl_branch">Branch</label><select class="db-branch" name="branch" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_sup">Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_am">Area Manager</label><select class="db-am" name="areaManager" required></select></div>
            <div id="daily-questions">Loading...</div>
-           
-           <button class="submit-btn">Submit Daily Task</button>
+           <button class="submit-btn" data-i18n="btn_submit">Submit Daily Task</button>
         </form>
       </div>
 
       <!-- Weekly Task -->
       <div id="weekly" class="form-section">
-        <h2>Report Form</h2>
+        <h2 data-i18n="title_weekly_report">Report Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Weekly Task')">
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-             <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
-             <div class="form-group" style="margin:0;"><label>ID</label><input class="u-id" name="empId" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_name">Name</label><input class="u-name" name="name" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_id">ID</label><input class="u-id" name="empId" readonly></div>
            </div>
-           <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
-           <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
-           <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
-           <div class="form-group"><label>Week Ending</label><input type="date" name="weekDate" required></div>
-           
-           <!-- DYNAMIC WEEKLY QUESTIONS -->
+           <div class="form-group"><label data-i18n="lbl_branch">Branch</label><select class="db-branch" name="branch" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_sup">Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_am">Area Manager</label><select class="db-am" name="areaManager" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_week_ending">Week Ending</label><input type="date" name="weekDate" required></div>
            <div id="weekly-questions">Loading...</div>
-           
-           <button class="submit-btn">Submit Weekly Report</button>
+           <button class="submit-btn" data-i18n="btn_submit_weekly">Submit Weekly Report</button>
         </form>
       </div>
 
       <!-- Report Problem -->
       <div id="problem" class="form-section">
-        <h2>Report Issue</h2>
+        <h2 data-i18n="title_report_issue">Report Issue</h2>
         <form onsubmit="handleProblem(event)">
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-             <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
-             <div class="form-group" style="margin:0;"><label>ID</label><input class="u-id" name="empId" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_name">Name</label><input class="u-name" name="name" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_id">ID</label><input class="u-id" name="empId" readonly></div>
           </div>
-          <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
-          <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
-          <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
+          <div class="form-group"><label data-i18n="lbl_sup">Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
+          <div class="form-group"><label data-i18n="lbl_branch">Branch</label><select class="db-branch" name="branch" required></select></div>
+          <div class="form-group"><label data-i18n="lbl_am">Area Manager</label><select class="db-am" name="areaManager" required></select></div>
           <div class="form-group">
-             <label>Issue Type</label>
+             <label data-i18n="lbl_issue_type">Issue Type</label>
              <select name="issueType" onchange="checkIssue(this)" required>
                 <option value="Maintenance">Maintenance</option><option value="Team Member">Team Member</option>
                 <option value="Customer Complaint">Customer Complaint</option><option value="Others">Others</option>
              </select>
           </div>
-          <div class="form-group" id="div-oth" style="display:none;"><label>Specify Other</label><input type="text" name="issueTypeOther"></div>
-          <div class="form-group"><label>Urgency (Auto)</label><input id="urg-lbl" name="urgency" value="High Priority" readonly></div>
-          <div class="form-group"><label>Description</label><textarea name="description" rows="3" required></textarea></div>
+          <div class="form-group" id="div-oth" style="display:none;"><label data-i18n="lbl_specify">Specify Other</label><input type="text" name="issueTypeOther"></div>
+          <div class="form-group"><label data-i18n="lbl_urgency">Urgency (Auto)</label><input id="urg-lbl" name="urgency" value="High Priority" readonly></div>
+          <div class="form-group"><label data-i18n="lbl_desc">Description</label><textarea name="description" rows="3" required></textarea></div>
           <div class="form-group" style="border:2px dashed #ccc; padding:20px; text-align:center; border-radius:8px;">
              <label style="cursor:pointer; display:block;">
                 <i class="material-icons" style="font-size:32px; color:var(--primary);">cloud_upload</i><br>
-                <span>Tap to Upload Image</span>
+                <span data-i18n="lbl_upload">Tap to Upload Image</span>
                 <input type="file" id="p-img" accept="image/*" style="display:none;" onchange="alert('Image Selected: '+this.files[0].name)">
              </label>
           </div>
-          <button class="submit-btn">Submit Report</button>
+          <button class="submit-btn" data-i18n="btn_submit_report">Submit Report</button>
         </form>
       </div>
 
       <!-- Vacation -->
       <div id="vacation" class="form-section">
-        <h2>Request Form</h2>
+        <h2 data-i18n="title_vacation">Request Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Vacation')">
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-             <div class="form-group" style="margin:0;"><label>Name</label><input class="u-name" name="name" readonly></div>
-             <div class="form-group" style="margin:0;"><label>ID</label><input class="u-id" name="empId" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_name">Name</label><input class="u-name" name="name" readonly></div>
+             <div class="form-group" style="margin:0;"><label data-i18n="lbl_id">ID</label><input class="u-id" name="empId" readonly></div>
           </div>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-            <div class="form-group"><label>Start</label><input type="date" name="startDate" required></div>
-            <div class="form-group"><label>End</label><input type="date" name="endDate" required></div>
+            <div class="form-group"><label data-i18n="lbl_start">Start</label><input type="date" name="startDate" required></div>
+            <div class="form-group"><label data-i18n="lbl_end">End</label><input type="date" name="endDate" required></div>
           </div>
-          <div class="form-group"><label>Reason</label><input type="text" name="reason" required></div>
-          <button class="submit-btn">Submit</button>
+          <div class="form-group"><label data-i18n="lbl_reason">Reason</label><input type="text" name="reason" required></div>
+          <button class="submit-btn" data-i18n="btn_submit">Submit</button>
           <p style="margin-top:15px; font-size:0.9rem; color:#dc2626; background:#fef2f2; padding:10px; border-radius:6px; border:1px solid #fee2e2;">
-            <strong>Note:</strong> This form is only to record the vacation details of the team leader.
+            <strong data-i18n="note_title">Note:</strong> <span data-i18n="note_vacation">This form is only to record the vacation details of the team leader.</span>
           </p>
         </form>
       </div>
@@ -649,85 +607,82 @@
       <!-- Training Grid -->
       <div id="training-dash" class="form-section">
         <h2 style="display:flex; justify-content:space-between; align-items:center;">
-           9-Days Training
+           <span data-i18n="title_9days">9-Days Training</span>
         </h2>
         <button class="action-btn" onclick="showTab('trainee-reg-view')">
            <i class="material-icons" style="color:var(--primary);">person_add</i>
-           Add New Team Member
+           <span data-i18n="btn_add_member">Add New Team Member</span>
         </button>
         <div class="training-grid">
-          <div class="day-card" onclick="loadTraineesAndOpenDay(1)"><span class="day-num">1</span> Day One</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(2)"><span class="day-num">2</span> Day Two</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(3)"><span class="day-num">3</span> Day Three</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(4)"><span class="day-num">4</span> Day Four</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(5)"><span class="day-num">5</span> Day Five</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(6)"><span class="day-num">6</span> Day Six</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(7)"><span class="day-num">7</span> Day Seven</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(8)"><span class="day-num">8</span> Day Eight</div>
-          <div class="day-card" onclick="loadTraineesAndOpenDay(9)"><span class="day-num">9</span> Day Nine</div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(1)"><span class="day-num">1</span> <span data-i18n="day_one">Day One</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(2)"><span class="day-num">2</span> <span data-i18n="day_two">Day Two</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(3)"><span class="day-num">3</span> <span data-i18n="day_three">Day Three</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(4)"><span class="day-num">4</span> <span data-i18n="day_four">Day Four</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(5)"><span class="day-num">5</span> <span data-i18n="day_five">Day Five</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(6)"><span class="day-num">6</span> <span data-i18n="day_six">Day Six</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(7)"><span class="day-num">7</span> <span data-i18n="day_seven">Day Seven</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(8)"><span class="day-num">8</span> <span data-i18n="day_eight">Day Eight</span></div>
+          <div class="day-card" onclick="loadTraineesAndOpenDay(9)"><span class="day-num">9</span> <span data-i18n="day_nine">Day Nine</span></div>
         </div>
       </div>
 
       <!-- Trainee Registration -->
       <div id="trainee-reg-view" class="form-section">
-        <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
-        <h2>Register Team Member</h2>
+        <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> <span data-i18n="back_grid">Back to Grid</span></div>
+        <h2 data-i18n="title_register">Register Team Member</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Trainee Registration')">
-           <div class="form-group"><label>Team Leader (You)</label><input class="u-name" name="teamLeader" readonly></div>
+           <div class="form-group"><label data-i18n="lbl_tl">Team Leader (You)</label><input class="u-name" name="teamLeader" readonly></div>
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-              <div class="form-group"><label>Employee ID</label><input type="text" name="traineeId" required></div>
-              <div class="form-group"><label>Full Name</label><input type="text" name="traineeName" required></div>
+              <div class="form-group"><label data-i18n="lbl_emp_id">Employee ID</label><input type="text" name="traineeId" required></div>
+              <div class="form-group"><label data-i18n="lbl_fullname">Full Name</label><input type="text" name="traineeName" required></div>
            </div>
-           <div class="form-group"><label>Email</label><input type="email" name="traineeEmail" required></div>
+           <div class="form-group"><label data-i18n="lbl_email">Email</label><input type="email" name="traineeEmail" required></div>
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-              <div class="form-group"><label>Nationality</label><input type="text" name="nationality" required></div>
-              <div class="form-group"><label>Status</label><select name="empStatus" required><option value="New">New</option><option value="Old">Old</option></select></div>
+              <div class="form-group"><label data-i18n="lbl_nation">Nationality</label><input type="text" name="nationality" required></div>
+              <div class="form-group"><label data-i18n="lbl_status">Status</label><select name="empStatus" required><option value="New">New</option><option value="Old">Old</option></select></div>
            </div>
-           <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
-           <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
-           <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
-           <div class="form-group"><label>Area</label><select name="area" required><option value="" disabled selected>Select Area</option><option value="Jeddah">Jeddah</option><option value="Makkah">Makkah</option><option value="Taif">Taif</option><option value="Madinah">Madinah</option></select></div>
-           <button class="submit-btn">Save Team Member</button>
+           <div class="form-group"><label data-i18n="lbl_branch">Branch</label><select class="db-branch" name="branch" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_sup">Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_am">Area Manager</label><select class="db-am" name="areaManager" required></select></div>
+           <div class="form-group"><label data-i18n="lbl_area">Area</label><select name="area" required><option value="" disabled selected>Select Area</option><option value="Jeddah">Jeddah</option><option value="Makkah">Makkah</option><option value="Taif">Taif</option><option value="Madinah">Madinah</option></select></div>
+           <button class="submit-btn" data-i18n="btn_save_member">Save Team Member</button>
         </form>
       </div>
 
       <!-- Training Dynamic Form -->
       <div id="training-dynamic" class="form-section">
-        <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
+        <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> <span data-i18n="back_grid">Back to Grid</span></div>
         <h2 id="training-title">Training Day</h2>
         <form id="dynamic-form" onsubmit="handleDynamicSubmit(event, 'Training')">
           <input type="hidden" name="category" id="train-cat">
           <div class="form-group">
-            <label>Trainee ID</label>
+            <label data-i18n="lbl_trainee_id">Trainee ID</label>
             <select id="trainee-dropdown" name="traineeId" required onchange="onTraineeSelect(this)"><option value="" disabled selected>Select Trainee ID</option></select>
           </div>
-          <div class="form-group"><label>Trainee Name</label><input type="text" id="t-name-auto" name="traineeName" readonly required></div>
-          <div class="form-group"><label>Trainee Email</label><input type="email" id="t-email-auto" name="traineeEmail" readonly required></div>
-          <div class="form-group"><label>Trainer Name</label><input class="u-name" name="trainerName" readonly></div>
-          
-          <!-- DYNAMIC TRAINING QUESTIONS -->
+          <div class="form-group"><label data-i18n="lbl_trainee_name">Trainee Name</label><input type="text" id="t-name-auto" name="traineeName" readonly required></div>
+          <div class="form-group"><label data-i18n="lbl_trainee_email">Trainee Email</label><input type="email" id="t-email-auto" name="traineeEmail" readonly required></div>
+          <div class="form-group"><label data-i18n="lbl_trainer">Trainer Name</label><input class="u-name" name="trainerName" readonly></div>
           <div id="questions-container">Loading...</div>
-          
-          <div class="form-group"><label>Notes</label><textarea name="notes" rows="3" required></textarea></div>
-          <button class="submit-btn">Submit Evaluation</button>
+          <div class="form-group"><label data-i18n="lbl_notes">Notes</label><textarea name="notes" rows="3" required></textarea></div>
+          <button class="submit-btn" data-i18n="btn_submit_eval">Submit Evaluation</button>
         </form>
       </div>
 
       <div id="history-view" class="form-section" style="max-width:1000px;">
-        <h2>Records</h2>
+        <h2 data-i18n="title_records">Records</h2>
         <div class="filter-bar">
           <input list="dl-ids" id="hist-id" placeholder="Filter by Employee ID" style="flex:2;">
-          <button class="submit-btn" style="width:auto; flex:1;" onclick="fetchHistory()">Filter</button>
+          <button class="submit-btn" style="width:auto; flex:1;" onclick="fetchHistory()" data-i18n="btn_filter">Filter</button>
         </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
            <input type="date" id="hist-start"> <input type="date" id="hist-end">
         </div>
         <div id="progress-section" class="progress-section" style="display:none;">
-            <h3 style="margin-bottom:15px; font-size:1.1rem;">Trainee Progress</h3>
+            <h3 style="margin-bottom:15px; font-size:1.1rem;" data-i18n="title_progress">Trainee Progress</h3>
             <div id="progress-grid" class="progress-grid"></div>
         </div>
         <div class="table-responsive" style="margin-top:25px;">
-            <table class="history-table"><thead><tr><th>Date</th><th>Day</th><th>Name</th><th>ID</th><th>Trainer</th><th>Notes</th></tr></thead><tbody id="history-body"></tbody></table>
+            <table class="history-table"><thead><tr><th data-i18n="th_date">Date</th><th data-i18n="th_day">Day</th><th data-i18n="th_name">Name</th><th data-i18n="th_id">ID</th><th data-i18n="th_trainer">Trainer</th><th data-i18n="th_notes">Notes</th></tr></thead><tbody id="history-body"></tbody></table>
         </div>
       </div>
 
@@ -745,6 +700,381 @@
     let activeAnnouncements = [];
     let globalTraineeList = []; 
     let currentAdminTab = 'Daily Task'; 
+    let currentLang = 'en';
+
+    // --- TRANSLATION DICTIONARY ---
+    const i18n = {
+        en: {
+            login_title: "BON Cafe - Team Leader",
+            login_btn: "Login",
+            admin_login_link: "or Login as Admin?",
+            nav_home: "Home",
+            nav_announcements: "Announcements",
+            nav_dashboard: "My Dashboard",
+            nav_daily: "Daily Task",
+            nav_weekly: "Weekly Task",
+            nav_problem: "Report Problem",
+            nav_vacation: "Vacation",
+            nav_courses: "Training Courses",
+            nav_training: "9-Days Training",
+            nav_history: "Training History",
+            nav_logout: "Logout",
+            role_title: "Role and Duties of Team Leaders",
+            cat_ann: "Announcements",
+            cat_dash: "My Dashboard",
+            cat_daily: "Daily Task Checklist",
+            cat_weekly: "Weekly Task Report",
+            cat_problem: "Report Problem",
+            cat_vacation: "Vacation Request",
+            cat_courses: "Training Course",
+            cat_training: "Training Program",
+            title_courses: "Training Courses",
+            btn_refresh: "Refresh",
+            course_hint: "Click on a course to view the material. Mark as done when finished.",
+            title_announcements: "Team Announcements",
+            title_dashboard: "Performance Overview",
+            lbl_completion: "Daily & Weekly Completion",
+            title_daily_history: "Daily Tasks",
+            title_weekly_history: "Weekly Tasks",
+            th_date: "Date",
+            th_branch: "Branch",
+            th_status: "Status",
+            title_daily_check: "Checklist",
+            lbl_name: "Name",
+            lbl_id: "ID",
+            lbl_branch: "Branch",
+            lbl_sup: "Supervisor",
+            lbl_am: "Area Manager",
+            btn_submit: "Submit",
+            title_weekly_report: "Report Form",
+            lbl_week_ending: "Week Ending",
+            btn_submit_weekly: "Submit Weekly Report",
+            title_report_issue: "Report Issue",
+            lbl_issue_type: "Issue Type",
+            lbl_specify: "Specify Other",
+            lbl_urgency: "Urgency (Auto)",
+            lbl_desc: "Description",
+            lbl_upload: "Tap to Upload Image",
+            btn_submit_report: "Submit Report",
+            title_vacation: "Request Form",
+            lbl_start: "Start",
+            lbl_end: "End",
+            lbl_reason: "Reason",
+            note_title: "Note:",
+            note_vacation: "This form is only to record the vacation details of the team leader.",
+            title_9days: "9-Days Training",
+            btn_add_member: "Add New Team Member",
+            day_one: "Day One", day_two: "Day Two", day_three: "Day Three", day_four: "Day Four", day_five: "Day Five", day_six: "Day Six", day_seven: "Day Seven", day_eight: "Day Eight", day_nine: "Day Nine",
+            back_grid: "Back to Grid",
+            title_register: "Register Team Member",
+            lbl_tl: "Team Leader (You)",
+            lbl_emp_id: "Employee ID",
+            lbl_fullname: "Full Name",
+            lbl_email: "Email",
+            lbl_nation: "Nationality",
+            lbl_status: "Status",
+            lbl_area: "Area",
+            btn_save_member: "Save Team Member",
+            lbl_trainee_id: "Trainee ID",
+            lbl_trainee_name: "Trainee Name",
+            lbl_trainee_email: "Trainee Email",
+            lbl_trainer: "Trainer Name",
+            lbl_notes: "Notes",
+            btn_submit_eval: "Submit Evaluation",
+            title_records: "Records",
+            btn_filter: "Filter",
+            title_progress: "Trainee Progress",
+            th_day: "Day",
+            th_name: "Name",
+            th_trainer: "Trainer",
+            th_notes: "Notes",
+            save_image: "Save as Image",
+            close: "Close"
+        },
+        ar: {
+            login_title: "بون كافيه - قائد الفريق",
+            login_btn: "تسجيل الدخول",
+            admin_login_link: "أو تسجيل دخول كمسؤول؟",
+            nav_home: "الرئيسية",
+            nav_announcements: "الإعلانات",
+            nav_dashboard: "لوحة التحكم",
+            nav_daily: "المهمة اليومية",
+            nav_weekly: "المهمة الأسبوعية",
+            nav_problem: "الإبلاغ عن مشكلة",
+            nav_vacation: "الإجازات",
+            nav_courses: "دورات تدريبية",
+            nav_training: "تدريب 9 أيام",
+            nav_history: "سجل التدريب",
+            nav_logout: "تسجيل خروج",
+            role_title: "دور ومهام قادة الفريق",
+            cat_ann: "الإعلانات",
+            cat_dash: "لوحة التحكم",
+            cat_daily: "قائمة المهام اليومية",
+            cat_weekly: "تقرير المهام الأسبوعية",
+            cat_problem: "الإبلاغ عن مشكلة",
+            cat_vacation: "طلب إجازة",
+            cat_courses: "الدورات التدريبية",
+            cat_training: "برنامج التدريب",
+            title_courses: "الدورات التدريبية",
+            btn_refresh: "تحديث",
+            course_hint: "اضغط على الدورة لعرض المحتوى. حدد كمكتمل عند الانتهاء.",
+            title_announcements: "إعلانات الفريق",
+            title_dashboard: "نظرة عامة على الأداء",
+            lbl_completion: "الإنجاز اليومي والأسبوعي",
+            title_daily_history: "المهام اليومية",
+            title_weekly_history: "المهام الأسبوعية",
+            th_date: "التاريخ",
+            th_branch: "الفرع",
+            th_status: "الحالة",
+            title_daily_check: "قائمة التحقق",
+            lbl_name: "الاسم",
+            lbl_id: "الرقم الوظيفي",
+            lbl_branch: "الفرع",
+            lbl_sup: "المشرف",
+            lbl_am: "مدير المنطقة",
+            btn_submit: "إرسال",
+            title_weekly_report: "نموذج التقرير",
+            lbl_week_ending: "نهاية الأسبوع",
+            btn_submit_weekly: "إرسال التقرير الأسبوعي",
+            title_report_issue: "الإبلاغ عن مشكلة",
+            lbl_issue_type: "نوع المشكلة",
+            lbl_specify: "حدد أخرى",
+            lbl_urgency: "الأهمية (تلقائي)",
+            lbl_desc: "الوصف",
+            lbl_upload: "اضغط لرفع صورة",
+            btn_submit_report: "إرسال البلاغ",
+            title_vacation: "نموذج الطلب",
+            lbl_start: "من",
+            lbl_end: "إلى",
+            lbl_reason: "السبب",
+            note_title: "ملاحظة:",
+            note_vacation: "هذا النموذج مخصص فقط لتسجيل تفاصيل إجازة قائد الفريق.",
+            title_9days: "تدريب 9 أيام",
+            btn_add_member: "إضافة عضو جديد",
+            day_one: "اليوم الأول", day_two: "اليوم الثاني", day_three: "اليوم الثالث", day_four: "اليوم الرابع", day_five: "اليوم الخامس", day_six: "اليوم السادس", day_seven: "اليوم السابع", day_eight: "اليوم الثامن", day_nine: "اليوم التاسع",
+            back_grid: "عودة للقائمة",
+            title_register: "تسجيل عضو فريق",
+            lbl_tl: "قائد الفريق (أنت)",
+            lbl_emp_id: "الرقم الوظيفي",
+            lbl_fullname: "الاسم الكامل",
+            lbl_email: "البريد الإلكتروني",
+            lbl_nation: "الجنسية",
+            lbl_status: "الحالة",
+            lbl_area: "المنطقة",
+            btn_save_member: "حفظ العضو",
+            lbl_trainee_id: "رقم المتدرب",
+            lbl_trainee_name: "اسم المتدرب",
+            lbl_trainee_email: "بريد المتدرب",
+            lbl_trainer: "اسم المدرب",
+            lbl_notes: "ملاحظات",
+            btn_submit_eval: "إرسال التقييم",
+            title_records: "السجلات",
+            btn_filter: "تصفية",
+            title_progress: "تقدم المتدرب",
+            th_day: "اليوم",
+            th_name: "الاسم",
+            th_trainer: "المدرب",
+            th_notes: "الملاحظات",
+            save_image: "حفظ كصورة",
+            close: "إغلاق"
+        },
+        id: {
+            login_title: "BON Cafe - Ketua Tim",
+            login_btn: "Masuk",
+            admin_login_link: "atau Masuk sebagai Admin?",
+            nav_home: "Beranda",
+            nav_announcements: "Pengumuman",
+            nav_dashboard: "Dasbor Saya",
+            nav_daily: "Tugas Harian",
+            nav_weekly: "Tugas Mingguan",
+            nav_problem: "Lapor Masalah",
+            nav_vacation: "Cuti",
+            nav_courses: "Kursus Pelatihan",
+            nav_training: "Pelatihan 9 Hari",
+            nav_history: "Riwayat Pelatihan",
+            nav_logout: "Keluar",
+            role_title: "Peran dan Tugas Ketua Tim",
+            cat_ann: "Pengumuman",
+            cat_dash: "Dasbor Saya",
+            cat_daily: "Daftar Tugas Harian",
+            cat_weekly: "Laporan Tugas Mingguan",
+            cat_problem: "Lapor Masalah",
+            cat_vacation: "Permintaan Cuti",
+            cat_courses: "Kursus Pelatihan",
+            cat_training: "Program Pelatihan",
+            title_courses: "Kursus Pelatihan",
+            btn_refresh: "Segarkan",
+            course_hint: "Klik kursus untuk melihat materi. Tandai selesai jika sudah.",
+            title_announcements: "Pengumuman Tim",
+            title_dashboard: "Ikhtisar Kinerja",
+            lbl_completion: "Penyelesaian Harian & Mingguan",
+            title_daily_history: "Tugas Harian",
+            title_weekly_history: "Tugas Mingguan",
+            th_date: "Tanggal",
+            th_branch: "Cabang",
+            th_status: "Status",
+            title_daily_check: "Daftar Periksa",
+            lbl_name: "Nama",
+            lbl_id: "ID",
+            lbl_branch: "Cabang",
+            lbl_sup: "Supervisor",
+            lbl_am: "Manajer Area",
+            btn_submit: "Kirim",
+            title_weekly_report: "Formulir Laporan",
+            lbl_week_ending: "Akhir Minggu",
+            btn_submit_weekly: "Kirim Laporan Mingguan",
+            title_report_issue: "Lapor Masalah",
+            lbl_issue_type: "Jenis Masalah",
+            lbl_specify: "Sebutkan Lainnya",
+            lbl_urgency: "Urgensi (Otomatis)",
+            lbl_desc: "Deskripsi",
+            lbl_upload: "Ketuk untuk Unggah Gambar",
+            btn_submit_report: "Kirim Laporan",
+            title_vacation: "Formulir Permintaan",
+            lbl_start: "Mulai",
+            lbl_end: "Berakhir",
+            lbl_reason: "Alasan",
+            note_title: "Catatan:",
+            note_vacation: "Formulir ini hanya untuk mencatat detail cuti ketua tim.",
+            title_9days: "Pelatihan 9 Hari",
+            btn_add_member: "Tambah Anggota Baru",
+            day_one: "Hari Satu", day_two: "Hari Dua", day_three: "Hari Tiga", day_four: "Hari Empat", day_five: "Hari Lima", day_six: "Hari Enam", day_seven: "Hari Tujuh", day_eight: "Hari Delapan", day_nine: "Hari Sembilan",
+            back_grid: "Kembali ke Grid",
+            title_register: "Daftar Anggota Tim",
+            lbl_tl: "Ketua Tim (Anda)",
+            lbl_emp_id: "ID Karyawan",
+            lbl_fullname: "Nama Lengkap",
+            lbl_email: "Email",
+            lbl_nation: "Kebangsaan",
+            lbl_status: "Status",
+            lbl_area: "Area",
+            btn_save_member: "Simpan Anggota",
+            lbl_trainee_id: "ID Peserta",
+            lbl_trainee_name: "Nama Peserta",
+            lbl_trainee_email: "Email Peserta",
+            lbl_trainer: "Nama Pelatih",
+            lbl_notes: "Catatan",
+            btn_submit_eval: "Kirim Evaluasi",
+            title_records: "Catatan",
+            btn_filter: "Filter",
+            title_progress: "Kemajuan Peserta",
+            th_day: "Hari",
+            th_name: "Nama",
+            th_trainer: "Pelatih",
+            th_notes: "Catatan",
+            save_image: "Simpan Gambar",
+            close: "Tutup"
+        },
+        in: {
+            login_title: "BON Cafe - टीम लीडर",
+            login_btn: "लॉग इन करें",
+            admin_login_link: "या एडमिन के रूप में लॉग इन करें?",
+            nav_home: "होम",
+            nav_announcements: "घोषणाएँ",
+            nav_dashboard: "मेरा डैशबोर्ड",
+            nav_daily: "दैनिक कार्य",
+            nav_weekly: "साप्ताहिक कार्य",
+            nav_problem: "समस्या रिपोर्ट करें",
+            nav_vacation: "छुट्टी",
+            nav_courses: "प्रशिक्षण पाठ्यक्रम",
+            nav_training: "9-दिवसीय प्रशिक्षण",
+            nav_history: "प्रशिक्षण इतिहास",
+            nav_logout: "लॉग आउट",
+            role_title: "टीम लीडर की भूमिका और कर्तव्य",
+            cat_ann: "घोषणाएँ",
+            cat_dash: "मेरा डैशबोर्ड",
+            cat_daily: "दैनिक कार्य सूची",
+            cat_weekly: "साप्ताहिक कार्य रिपोर्ट",
+            cat_problem: "समस्या रिपोर्ट करें",
+            cat_vacation: "छुट्टी का अनुरोध",
+            cat_courses: "प्रशिक्षण पाठ्यक्रम",
+            cat_training: "प्रशिक्षण कार्यक्रम",
+            title_courses: "प्रशिक्षण पाठ्यक्रम",
+            btn_refresh: "ताज़ा करें",
+            course_hint: "सामग्री देखने के लिए पाठ्यक्रम पर क्लिक करें। समाप्त होने पर पूर्ण चिह्नित करें।",
+            title_announcements: "टीम घोषणाएँ",
+            title_dashboard: "प्रदर्शन अवलोकन",
+            lbl_completion: "दैनिक और साप्ताहिक पूर्णता",
+            title_daily_history: "दैनिक कार्य",
+            title_weekly_history: "साप्ताहिक कार्य",
+            th_date: "दिनांक",
+            th_branch: "शाखा",
+            th_status: "स्थिति",
+            title_daily_check: "चेकलिस्ट",
+            lbl_name: "नाम",
+            lbl_id: "आईडी",
+            lbl_branch: "शाखा",
+            lbl_sup: "पर्यवेक्षक",
+            lbl_am: "क्षेत्र प्रबंधक",
+            btn_submit: "जमा करें",
+            title_weekly_report: "रिपोर्ट फॉर्म",
+            lbl_week_ending: "सप्ताह का अंत",
+            btn_submit_weekly: "साप्ताहिक रिपोर्ट जमा करें",
+            title_report_issue: "समस्या रिपोर्ट करें",
+            lbl_issue_type: "समस्या का प्रकार",
+            lbl_specify: "अन्य निर्दिष्ट करें",
+            lbl_urgency: "तात्कालिकता (स्वतः)",
+            lbl_desc: "विवरण",
+            lbl_upload: "छवि अपलोड करने के लिए टैप करें",
+            btn_submit_report: "रिपोर्ट जमा करें",
+            title_vacation: "अनुरोध फॉर्म",
+            lbl_start: "प्रारंभ",
+            lbl_end: "अंत",
+            lbl_reason: "कारण",
+            note_title: "नोट:",
+            note_vacation: "यह फॉर्म केवल टीम लीडर के अवकाश विवरण को रिकॉर्ड करने के लिए है।",
+            title_9days: "9-दिवसीय प्रशिक्षण",
+            btn_add_member: "नया सदस्य जोड़ें",
+            day_one: "पहला दिन", day_two: "दूसरा दिन", day_three: "तीसरा दिन", day_four: "चौथा दिन", day_five: "पाँचवा दिन", day_six: "छठा दिन", day_seven: "सातवाँ दिन", day_eight: "आठवाँ दिन", day_nine: "नौवाँ दिन",
+            back_grid: "ग्रिड पर वापस",
+            title_register: "टीम सदस्य पंजीकृत करें",
+            lbl_tl: "टीम लीडर (आप)",
+            lbl_emp_id: "कर्मचारी आईडी",
+            lbl_fullname: "पूरा नाम",
+            lbl_email: "ईमेल",
+            lbl_nation: "राष्ट्रीयता",
+            lbl_status: "स्थिति",
+            lbl_area: "क्षेत्र",
+            btn_save_member: "सदस्य सहेजें",
+            lbl_trainee_id: "प्रशिक्षु आईडी",
+            lbl_trainee_name: "प्रशिक्षु का नाम",
+            lbl_trainee_email: "प्रशिक्षु ईमेल",
+            lbl_trainer: "प्रशिक्षक का नाम",
+            lbl_notes: "टिप्पणियाँ",
+            btn_submit_eval: "मूल्यांकन जमा करें",
+            title_records: "रिकॉर्ड्स",
+            btn_filter: "फ़िल्टर",
+            title_progress: "प्रशिक्षु प्रगति",
+            th_day: "दिन",
+            th_name: "नाम",
+            th_trainer: "प्रशिक्षक",
+            th_notes: "टिप्पणियाँ",
+            save_image: "छवि के रूप में सहेजें",
+            close: "बंद करें"
+        }
+    };
+
+    function updateLanguage(lang) {
+        currentLang = lang;
+        const els = document.querySelectorAll('[data-i18n]');
+        els.forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (i18n[lang] && i18n[lang][key]) {
+                el.innerText = i18n[lang][key];
+            }
+        });
+        
+        // Handle RTL for Arabic
+        if(lang === 'ar') {
+            document.body.classList.add('is-rtl');
+        } else {
+            document.body.classList.remove('is-rtl');
+        }
+
+        // Sync selectors
+        document.querySelector('#login-overlay select').value = lang;
+        document.querySelector('#sidebar-lang-select').value = lang;
+    }
 
     // --- MODAL FUNCTIONS ---
     function showModal(type, title, msg, onConfirm = null) {
@@ -757,19 +1087,22 @@
         box.classList.remove('mod-success', 'mod-error', 'mod-warning', 'mod-confirm');
         btns.innerHTML = '';
         t.innerText = title; m.innerText = msg;
+        const btnText = (type === 'confirm') ? (currentLang === 'ar' ? 'نعم' : 'Yes') : (currentLang === 'ar' ? 'موافق' : 'OK');
+        const cancelText = (currentLang === 'ar' ? 'إلغاء' : 'Cancel');
+
         if(type === 'success') {
             box.classList.add('mod-success'); icon.innerText = 'check_circle';
-            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">OK</button>';
+            btns.innerHTML = `<button class="c-btn c-btn-primary" onclick="closeModal()">${btnText}</button>`;
         } else if(type === 'error') {
             box.classList.add('mod-error'); icon.innerText = 'error';
-            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Close</button>';
+            btns.innerHTML = `<button class="c-btn c-btn-primary" onclick="closeModal()">${currentLang==='ar'?'إغلاق':'Close'}</button>`;
         } else if(type === 'warning') {
             box.classList.add('mod-warning'); icon.innerText = 'warning';
-            btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">Understood</button>';
+            btns.innerHTML = `<button class="c-btn c-btn-primary" onclick="closeModal()">${btnText}</button>`;
         } else if(type === 'confirm') {
             box.classList.add('mod-confirm'); icon.innerText = 'help';
-            const yes = document.createElement('button'); yes.className = 'c-btn c-btn-primary'; yes.innerText = 'Yes';
-            const no = document.createElement('button'); no.className = 'c-btn c-btn-cancel'; no.innerText = 'Cancel';
+            const yes = document.createElement('button'); yes.className = 'c-btn c-btn-primary'; yes.innerText = btnText;
+            const no = document.createElement('button'); no.className = 'c-btn c-btn-cancel'; no.innerText = cancelText;
             yes.onclick = () => { closeModal(); if(onConfirm) onConfirm(); }; no.onclick = closeModal;
             btns.append(no, yes);
         }
@@ -785,7 +1118,7 @@
     function showTab(id, pushState = true) {
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
-       const titleMap = { 'landing': 'Home', 'announce-view': 'Announcements', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task', 'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation', 'training-dash': 'Training Grid', 'training-dynamic': 'Training Form', 'trainee-reg-view': 'Team Member Registration', 'history-view': 'History', 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement', 'training-course-view': 'Training Courses' };
+       const titleMap = { 'landing': i18n[currentLang].nav_home, 'announce-view': i18n[currentLang].nav_announcements, 'tl-dash': i18n[currentLang].nav_dashboard, 'daily': i18n[currentLang].nav_daily, 'weekly': i18n[currentLang].nav_weekly, 'problem': i18n[currentLang].nav_problem, 'vacation': i18n[currentLang].nav_vacation, 'training-dash': i18n[currentLang].nav_training, 'training-dynamic': i18n[currentLang].nav_training, 'trainee-reg-view': i18n[currentLang].title_register, 'history-view': i18n[currentLang].nav_history, 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement', 'training-course-view': i18n[currentLang].nav_courses };
        document.getElementById('dynamic-title').innerText = titleMap[id] || 'Bon Portal';
        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
        const btn = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(id));
@@ -796,7 +1129,8 @@
        if(id === 'training-course-view') loadTrainingCourses();
        if(id === 'admin-dash' && isAdminMode) { loadAdminData(); updateAdminTabBadges(); }
     }
-    function toggleAdmin() { isAdminMode = !isAdminMode; document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : "Team Portal Login"; }
+    function toggleAdmin() { isAdminMode = !isAdminMode; document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : i18n[currentLang].login_title; }
+    
     async function doLogin() {
        const u = document.getElementById('login-u').value; const p = document.getElementById('login-p').value; const btn = document.querySelector('#login-overlay button');
        if(!u || !p) { showModal('warning', 'Input Missing', 'Please enter username and password'); return; }
@@ -805,14 +1139,17 @@
        if(res.success) {
            currentUser = res; document.getElementById('login-overlay').style.display = 'none';
            if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('mobile-open');
-           showModal('success', `Welcome, ${currentUser.name.split(' ')[0]}!`, "Start your day with a smile and positivity");
+           
+           const welcomeTxt = (currentLang === 'ar') ? "أهلاً بك" : "Welcome";
+           showModal('success', `${welcomeTxt}, ${currentUser.name.split(' ')[0]}!`, "");
            initApp(); window.history.replaceState({tab: 'landing'}, "", "#landing"); fetchAnnouncements(); 
-       } else { showModal('error', 'Login Failed', res.message); btn.innerText = "Login"; }
+       } else { showModal('error', 'Login Failed', res.message); btn.innerText = i18n[currentLang].login_btn; }
     }
     function confirmLogout() { showModal('confirm', 'Confirm Logout', 'Are you sure you want to log out?', () => { currentUser = null; location.reload(); }); }
     
     async function initApp() {
-       document.getElementById('welcome-msg').innerText = "Welcome, " + currentUser.name.split(' ')[0]; 
+       const welcomeTxt = (currentLang === 'ar') ? "مرحباً" : "Welcome";
+       document.getElementById('welcome-msg').innerText = welcomeTxt + ", " + currentUser.name.split(' ')[0]; 
        document.querySelectorAll('.u-name').forEach(el => el.value = currentUser.name);
        document.querySelectorAll('.u-id').forEach(el => el.value = currentUser.id);
        if(currentUser.role === 'Admin') { document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'none'); document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex'); showTab('admin-dash', false); } 
@@ -820,7 +1157,6 @@
        const d = await fetchAPI('getGlobalDropdowns');
        if(d) { const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join('')); fills('.db-branch', d.branches); fills('.db-sup', d.sups); fills('.db-am', d.ams); }
        
-       // --- DYNAMIC RENDERING ---
        const dq = await fetchAPI('getQuestions', {sheetName:'Daily Config'});
        renderDynamicInputs('daily-questions', dq, 'daily_');
        const wq = await fetchAPI('getQuestions', {sheetName:'Weekly Config'});
@@ -828,89 +1164,28 @@
     }
     function toggleMenu() { const sb = document.getElementById('sidebar'); if(window.innerWidth <= 768) { sb.classList.toggle('mobile-open'); document.getElementById('mobile-close-btn').style.display = sb.classList.contains('mobile-open') ? 'block' : 'none'; } else { sb.classList.toggle('closed'); document.getElementById('main-wrapper').classList.toggle('full'); } }
 
-    // --- DYNAMIC INPUT RENDERER (THE KEY CHANGE) ---
     function renderDynamicInputs(containerId, questions, prefix) {
       const container = document.getElementById(containerId);
-      if(!questions || questions.length === 0) {
-          container.innerHTML = '<p style="color:#888;">No questions configured.</p>';
-          return;
-      }
-      
+      if(!questions || questions.length === 0) { container.innerHTML = '<p style="color:#888;">No questions configured.</p>'; return; }
       let html = '';
       questions.forEach((q, index) => {
-         // Fallbacks
          const type = (q.type || 'text').toLowerCase();
          const options = q.options ? q.options.split(',').map(o => o.trim()) : [];
          const inputName = prefix + "q_" + index;
-         const noteName = prefix + "reason_" + index; // For hidden note field
-         
-         html += `<div class="question-block">
-             <div style="font-weight:600; margin-bottom:10px;">${index + 1}. ${q.text}</div>`;
-
-         if(type === 'text') {
-             html += `<input type="text" name="${inputName}" required placeholder="Your answer...">`;
-         } else if (type === 'textarea') {
-             html += `<textarea name="${inputName}" rows="2" required placeholder="Your answer..."></textarea>`;
-         } else if (type === 'radio') {
-             html += `<div class="q-options">`;
-             options.forEach(opt => {
-                 html += `<label><input type="radio" name="${inputName}" value="${opt}" required onchange="checkDynamicNote('${noteName}', this)"> ${opt}</label>`;
-             });
-             html += `</div>`;
-         } else if (type === 'checkbox') {
-             html += `<div class="q-options">`;
-             options.forEach(opt => {
-                 // Checkboxes use [] in name to denote array, usually
-                 html += `<label><input type="checkbox" name="${inputName}[]" value="${opt}"> ${opt}</label>`;
-             });
-             html += `</div>`;
-         } else if (type === 'dropdown') {
-             html += `<select name="${inputName}" required onchange="checkDynamicNote('${noteName}', this)">
-                <option value="" disabled selected>Select Option</option>`;
-             options.forEach(opt => {
-                 html += `<option value="${opt}">${opt}</option>`;
-             });
-             html += `</select>`;
-         }
-
-         // Handle "Show Notes" configuration
-         if(q.showNotes) {
-             html += `<div id="div_${noteName}" class="hidden-input">
-                <input type="text" name="${noteName}" placeholder="Please specify details/reason...">
-             </div>`;
-         }
-
+         const noteName = prefix + "reason_" + index;
+         html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${index + 1}. ${q.text}</div>`;
+         if(type === 'text') { html += `<input type="text" name="${inputName}" required placeholder="Your answer...">`; } 
+         else if (type === 'textarea') { html += `<textarea name="${inputName}" rows="2" required placeholder="Your answer..."></textarea>`; } 
+         else if (type === 'radio') { html += `<div class="q-options">`; options.forEach(opt => { html += `<label><input type="radio" name="${inputName}" value="${opt}" required onchange="checkDynamicNote('${noteName}', this)"> ${opt}</label>`; }); html += `</div>`; } 
+         else if (type === 'checkbox') { html += `<div class="q-options">`; options.forEach(opt => { html += `<label><input type="checkbox" name="${inputName}[]" value="${opt}"> ${opt}</label>`; }); html += `</div>`; } 
+         else if (type === 'dropdown') { html += `<select name="${inputName}" required onchange="checkDynamicNote('${noteName}', this)"><option value="" disabled selected>Select Option</option>`; options.forEach(opt => { html += `<option value="${opt}">${opt}</option>`; }); html += `</select>`; }
+         if(q.showNotes) { html += `<div id="div_${noteName}" class="hidden-input"><input type="text" name="${noteName}" placeholder="Please specify details/reason..."></div>`; }
          html += `</div>`;
       });
       container.innerHTML = html;
     }
+    function checkDynamicNote(id, el) { const div = document.getElementById("div_" + id); if(!div) return; const val = el.value.toLowerCase(); const happy = ['yes', 'pass', 'ok', 'good']; if (!happy.includes(val)) { div.style.display = 'block'; div.querySelector('input').required = true; } else { div.style.display = 'none'; div.querySelector('input').required = false; } }
 
-    // Generic function to toggle note field if user selects negative option
-    // NOTE: In the old code "No" triggered it. Now we just check if it's there.
-    // We can make it smart: if value is "No", "Fail", "Other", show it.
-    function checkDynamicNote(id, el) {
-       const div = document.getElementById("div_" + id);
-       if(!div) return;
-       const val = el.value.toLowerCase();
-       // Simple heuristic: if "no", "fail", "other", or "n/a" -> show note
-       // Or, since the config says "Show Notes", maybe we show it always? 
-       // The prompt asked for "editable". Let's stick to the heuristic or make it always show if configured.
-       // Let's make it appear if value is No/Fail/Retrain for now, or just generic toggle.
-       // IMPROVED: If showNotes is true in config, we show it IF value is specific? 
-       // Actually, the simplest approach for a dynamic form is: if showNotes is TRUE, 
-       // the field is created. We only reveal it if needed.
-       // Let's reveal it if value is NOT 'Yes' and NOT 'Pass' (Common happy paths)
-       const happy = ['yes', 'pass', 'ok', 'good'];
-       if (!happy.includes(val)) {
-           div.style.display = 'block';
-           div.querySelector('input').required = true;
-       } else {
-           div.style.display = 'none';
-           div.querySelector('input').required = false;
-       }
-    }
-
-    // --- OTHER FUNCTIONALITY ---
     async function fetchAnnouncements() {
         const listDiv = document.getElementById('announcement-list');
         const badge = document.getElementById('bell-count');
@@ -942,7 +1217,7 @@
 
     async function loadTraineesAndOpenDay(day) {
         showTab('training-dynamic');
-        document.getElementById('training-title').innerText = "Training Day " + day;
+        document.getElementById('training-title').innerText = i18n[currentLang].nav_training + " - " + day;
         document.getElementById('train-cat').value = "Training Day " + day;
         document.getElementById('trainee-dropdown').innerHTML = '<option value="" disabled selected>Loading IDs...</option>';
         document.getElementById('t-name-auto').value = ""; document.getElementById('t-email-auto').value = "";
@@ -951,10 +1226,7 @@
         if(globalTraineeList.length > 0) dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join(''); else dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
         
         const div = document.getElementById('questions-container'); div.innerHTML = 'Loading...';
-        
-        // --- DYNAMIC TRAINING RENDER ---
         const qs = await fetchAPI('getTrainingQuestions', {day: day});
-        // We use 'q_' prefix for Training as per old code logic
         renderDynamicInputs('questions-container', qs, 'q_');
     }
 
@@ -971,7 +1243,7 @@
     function checkIssue(el) { const v = el.value; document.getElementById('div-oth').style.display = (v === 'Others') ? 'block' : 'none'; const map = {"Maintenance":"High Priority", "Team Member":"Low Priority", "Customer Complaint":"Medium Priority", "Others":"Medium Priority"}; document.getElementById('urg-lbl').value = map[v] || "Low Priority"; }
     async function handleProblem(e) { e.preventDefault(); const btn = e.target.querySelector('button'); btn.innerText = "Uploading..."; btn.disabled = true; const fd = new FormData(e.target); const obj = { category: "Report Problem", name: currentUser.name, empId: currentUser.id }; fd.forEach((v,k) => obj[k] = v); const file = document.getElementById('p-img').files[0]; if(file) { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = async () => { obj.imageFile = reader.result; obj.imageName = file.name; postData(obj, btn, e.target); }; } else { postData(obj, btn, e.target); } }
     async function handleDynamicSubmit(e, cat) { e.preventDefault(); const btn = e.target.querySelector('button'); btn.innerText = "Saving..."; btn.disabled = true; const fd = new FormData(e.target); const obj = { category: cat, name: currentUser.name, empId: currentUser.id }; fd.forEach((v,k) => obj[k] = v); postData(obj, btn, e.target); }
-    async function postData(obj, btn, form) { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json()); btn.innerText = (obj.category === 'Trainee Registration') ? "Save Team Member" : "Submit"; btn.disabled = false; if(res.success) { showModal('success', 'Success', res.message); form.reset(); if(obj.category === 'Trainee Registration') showTab('training-dash'); if(!obj.category.includes('Admin')) loadTLData(); } else { showModal('error', 'Error', res.message); } }
+    async function postData(obj, btn, form) { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json()); btn.innerText = (obj.category === 'Trainee Registration') ? i18n[currentLang].btn_save_member : i18n[currentLang].btn_submit; btn.disabled = false; if(res.success) { showModal('success', 'Success', res.message); form.reset(); if(obj.category === 'Trainee Registration') showTab('training-dash'); if(!obj.category.includes('Admin')) loadTLData(); } else { showModal('error', 'Error', res.message); } }
     function confirmTraining() { showTab('training-dash'); }
     function showHistory() { showTab('history-view'); fetchHistory(); }
     let slideIndex=0; function showSlides(){let s=document.getElementsByClassName("slide"); if(!s.length)return; for(let i=0;i<s.length;i++)s[i].classList.remove("active-slide"); slideIndex++; if(slideIndex>s.length)slideIndex=1; s[slideIndex-1].classList.add("active-slide"); setTimeout(showSlides, 4000);} showSlides();

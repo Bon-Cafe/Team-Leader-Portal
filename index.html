@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leader</title>
+  <title>BON Cafe | Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* --- CORE VARIABLES (Updated to Orange) --- */
+    /* --- CORE VARIABLES --- */
     :root {
       --primary: #f97316; /* Orange-500 */
       --primary-dark: #c2410c; /* Orange-700 */
@@ -20,18 +20,41 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; display: flex; }
     
-    /* RTL Support */
+    /* --- RTL SUPPORT (ARABIC) --- */
     body.is-rtl { direction: rtl; }
-    body.is-rtl .sidebar { left: auto; right: 0; transform: translateX(260px); }
-    body.is-rtl .sidebar.closed { transform: translateX(260px); }
-    body.is-rtl .sidebar.mobile-open { transform: translateX(0); }
+    
+    /* 1. Sidebar Position in RTL: Attached to Right, Visible by default (0 transform) */
+    body.is-rtl .sidebar { 
+        left: auto; 
+        right: 0; 
+        transform: translateX(0); /* FIX: Changed from 260px to 0 to make it visible */
+    }
+    
+    /* 2. Sidebar Closed State in RTL: Moved to Right (Positive X) */
+    body.is-rtl .sidebar.closed { 
+        transform: translateX(260px); 
+    }
+    
+    /* 3. Mobile Sidebar in RTL (Handled in Media Query below) */
+    
+    /* 4. Main Wrapper Margins in RTL */
     body.is-rtl .main-wrapper { margin-left: 0; margin-right: 260px; }
     body.is-rtl .main-wrapper.full { margin-right: 0; }
-    body.is-rtl .nav-item { flex-direction: row-reverse; }
-    body.is-rtl .nav-item i { margin-left: 10px; margin-right: 0; }
-    body.is-rtl .cat-card { text-align: right; flex-direction: row-reverse; }
-    body.is-rtl .prog-track { transform: scaleX(-1); } /* Flip progress bar */
+    
+    /* 5. Navigation Items in RTL */
+    /* Icons on Right, Text on Left (Standard Flex row in RTL) */
+    body.is-rtl .nav-item { flex-direction: row; } 
+    body.is-rtl .nav-item i { margin-left: 12px; margin-right: 0; }
+    
+    /* Hover Effect in RTL: Move Left (Inwards) */
+    body.is-rtl .nav-item:hover { transform: translateX(-3px); }
+    
+    /* General RTL Tweaks */
+    body.is-rtl .cat-card { text-align: right; flex-direction: row; } /* Ensure card flow matches RTL */
+    body.is-rtl .prog-track { transform: scaleX(-1); } /* Flip progress bar direction */
     body.is-rtl .bell-wrapper { margin-right: 0; margin-left: 10px; }
+    body.is-rtl .password-eye { right: auto; left: 10px; } /* Flip password eye */
+    body.is-rtl .password-wrapper input { padding-right: 14px; padding-left: 40px; }
 
     /* --- SIDEBAR --- */
     .sidebar {
@@ -106,7 +129,7 @@
     .login-lang { margin-bottom: 20px; text-align: right; }
     .login-lang select { width: auto; padding: 5px; font-size: 0.85rem; }
 
-    /* --- OTHER STYLES (Retained) --- */
+    /* --- OTHER STYLES --- */
     .admin-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
     .admin-tab-btn { position: relative; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--border); background: white; cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.2s; }
     .admin-tab-btn:hover { background: #f3f4f6; color: var(--primary); }
@@ -241,7 +264,7 @@
 
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%); width: 280px; }
-      body.is-rtl .sidebar { transform: translateX(100%); }
+      body.is-rtl .sidebar { transform: translateX(100%); } /* Hidden to right on mobile RTL */
       .sidebar.mobile-open { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
       body.is-rtl .sidebar.mobile-open { transform: translateX(0); }
       .main-wrapper { margin-left: 0; margin-right: 0; width: 100%; }
@@ -327,9 +350,7 @@
   <!-- LOGIN SCREEN -->
   <div id="login-overlay">
     <div class="login-box">
-       <!-- COMPANY LOGO HERE -->
        <img src="https://github.com/Bon-Cafe/TEAM-IMAGE/blob/main/NBC%20LOGO.jpg.png?raw=true" class="company-logo" alt="BON Cafe">
-       
        <div class="login-lang">
          <select onchange="updateLanguage(this.value)" class="lang-select" style="border:1px solid #ccc; background:#fff; color:#333;">
             <option value="en">English</option>
@@ -338,7 +359,6 @@
             <option value="in">India (Hindi)</option>
          </select>
        </div>
-
        <h2 data-i18n="login_title">BON Cafe - Team Leader</h2>
        <div class="form-group"><input type="text" id="login-u" placeholder="Username" required></div>
        <div class="form-group password-wrapper">
@@ -355,8 +375,6 @@
       <span id="welcome-msg">Welcome</span> 
       <i class="material-icons" onclick="toggleMenu()" style="cursor:pointer; display:none; color:white;" id="mobile-close-btn">close</i>
     </div>
-    
-    <!-- Sidebar Language Switcher (Visible when logged in) -->
     <div class="lang-switcher-sidebar tl-only">
          <select onchange="updateLanguage(this.value)" class="lang-select" id="sidebar-lang-select">
             <option value="en">English</option>
@@ -365,7 +383,6 @@
             <option value="in">India</option>
          </select>
     </div>
-
     <ul class="nav-links">
       <li class="nav-item tl-only active" onclick="showTab('landing')"><i class="material-icons">home</i> <span data-i18n="nav_home">Home</span></li>
       <li class="nav-item tl-only" onclick="showTab('announce-view')"><i class="material-icons">campaign</i> <span data-i18n="nav_announcements">Announcements</span></li>
@@ -449,7 +466,7 @@
          <div id="announcement-list">Loading...</div>
       </div>
 
-      <!-- Admin Post (Not Translated) -->
+      <!-- Admin Post -->
       <div id="admin-post-ann" class="form-section">
          <h2>Create New Announcement</h2>
          <form onsubmit="handleDynamicSubmit(event, 'Announcements')">
@@ -489,7 +506,7 @@
          <div class="table-responsive"><table class="history-table"><thead><tr><th data-i18n="th_date">Date</th><th data-i18n="th_branch">Branch</th><th data-i18n="th_status">Status</th></tr></thead><tbody id="tl-weekly-body"></tbody></table></div>
       </div>
 
-      <!-- Admin Dash (Not Translated) -->
+      <!-- Admin Dash -->
       <div id="admin-dash" class="form-section" style="max-width:1400px;">
          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <h2 style="margin:0;">Global Dashboard</h2>
@@ -702,7 +719,6 @@
     let currentAdminTab = 'Daily Task'; 
     let currentLang = 'en';
 
-    // --- TRANSLATION DICTIONARY ---
     const i18n = {
         en: {
             login_title: "BON Cafe - Team Leader",
@@ -1071,12 +1087,10 @@
             document.body.classList.remove('is-rtl');
         }
 
-        // Sync selectors
         document.querySelector('#login-overlay select').value = lang;
         document.querySelector('#sidebar-lang-select').value = lang;
     }
 
-    // --- MODAL FUNCTIONS ---
     function showModal(type, title, msg, onConfirm = null) {
         const modal = document.getElementById('c-modal');
         const box = document.getElementById('c-modal-box');
@@ -1112,7 +1126,6 @@
     function openViewer(url, title) { document.getElementById('viewer-iframe').src = url; document.getElementById('viewer-title').innerText = title || "Content Viewer"; document.getElementById('viewer-modal').style.display = 'flex'; }
     function closeViewer() { document.getElementById('viewer-modal').style.display = 'none'; document.getElementById('viewer-iframe').src = ""; }
     
-    // --- AUTH & INIT ---
     function togglePass() { const p = document.getElementById('login-p'); p.type = p.type === 'password' ? 'text' : 'password'; }
     window.onpopstate = function(event) { if(event.state && event.state.tab) showTab(event.state.tab, false); else { showModal('confirm', 'Exit Portal?', 'Log out?', () => location.reload()); window.history.pushState({tab: 'landing'}, "", "#landing"); } };
     function showTab(id, pushState = true) {
@@ -1139,7 +1152,6 @@
        if(res.success) {
            currentUser = res; document.getElementById('login-overlay').style.display = 'none';
            if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('mobile-open');
-           
            const welcomeTxt = (currentLang === 'ar') ? "أهلاً بك" : "Welcome";
            showModal('success', `${welcomeTxt}, ${currentUser.name.split(' ')[0]}!`, "");
            initApp(); window.history.replaceState({tab: 'landing'}, "", "#landing"); fetchAnnouncements(); 
@@ -1156,7 +1168,6 @@
        else { document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none'); document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'flex'); showTab('landing', false); loadTLData(); }
        const d = await fetchAPI('getGlobalDropdowns');
        if(d) { const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join('')); fills('.db-branch', d.branches); fills('.db-sup', d.sups); fills('.db-am', d.ams); }
-       
        const dq = await fetchAPI('getQuestions', {sheetName:'Daily Config'});
        renderDynamicInputs('daily-questions', dq, 'daily_');
        const wq = await fetchAPI('getQuestions', {sheetName:'Weekly Config'});
@@ -1224,7 +1235,6 @@
         globalTraineeList = await fetchAPI('getTraineeList');
         const dd = document.getElementById('trainee-dropdown');
         if(globalTraineeList.length > 0) dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join(''); else dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
-        
         const div = document.getElementById('questions-container'); div.innerHTML = 'Loading...';
         const qs = await fetchAPI('getTrainingQuestions', {day: day});
         renderDynamicInputs('questions-container', qs, 'q_');

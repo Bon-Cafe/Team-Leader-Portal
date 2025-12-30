@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leader</title>
+  <title>BON Cafe | Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -75,12 +75,12 @@
     .tp-fail { background:#fee2e2; color:#991b1b; }
     .tp-retrain { background:#fef3c7; color:#92400e; }
 
-    /* Print Styles */
+    /* Print Styles - A4 Portrait 0.25 Margin */
     @media print {
       body * { visibility: hidden; }
       #training-pop, #training-pop * { visibility: visible; }
       #training-pop { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white; padding: 0; margin: 0; overflow: visible; }
-      .custom-modal-box { box-shadow: none; transform: none !important; width: 100% !important; max-width: 100% !important; padding: 0.25in !important; }
+      .custom-modal-box { box-shadow: none; transform: none !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; }
       .c-modal-btns, .viewer-close, .sidebar, .content-header { display: none !important; }
       @page { size: A4 portrait; margin: 0.25in; }
     }
@@ -128,7 +128,7 @@
 </head>
 <body>
 
-  <!-- TRAINING POPUP MODAL -->
+  <!-- TRAINING POPUP MODAL (Modern Barista Style) -->
   <div class="custom-modal-overlay" id="training-pop">
     <div class="custom-modal-box" style="max-width: 800px; text-align: left;" id="training-card-content">
        <div class="tp-header">
@@ -555,57 +555,6 @@
     }
     function checkDynamicNote(id, el) { const div = document.getElementById("div_" + id); if(!div) return; const val = el.value.toLowerCase(); const happy = ['yes', 'pass', 'ok', 'good']; if (!happy.includes(val)) { div.style.display = 'block'; div.querySelector('input').required = true; } else { div.style.display = 'none'; div.querySelector('input').required = false; } }
 
-    async function fetchAnnouncements() {
-        const listDiv = document.getElementById('announcement-list');
-        const badge = document.getElementById('bell-count');
-        const res = await fetchAPI('getAnnouncements', {userId: currentUser.id});
-        activeAnnouncements = res;
-        const unread = res.filter(a => !a.isRead && a.type !== 'task').length;
-        if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } else { badge.style.display = 'none'; }
-        if(res.length === 0) { listDiv.innerHTML = '<p style="text-align:center;color:#666;">No active announcements.</p>'; return; }
-        listDiv.innerHTML = res.map(a => {
-            if(a.type === 'task') {
-               const isGlow = a.status === 'Pending' ? 'glowing-task' : '';
-               return `<div class="announce-card ${isGlow}" style="border-left-color:red;"><span class="tagged-badge">Tagged Task</span><div class="ac-header"><span class="ac-date">${a.date}</span></div><div class="ac-title">Direct Task from Admin</div><div class="ac-msg" style="font-weight:600;">${a.message}</div><div id="reply-box-${a.id}" class="reply-area">${a.status === 'Pending' ? `<input type="text" id="inp-${a.id}" placeholder="Type your reply here..." style="margin-bottom:10px;"><button class="ac-btn-read" onclick="replyToTask('${a.id}')">Reply to Task</button><button class="ac-btn-read" style="background:gray; margin-left:5px;" onclick="taskOk('${a.id}')">Mark as OK</button>` : `<span class="ac-read-badge">Status: ${a.status} ${a.reply? '- '+a.reply : ''}</span>`}</div></div>`;
-            } else {
-               return `<div class="announce-card"><div class="ac-header"><span class="ac-date">${a.date}</span>${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}</div><div class="ac-title">${a.title}</div><div class="ac-msg">${a.message}</div>${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}</div>`;
-            }
-        }).join('');
-    }
-    async function readAnnouncement(id, btn) { btn.innerText = "Processing..."; const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json()); if(res.success) fetchAnnouncements(); }
-    async function replyToTask(id) { const rep = document.getElementById('inp-'+id).value; if(!rep) return alert("Please write a reply"); const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'replyTask', taskId:id, reply:rep})}).then(r=>r.json()); if(res.success) { showModal('success', 'Replied', 'Your response has been sent to Admin'); fetchAnnouncements(); } }
-    async function taskOk(id) { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'taskOk', taskId:id})}).then(r=>r.json()); if(res.success) fetchAnnouncements(); }
-    
-    async function loadTrainingCourses() {
-        const listDiv = document.getElementById('course-list'); listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Loading courses...</div>';
-        const res = await fetchAPI('getTrainingCourses', {userId: currentUser.id});
-        if(!res || res.length === 0) { listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">No courses available.</div>'; return; }
-        listDiv.innerHTML = res.map(c => `<div class="course-card"><i class="material-icons course-type-icon">${c.type === 'Video' ? 'play_circle_filled' : 'picture_as_pdf'}</i><div class="course-title">${c.title}</div><div class="course-meta">${c.type}</div><div class="course-btn ${c.isDone ? 'done' : ''}" onclick="handleCourseClick('${c.id}', '${c.link}', '${c.title}', ${c.isDone})">${c.isDone ? 'Completed' : 'View Material'}</div></div>`).join('');
-    }
-    async function handleCourseClick(id, link, title, isDone) { openViewer(link, title); if(!isDone) { setTimeout(() => { showModal('confirm', 'Finish Course?', 'Did you complete reading/watching this material?', async () => { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action: 'markCourseDone', courseId: id, userId: currentUser.id, userName: currentUser.name})}).then(r=>r.json()); if(res.success) { loadTrainingCourses(); showModal('success', 'Great Job!', 'Course marked as completed.'); } }); }, 3000); } }
-
-    async function loadTraineesAndOpenDay(day) {
-        showTab('training-dynamic');
-        document.getElementById('training-title').innerText = i18n[currentLang].nav_training + " - " + day;
-        document.getElementById('train-cat').value = "Training Day " + day;
-        document.getElementById('trainee-dropdown').innerHTML = '<option value="" disabled selected>Loading IDs...</option>';
-        document.getElementById('t-name-auto').value = ""; document.getElementById('t-email-auto').value = "";
-        globalTraineeList = await fetchAPI('getTraineeList');
-        const dd = document.getElementById('trainee-dropdown');
-        if(globalTraineeList.length > 0) dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join(''); else dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
-        const div = document.getElementById('questions-container'); div.innerHTML = 'Loading...';
-        const qs = await fetchAPI('getTrainingQuestions', {day: day});
-        renderDynamicInputs('questions-container', qs, 'q_');
-    }
-
-    function onTraineeSelect(el) { const selectedId = el.value; const trainee = globalTraineeList.find(t => String(t.id) === String(selectedId)); if (trainee) { document.getElementById('t-name-auto').value = trainee.name; document.getElementById('t-email-auto').value = trainee.email; } }
-    async function fetchHistory() { const id = document.getElementById('hist-id').value; const data = await fetchAPI('getTrainingHistory', { id:id, start:document.getElementById('hist-start').value, end:document.getElementById('hist-end').value, viewerName: currentUser.name, role: currentUser.role }); document.getElementById('history-body').innerHTML = data.length ? data.map(r=>`<tr><td>${r.date}</td><td><span class="done-tag">${r.day}</span></td><td>${r.name}</td><td>${r.id}</td><td>${r.trainer}</td><td>${r.notes}</td></tr>`).join('') : '<tr><td colspan="6">No records</td></tr>'; const trainees = {}; data.forEach(r => { if(!trainees[r.id]) trainees[r.id] = {name:r.name, days:new Set()}; const dNum = r.day.match(/\d+/); if(dNum) trainees[r.id].days.add(parseInt(dNum[0])); }); let pHTML = ''; for (const [tid, info] of Object.entries(trainees)) { const pct = Math.min((info.days.size / 9)*100, 100); pHTML += `<div class="progress-card"><div class="p-header"><span>${info.name}</span><span>${info.days.size}/9</span></div><div class="p-sub">ID: ${tid}</div><div class="p-track-history"><div class="p-fill-history" style="width:${pct}%"><i class="material-icons coffee-marker">local_cafe</i></div></div><div class="p-text-history">${Math.round(pct)}% Completed</div></div>`; } document.getElementById('progress-grid').innerHTML = pHTML; document.getElementById('progress-section').style.display = pHTML ? 'block' : 'none'; }
-    async function loadTLData() { document.getElementById('tl-name').innerText = currentUser.name; document.getElementById('tl-id').innerText = "ID: " + currentUser.id; document.getElementById('tl-pic').src = currentUser.image || "https://via.placeholder.com/100"; const res = await fetchAPI('getDashboardData', {viewerId:currentUser.id, role:'User', start:document.getElementById('tl-start').value, end:document.getElementById('tl-end').value}); const score = Math.min(100, (res.daily.length * 5) + (res.weekly.length * 10)); document.getElementById('tl-bar').style.width = score + "%"; document.getElementById('tl-score').innerText = score + "%"; const dailyHTML = res.daily.length ? res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>'; const weeklyHTML = res.weekly.length ? res.weekly.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>'; document.getElementById('tl-daily-body').innerHTML = dailyHTML; document.getElementById('tl-weekly-body').innerHTML = weeklyHTML; }
-    async function openAssignTaskModal() { const drop = await fetchAPI('getGlobalDropdowns'); const sel = document.getElementById('task-tl-names'); sel.innerHTML = drop.names.map(n => `<option value="${n}">${n}</option>`).join(''); document.getElementById('assign-task-pop').classList.add('open'); }
-    async function submitAssignedTask() { const tl = document.getElementById('task-tl-names').value; const msg = document.getElementById('task-msg').value; if(!msg) return alert("Please write a task"); const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'assignTask', tlName:tl, task:msg, adminName:currentUser.name})}).then(r=>r.json()); if(res.success) { document.getElementById('assign-task-pop').classList.remove('open'); showModal('success', 'Success', 'Task assigned successfully to ' + tl); document.getElementById('task-msg').value = ""; } }
-    function switchAdminTab(tab) { currentAdminTab = tab; document.querySelectorAll('.admin-tab-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === tab); }); loadAdminData(); updateAdminTabBadges(); }
-    async function updateAdminTabBadges() { const probRes = await fetchAPI('getDashboardData', { role:'Admin', category:'Problems' }); const today = new Date().toLocaleDateString(); const newProbs = probRes.categoryData.filter(r => r.date === today).length; const probTab = document.getElementById('tab-Problems'); if(probTab) { const oldBadge = probTab.querySelector('.tab-notify'); if(oldBadge) oldBadge.remove(); if(newProbs > 0 && currentAdminTab !== 'Problems') probTab.innerHTML += `<span class="tab-notify">${newProbs}</span>`; } const taskHistory = await fetchAPI('getAdminTasks'); const newReplies = taskHistory.filter(t => t.status === 'Replied').length; const historyTab = document.getElementById('tab-TaskHistory'); if(historyTab) { const oldBadge = historyTab.querySelector('.tab-notify'); if(oldBadge) oldBadge.remove(); if(newReplies > 0 && currentAdminTab !== 'Task History') historyTab.innerHTML += `<span class="tab-notify">${newReplies}</span>`; } }
-    
     // --- UPDATED ADMIN TABLE (CLICKABLE) ---
     async function loadAdminData() {
         const tbody = document.getElementById('ad-tbody');
@@ -640,7 +589,6 @@
              thead.innerHTML = `<tr><th>Date</th><th>Image</th><th>Team Leader</th><th>Branch</th><th>Sup</th><th>Issue</th><th>Urgency</th></tr>`;
              tbody.innerHTML = data.map(r => `<tr class="clickable-row" onclick="showProblemPop(${JSON.stringify(r).replace(/"/g, '&quot;')})"><td>${r.date}</td><td style="text-align:center;">${r.img && r.img !== 'No Image' ? `<img src="${r.img}" class="table-img-icon">` : '-'}</td><td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.issue}</td><td>${r.urg}</td></tr>`).join('');
         }
-        // ... (Other categories remain same structure) ...
         else if (currentAdminTab === 'Vacations') { thead.innerHTML = `<tr><th>Req Date</th><th>Team Leader</th><th>Start Date</th><th>End Date</th><th>Reason</th></tr>`; tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.start}</td><td>${r.end}</td><td>${r.reason}</td></tr>`).join(''); } 
         else if (currentAdminTab === 'Announcement') { thead.innerHTML = `<tr><th>ID</th><th>Date</th><th>Title</th><th>Message</th><th>By</th></tr>`; tbody.innerHTML = data.map(r => `<tr><td>${r.id}</td><td>${r.date}</td><td>${r.title}</td><td>${r.msg}</td><td>${r.by}</td></tr>`).join(''); } 
     }

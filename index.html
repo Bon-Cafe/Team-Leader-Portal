@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leader</title>
+  <title>BON Cafe | Team Leaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -896,17 +896,17 @@
        // Or, since the config says "Show Notes", maybe we show it always? 
        // The prompt asked for "editable". Let's stick to the heuristic or make it always show if configured.
        // Let's make it appear if value is No/Fail/Retrain for now, or just generic toggle.
-       // IMPROVED: If showNotes is true in config, we show it IF value is specific? 
-       // Actually, the simplest approach for a dynamic form is: if showNotes is TRUE, 
+       // IMPROVED: If showNotes is false in config, we show it IF value is specific? 
+       // Actually, the simplest approach for a dynamic form is: if showNotes is FALSE, 
        // the field is created. We only reveal it if needed.
        // Let's reveal it if value is NOT 'Yes' and NOT 'Pass' (Common happy paths)
        const happy = ['yes', 'pass', 'ok', 'good'];
        if (!happy.includes(val)) {
            div.style.display = 'block';
-           div.querySelector('input').required = true;
+           div.querySelector('input').required = false;
        } else {
            div.style.display = 'none';
-           div.querySelector('input').required = false;
+           div.querySelector('input').required = true;
        }
     }
 

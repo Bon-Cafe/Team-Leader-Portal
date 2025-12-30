@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>BON Cafe | Team Leaders</title>
+  <title>BON Cafe | Team Leader</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- NEW: Include html2canvas for Save as Image feature -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     /* --- CORE VARIABLES --- */
@@ -84,7 +83,7 @@
     /* --- NEW ADMIN PANEL STYLES --- */
     .admin-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
     .admin-tab-btn {
-        position: relative; /* Needed for badge */
+        position: relative;
         padding: 10px 20px; border-radius: 20px; border: 1px solid var(--border);
         background: white; cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.2s;
     }
@@ -128,7 +127,7 @@
     .mod-warning .c-modal-icon { color: var(--warning); }
     .mod-confirm .c-modal-icon { color: #3b82f6; }
 
-    /* --- CONTENT VIEWER MODAL (For Training PDF/Video) --- */
+    /* --- VIEWER MODAL --- */
     .viewer-modal-overlay {
         position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000;
         display: none; justify-content: center; align-items: center;
@@ -165,7 +164,7 @@
         font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;
     }
 
-    /* --- NEW FEATURES CSS: GLOWING AND NOTIFICATIONS --- */
+    /* --- GLOWING AND NOTIFICATIONS --- */
     @keyframes taskGlow {
       0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); border-color: #ef4444; }
       50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); border-color: #fca5a5; }
@@ -184,8 +183,6 @@
       display: flex; align-items: center; justify-content: center;
       border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
-    /* --- NEW: Task Specific UI --- */
     .tagged-badge { background: #fee2e2; color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; display: inline-block; }
     .reply-area { margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
 
@@ -328,7 +325,7 @@
 </head>
 <body>
 
-  <!-- MODAL: PROBLEM DETAIL -->
+  <!-- MODALS and OVERLAYS (No changes here, standard structure) -->
   <div class="custom-modal-overlay" id="problem-pop">
     <div class="custom-modal-box" style="max-width: 600px;" id="pop-capture-area">
        <div class="modern-pop-card">
@@ -351,7 +348,6 @@
     </div>
   </div>
 
-  <!-- MODAL: ASSIGN TASK -->
   <div class="custom-modal-overlay" id="assign-task-pop">
     <div class="custom-modal-box" style="max-width: 450px;">
        <h2>Assign New Task</h2>
@@ -370,7 +366,6 @@
     </div>
   </div>
 
-  <!-- MODERN CUSTOM MODAL -->
   <div class="custom-modal-overlay" id="c-modal">
     <div class="custom-modal-box" id="c-modal-box">
        <i class="material-icons c-modal-icon" id="c-icon">check_circle</i>
@@ -382,7 +377,6 @@
     </div>
   </div>
 
-  <!-- CONTENT VIEWER MODAL (Iframe) -->
   <div class="viewer-modal-overlay" id="viewer-modal">
      <div class="viewer-modal-box">
          <div class="viewer-header">
@@ -421,14 +415,11 @@
       <li class="nav-item tl-only" onclick="showTab('weekly')"><i class="material-icons">event_note</i> Weekly Task</li>
       <li class="nav-item tl-only" onclick="showTab('problem')"><i class="material-icons">report_problem</i> Report Problem</li>
       <li class="nav-item tl-only" onclick="showTab('vacation')"><i class="material-icons">flight</i> Vacation</li>
-      <!-- Added Training Course Menu Item -->
       <li class="nav-item tl-only" onclick="showTab('training-course-view')"><i class="material-icons">menu_book</i> Training Courses</li>
-      
       <li class="nav-item tl-only" onclick="confirmTraining()"><i class="material-icons">school</i> 9-Days Training</li>
       <li class="nav-item tl-only" onclick="showHistory()"><i class="material-icons">history</i> Training History</li>
       <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-dash')"><i class="material-icons">analytics</i> Global Dashboard</li>
       <li class="nav-item admin-only" style="display:none;" onclick="showTab('admin-post-ann')"><i class="material-icons">campaign</i> Post Announcement</li>
-      
       <li style="margin-top:auto; border-top:1px solid #374151;" class="nav-item" onclick="confirmLogout()"><i class="material-icons">logout</i> Logout</li>
     </ul>
   </div>
@@ -452,7 +443,6 @@
             <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1000&q=80" class="slide">
             <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80" class="slide">
         </div>
-        
         <div class="role-section">
             <div class="role-header" onclick="document.getElementById('role-text').classList.toggle('open')"><span>Role and Duties of Team Leaders</span><i class="material-icons">expand_more</i></div>
             <div class="role-content" id="role-text">
@@ -463,7 +453,6 @@
                 <p><strong>5. Performance:</strong> Monitor team KPIs and ensure quality standards are met.</p>
             </div>
         </div>
-
         <div class="category-list tl-only">
             <div class="cat-card" onclick="showTab('announce-view')"><i class="material-icons">campaign</i><span>Announcements</span></div>
             <div class="cat-card" onclick="showTab('tl-dash')"><i class="material-icons">dashboard</i><span>My Dashboard</span></div>
@@ -471,7 +460,6 @@
             <div class="cat-card" onclick="showTab('weekly')"><i class="material-icons">event_note</i><span>Weekly Task Report</span></div>
             <div class="cat-card" onclick="showTab('problem')"><i class="material-icons">report_problem</i><span>Report Problem</span></div>
             <div class="cat-card" onclick="showTab('vacation')"><i class="material-icons">flight</i><span>Vacation Request</span></div>
-            <!-- Added Course Card -->
             <div class="cat-card" onclick="showTab('training-course-view')"><i class="material-icons">menu_book</i><span>Training Course</span></div>
             <div class="cat-card" onclick="confirmTraining()"><i class="material-icons">school</i><span>Training Program</span></div>
         </div>
@@ -481,7 +469,7 @@
         </div>
       </div>
 
-      <!-- TRAINING COURSES VIEW -->
+      <!-- Training Course View -->
       <div id="training-course-view" class="form-section">
          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 style="margin:0;">Training Courses</h2>
@@ -491,13 +479,13 @@
          <div id="course-list" class="course-grid">Loading courses...</div>
       </div>
 
-      <!-- ANNOUNCEMENTS VIEW -->
+      <!-- Announcement View -->
       <div id="announce-view" class="form-section">
          <h2>Team Announcements</h2>
          <div id="announcement-list">Loading...</div>
       </div>
 
-      <!-- ADMIN POST ANNOUNCEMENT -->
+      <!-- Admin Post Announcement -->
       <div id="admin-post-ann" class="form-section">
          <h2>Create New Announcement</h2>
          <form onsubmit="handleDynamicSubmit(event, 'Announcements')">
@@ -509,6 +497,7 @@
          </form>
       </div>
 
+      <!-- TL Dashboard -->
       <div id="tl-dash" class="form-section">
          <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
             <h2 style="margin:0;">Performance Overview</h2>
@@ -536,11 +525,10 @@
          <div class="table-responsive"><table class="history-table"><thead><tr><th>Date</th><th>Branch</th><th>Status</th></tr></thead><tbody id="tl-weekly-body"></tbody></table></div>
       </div>
 
-      <!-- NEW ADMIN DASHBOARD -->
+      <!-- Admin Dashboard -->
       <div id="admin-dash" class="form-section" style="max-width:1400px;">
          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <h2 style="margin:0;">Global Dashboard</h2>
-            <!-- Button to open Assign Task modal -->
             <button class="c-btn c-btn-primary" style="flex:none; width:auto; padding:10px 20px;" onclick="openAssignTaskModal()">Assign Task</button>
          </div>
          <div class="admin-nav">
@@ -549,7 +537,6 @@
              <button class="admin-tab-btn" id="tab-Problems" onclick="switchAdminTab('Problems')">Problems</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Vacation')">Vacations</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Trainings')">Trainings</button>
-             <!-- New Tab: Task History -->
              <button class="admin-tab-btn" id="tab-TaskHistory" onclick="switchAdminTab('Task History')">Task History</button>
              <button class="admin-tab-btn" onclick="switchAdminTab('Announcement')">Announcement</button>
          </div>
@@ -568,6 +555,7 @@
          </div>
       </div>
 
+      <!-- Daily Task -->
       <div id="daily" class="form-section">
         <h2>Checklist</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Daily Task')">
@@ -578,11 +566,15 @@
            <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
            <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
            <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
+           
+           <!-- DYNAMIC DAILY QUESTIONS -->
            <div id="daily-questions">Loading...</div>
+           
            <button class="submit-btn">Submit Daily Task</button>
         </form>
       </div>
 
+      <!-- Weekly Task -->
       <div id="weekly" class="form-section">
         <h2>Report Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Weekly Task')">
@@ -594,11 +586,15 @@
            <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
            <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
            <div class="form-group"><label>Week Ending</label><input type="date" name="weekDate" required></div>
+           
+           <!-- DYNAMIC WEEKLY QUESTIONS -->
            <div id="weekly-questions">Loading...</div>
+           
            <button class="submit-btn">Submit Weekly Report</button>
         </form>
       </div>
 
+      <!-- Report Problem -->
       <div id="problem" class="form-section">
         <h2>Report Issue</h2>
         <form onsubmit="handleProblem(event)">
@@ -630,6 +626,7 @@
         </form>
       </div>
 
+      <!-- Vacation -->
       <div id="vacation" class="form-section">
         <h2>Request Form</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Vacation')">
@@ -643,13 +640,13 @@
           </div>
           <div class="form-group"><label>Reason</label><input type="text" name="reason" required></div>
           <button class="submit-btn">Submit</button>
-          <!-- ADDED DISCLAIMER NOTE -->
           <p style="margin-top:15px; font-size:0.9rem; color:#dc2626; background:#fef2f2; padding:10px; border-radius:6px; border:1px solid #fee2e2;">
-            <strong>Note:</strong> This form is only to record the vacation details of the team leader. Please make sure you have already informed your supervisor and applied for leave from the management system.
+            <strong>Note:</strong> This form is only to record the vacation details of the team leader.
           </p>
         </form>
       </div>
 
+      <!-- Training Grid -->
       <div id="training-dash" class="form-section">
         <h2 style="display:flex; justify-content:space-between; align-items:center;">
            9-Days Training
@@ -658,7 +655,6 @@
            <i class="material-icons" style="color:var(--primary);">person_add</i>
            Add New Team Member
         </button>
-        
         <div class="training-grid">
           <div class="day-card" onclick="loadTraineesAndOpenDay(1)"><span class="day-num">1</span> Day One</div>
           <div class="day-card" onclick="loadTraineesAndOpenDay(2)"><span class="day-num">2</span> Day Two</div>
@@ -672,65 +668,46 @@
         </div>
       </div>
 
-      <!-- TRAINEE REGISTRATION FORM -->
+      <!-- Trainee Registration -->
       <div id="trainee-reg-view" class="form-section">
         <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
         <h2>Register Team Member</h2>
         <form onsubmit="handleDynamicSubmit(event, 'Trainee Registration')">
            <div class="form-group"><label>Team Leader (You)</label><input class="u-name" name="teamLeader" readonly></div>
-           
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
               <div class="form-group"><label>Employee ID</label><input type="text" name="traineeId" required></div>
               <div class="form-group"><label>Full Name</label><input type="text" name="traineeName" required></div>
            </div>
-           
            <div class="form-group"><label>Email</label><input type="email" name="traineeEmail" required></div>
-           
            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
               <div class="form-group"><label>Nationality</label><input type="text" name="nationality" required></div>
-              <div class="form-group"><label>Status</label>
-                  <select name="empStatus" required>
-                      <option value="New">New</option>
-                      <option value="Old">Old</option>
-                  </select>
-              </div>
+              <div class="form-group"><label>Status</label><select name="empStatus" required><option value="New">New</option><option value="Old">Old</option></select></div>
            </div>
-           
            <div class="form-group"><label>Branch</label><select class="db-branch" name="branch" required></select></div>
            <div class="form-group"><label>Supervisor</label><select class="db-sup" name="supervisor" required></select></div>
            <div class="form-group"><label>Area Manager</label><select class="db-am" name="areaManager" required></select></div>
-           
-           <div class="form-group"><label>Area</label>
-              <select name="area" required>
-                 <option value="" disabled selected>Select Area</option>
-                 <option value="Jeddah">Jeddah</option>
-                 <option value="Makkah">Makkah</option>
-                 <option value="Taif">Taif</option>
-                 <option value="Madinah">Madinah</option>
-              </select>
-           </div>
-           
+           <div class="form-group"><label>Area</label><select name="area" required><option value="" disabled selected>Select Area</option><option value="Jeddah">Jeddah</option><option value="Makkah">Makkah</option><option value="Taif">Taif</option><option value="Madinah">Madinah</option></select></div>
            <button class="submit-btn">Save Team Member</button>
         </form>
       </div>
 
+      <!-- Training Dynamic Form -->
       <div id="training-dynamic" class="form-section">
         <div onclick="showTab('training-dash')" style="cursor:pointer; margin-bottom:20px; color:#6b7280; font-weight:600; display:flex; align-items:center;"><i class="material-icons">arrow_back</i> Back to Grid</div>
         <h2 id="training-title">Training Day</h2>
         <form id="dynamic-form" onsubmit="handleDynamicSubmit(event, 'Training')">
           <input type="hidden" name="category" id="train-cat">
-          
           <div class="form-group">
             <label>Trainee ID</label>
-            <select id="trainee-dropdown" name="traineeId" required onchange="onTraineeSelect(this)">
-               <option value="" disabled selected>Select Trainee ID</option>
-            </select>
+            <select id="trainee-dropdown" name="traineeId" required onchange="onTraineeSelect(this)"><option value="" disabled selected>Select Trainee ID</option></select>
           </div>
           <div class="form-group"><label>Trainee Name</label><input type="text" id="t-name-auto" name="traineeName" readonly required></div>
           <div class="form-group"><label>Trainee Email</label><input type="email" id="t-email-auto" name="traineeEmail" readonly required></div>
-          
           <div class="form-group"><label>Trainer Name</label><input class="u-name" name="trainerName" readonly></div>
+          
+          <!-- DYNAMIC TRAINING QUESTIONS -->
           <div id="questions-container">Loading...</div>
+          
           <div class="form-group"><label>Notes</label><textarea name="notes" rows="3" required></textarea></div>
           <button class="submit-btn">Submit Evaluation</button>
         </form>
@@ -769,7 +746,7 @@
     let globalTraineeList = []; 
     let currentAdminTab = 'Daily Task'; 
 
-    // --- MODERN MODAL SYSTEM ---
+    // --- MODAL FUNCTIONS ---
     function showModal(type, title, msg, onConfirm = null) {
         const modal = document.getElementById('c-modal');
         const box = document.getElementById('c-modal-box');
@@ -777,13 +754,9 @@
         const t = document.getElementById('c-title');
         const m = document.getElementById('c-msg');
         const btns = document.getElementById('c-btns');
-
         box.classList.remove('mod-success', 'mod-error', 'mod-warning', 'mod-confirm');
         btns.innerHTML = '';
-
-        t.innerText = title;
-        m.innerText = msg;
-
+        t.innerText = title; m.innerText = msg;
         if(type === 'success') {
             box.classList.add('mod-success'); icon.innerText = 'check_circle';
             btns.innerHTML = '<button class="c-btn c-btn-primary" onclick="closeModal()">OK</button>';
@@ -797,603 +770,212 @@
             box.classList.add('mod-confirm'); icon.innerText = 'help';
             const yes = document.createElement('button'); yes.className = 'c-btn c-btn-primary'; yes.innerText = 'Yes';
             const no = document.createElement('button'); no.className = 'c-btn c-btn-cancel'; no.innerText = 'Cancel';
-            yes.onclick = () => { closeModal(); if(onConfirm) onConfirm(); };
-            no.onclick = closeModal;
+            yes.onclick = () => { closeModal(); if(onConfirm) onConfirm(); }; no.onclick = closeModal;
             btns.append(no, yes);
         }
-
         modal.classList.add('open');
     }
-
     function closeModal() { document.getElementById('c-modal').classList.remove('open'); }
+    function openViewer(url, title) { document.getElementById('viewer-iframe').src = url; document.getElementById('viewer-title').innerText = title || "Content Viewer"; document.getElementById('viewer-modal').style.display = 'flex'; }
+    function closeViewer() { document.getElementById('viewer-modal').style.display = 'none'; document.getElementById('viewer-iframe').src = ""; }
     
-    // --- VIEWER MODAL ---
-    function openViewer(url, title) {
-        document.getElementById('viewer-iframe').src = url;
-        document.getElementById('viewer-title').innerText = title || "Content Viewer";
-        document.getElementById('viewer-modal').style.display = 'flex';
-    }
-    function closeViewer() {
-        document.getElementById('viewer-modal').style.display = 'none';
-        document.getElementById('viewer-iframe').src = "";
-    }
-
-    // --- PASSWORD TOGGLE ---
-    function togglePass() {
-        const p = document.getElementById('login-p');
-        p.type = p.type === 'password' ? 'text' : 'password';
-    }
-
-    // --- NAVIGATION SECURITY ---
-    window.onpopstate = function(event) {
-        if(event.state && event.state.tab) {
-            showTab(event.state.tab, false);
-        } else {
-            showModal('confirm', 'Exit Portal?', 'Are you sure you want to log out?', () => {
-                location.reload();
-            });
-            window.history.pushState({tab: 'landing'}, "", "#landing");
-        }
-    };
-
+    // --- AUTH & INIT ---
+    function togglePass() { const p = document.getElementById('login-p'); p.type = p.type === 'password' ? 'text' : 'password'; }
+    window.onpopstate = function(event) { if(event.state && event.state.tab) showTab(event.state.tab, false); else { showModal('confirm', 'Exit Portal?', 'Log out?', () => location.reload()); window.history.pushState({tab: 'landing'}, "", "#landing"); } };
     function showTab(id, pushState = true) {
        document.querySelectorAll('.form-section, .landing-wrapper').forEach(e => e.classList.remove('active'));
        document.getElementById(id).classList.add('active');
-       
-       const titleMap = {
-           'landing': 'Home', 'announce-view': 'Announcements', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task',
-           'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation',
-           'training-dash': 'Training Grid', 'training-dynamic': 'Training Form', 'trainee-reg-view': 'Team Member Registration',
-           'history-view': 'History', 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement',
-           'training-course-view': 'Training Courses'
-       };
+       const titleMap = { 'landing': 'Home', 'announce-view': 'Announcements', 'tl-dash': 'My Dashboard', 'daily': 'Daily Task', 'weekly': 'Weekly Task', 'problem': 'Report Problem', 'vacation': 'Vacation', 'training-dash': 'Training Grid', 'training-dynamic': 'Training Form', 'trainee-reg-view': 'Team Member Registration', 'history-view': 'History', 'admin-dash': 'Admin Panel', 'admin-post-ann': 'Post Announcement', 'training-course-view': 'Training Courses' };
        document.getElementById('dynamic-title').innerText = titleMap[id] || 'Bon Portal';
-
        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
        const btn = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(id));
        if(btn) btn.classList.add('active');
-
-       if(window.innerWidth <= 768) {
-           document.getElementById('sidebar').classList.remove('mobile-open');
-           document.getElementById('mobile-close-btn').style.display = 'none';
-       }
-
-       if(pushState) {
-           window.history.pushState({tab: id}, "", "#" + id);
-       }
-       
+       if(window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('mobile-close-btn').style.display = 'none'; }
+       if(pushState) window.history.pushState({tab: id}, "", "#" + id);
        if(id === 'announce-view') fetchAnnouncements();
        if(id === 'training-course-view') loadTrainingCourses();
-       if(id === 'admin-dash' && isAdminMode) {
-          loadAdminData();
-          updateAdminTabBadges(); // NEW: Check for notifications
-       }
+       if(id === 'admin-dash' && isAdminMode) { loadAdminData(); updateAdminTabBadges(); }
     }
-
-    // --- AUTH ---
-    function toggleAdmin() {
-       isAdminMode = !isAdminMode;
-       document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : "Team Portal Login";
-    }
+    function toggleAdmin() { isAdminMode = !isAdminMode; document.querySelector('#login-overlay h2').innerText = isAdminMode ? "Admin Login" : "Team Portal Login"; }
     async function doLogin() {
-       const u = document.getElementById('login-u').value;
-       const p = document.getElementById('login-p').value;
-       const btn = document.querySelector('#login-overlay button');
+       const u = document.getElementById('login-u').value; const p = document.getElementById('login-p').value; const btn = document.querySelector('#login-overlay button');
        if(!u || !p) { showModal('warning', 'Input Missing', 'Please enter username and password'); return; }
-
        btn.innerText = "Checking...";
        const res = await fetchAPI('handleLogin', {username:u, password:p});
        if(res.success) {
-           currentUser = res;
-           document.getElementById('login-overlay').style.display = 'none';
+           currentUser = res; document.getElementById('login-overlay').style.display = 'none';
            if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('mobile-open');
-           
-           // WELCOME POPUP
-           const firstName = currentUser.name.split(' ')[0];
-           showModal('success', `Welcome, ${firstName}!`, "Start your day with a smile and positivity");
-
-           initApp();
-           window.history.replaceState({tab: 'landing'}, "", "#landing");
-           fetchAnnouncements(); 
-       } else {
-           showModal('error', 'Login Failed', res.message); btn.innerText = "Login";
-       }
+           showModal('success', `Welcome, ${currentUser.name.split(' ')[0]}!`, "Start your day with a smile and positivity");
+           initApp(); window.history.replaceState({tab: 'landing'}, "", "#landing"); fetchAnnouncements(); 
+       } else { showModal('error', 'Login Failed', res.message); btn.innerText = "Login"; }
     }
+    function confirmLogout() { showModal('confirm', 'Confirm Logout', 'Are you sure you want to log out?', () => { currentUser = null; location.reload(); }); }
     
-    function confirmLogout() {
-        showModal('confirm', 'Confirm Logout', 'Are you sure you want to log out?', () => {
-            currentUser = null; location.reload();
-        });
-    }
-
     async function initApp() {
        document.getElementById('welcome-msg').innerText = "Welcome, " + currentUser.name.split(' ')[0]; 
        document.querySelectorAll('.u-name').forEach(el => el.value = currentUser.name);
        document.querySelectorAll('.u-id').forEach(el => el.value = currentUser.id);
-
-       if(currentUser.role === 'Admin') {
-          document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'none');
-          document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex');
-          showTab('admin-dash', false);
-       } else {
-          document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
-          document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'flex'); 
-          showTab('landing', false);
-          loadTLData();
-       }
-
+       if(currentUser.role === 'Admin') { document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'none'); document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'flex'); showTab('admin-dash', false); } 
+       else { document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none'); document.querySelectorAll('.tl-only').forEach(e => e.style.display = 'flex'); showTab('landing', false); loadTLData(); }
        const d = await fetchAPI('getGlobalDropdowns');
-       if(d) {
-          const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => {
-             sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join('');
-          });
-          fills('.db-branch', d.branches); fills('.db-sup', d.sups); fills('.db-am', d.ams);
-       }
+       if(d) { const fills = (cls, data) => document.querySelectorAll(cls).forEach(sel => sel.innerHTML = '<option value="" disabled selected>Select option</option>' + data.map(i=>`<option value="${i}">${i}</option>`).join('')); fills('.db-branch', d.branches); fills('.db-sup', d.sups); fills('.db-am', d.ams); }
        
+       // --- DYNAMIC RENDERING ---
        const dq = await fetchAPI('getQuestions', {sheetName:'Daily Config'});
-       renderDailyQuestions('daily-questions', dq);
+       renderDynamicInputs('daily-questions', dq, 'daily_');
        const wq = await fetchAPI('getQuestions', {sheetName:'Weekly Config'});
-       renderWeeklyQuestions('weekly-questions', wq);
+       renderDynamicInputs('weekly-questions', wq, 'weekly_');
+    }
+    function toggleMenu() { const sb = document.getElementById('sidebar'); if(window.innerWidth <= 768) { sb.classList.toggle('mobile-open'); document.getElementById('mobile-close-btn').style.display = sb.classList.contains('mobile-open') ? 'block' : 'none'; } else { sb.classList.toggle('closed'); document.getElementById('main-wrapper').classList.toggle('full'); } }
+
+    // --- DYNAMIC INPUT RENDERER (THE KEY CHANGE) ---
+    function renderDynamicInputs(containerId, questions, prefix) {
+      const container = document.getElementById(containerId);
+      if(!questions || questions.length === 0) {
+          container.innerHTML = '<p style="color:#888;">No questions configured.</p>';
+          return;
+      }
+      
+      let html = '';
+      questions.forEach((q, index) => {
+         // Fallbacks
+         const type = (q.type || 'text').toLowerCase();
+         const options = q.options ? q.options.split(',').map(o => o.trim()) : [];
+         const inputName = prefix + "q_" + index;
+         const noteName = prefix + "reason_" + index; // For hidden note field
+         
+         html += `<div class="question-block">
+             <div style="font-weight:600; margin-bottom:10px;">${index + 1}. ${q.text}</div>`;
+
+         if(type === 'text') {
+             html += `<input type="text" name="${inputName}" required placeholder="Your answer...">`;
+         } else if (type === 'textarea') {
+             html += `<textarea name="${inputName}" rows="2" required placeholder="Your answer..."></textarea>`;
+         } else if (type === 'radio') {
+             html += `<div class="q-options">`;
+             options.forEach(opt => {
+                 html += `<label><input type="radio" name="${inputName}" value="${opt}" required onchange="checkDynamicNote('${noteName}', this)"> ${opt}</label>`;
+             });
+             html += `</div>`;
+         } else if (type === 'checkbox') {
+             html += `<div class="q-options">`;
+             options.forEach(opt => {
+                 // Checkboxes use [] in name to denote array, usually
+                 html += `<label><input type="checkbox" name="${inputName}[]" value="${opt}"> ${opt}</label>`;
+             });
+             html += `</div>`;
+         } else if (type === 'dropdown') {
+             html += `<select name="${inputName}" required onchange="checkDynamicNote('${noteName}', this)">
+                <option value="" disabled selected>Select Option</option>`;
+             options.forEach(opt => {
+                 html += `<option value="${opt}">${opt}</option>`;
+             });
+             html += `</select>`;
+         }
+
+         // Handle "Show Notes" configuration
+         if(q.showNotes) {
+             html += `<div id="div_${noteName}" class="hidden-input">
+                <input type="text" name="${noteName}" placeholder="Please specify details/reason...">
+             </div>`;
+         }
+
+         html += `</div>`;
+      });
+      container.innerHTML = html;
     }
 
-    function toggleMenu() { 
-        const sb = document.getElementById('sidebar');
-        if(window.innerWidth <= 768) {
-            sb.classList.toggle('mobile-open');
-            document.getElementById('mobile-close-btn').style.display = sb.classList.contains('mobile-open') ? 'block' : 'none';
-        } else {
-            sb.classList.toggle('closed'); 
-            document.getElementById('main-wrapper').classList.toggle('full'); 
-        }
+    // Generic function to toggle note field if user selects negative option
+    // NOTE: In the old code "No" triggered it. Now we just check if it's there.
+    // We can make it smart: if value is "No", "Fail", "Other", show it.
+    function checkDynamicNote(id, el) {
+       const div = document.getElementById("div_" + id);
+       if(!div) return;
+       const val = el.value.toLowerCase();
+       // Simple heuristic: if "no", "fail", "other", or "n/a" -> show note
+       // Or, since the config says "Show Notes", maybe we show it always? 
+       // The prompt asked for "editable". Let's stick to the heuristic or make it always show if configured.
+       // Let's make it appear if value is No/Fail/Retrain for now, or just generic toggle.
+       // IMPROVED: If showNotes is true in config, we show it IF value is specific? 
+       // Actually, the simplest approach for a dynamic form is: if showNotes is TRUE, 
+       // the field is created. We only reveal it if needed.
+       // Let's reveal it if value is NOT 'Yes' and NOT 'Pass' (Common happy paths)
+       const happy = ['yes', 'pass', 'ok', 'good'];
+       if (!happy.includes(val)) {
+           div.style.display = 'block';
+           div.querySelector('input').required = true;
+       } else {
+           div.style.display = 'none';
+           div.querySelector('input').required = false;
+       }
     }
 
-    // --- ANNOUNCEMENT SYSTEM ---
+    // --- OTHER FUNCTIONALITY ---
     async function fetchAnnouncements() {
         const listDiv = document.getElementById('announcement-list');
         const badge = document.getElementById('bell-count');
-        
         const res = await fetchAPI('getAnnouncements', {userId: currentUser.id});
         activeAnnouncements = res;
-
         const unread = res.filter(a => !a.isRead && a.type !== 'task').length;
-        if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } 
-        else { badge.style.display = 'none'; }
-
+        if(unread > 0) { badge.style.display = 'flex'; badge.innerText = unread; } else { badge.style.display = 'none'; }
         if(res.length === 0) { listDiv.innerHTML = '<p style="text-align:center;color:#666;">No active announcements.</p>'; return; }
-
         listDiv.innerHTML = res.map(a => {
             if(a.type === 'task') {
-               // FEATURE 1: Glow red if Pending
                const isGlow = a.status === 'Pending' ? 'glowing-task' : '';
-               return `
-               <div class="announce-card ${isGlow}" style="border-left-color:red;">
-                  <span class="tagged-badge">Tagged Task</span>
-                  <div class="ac-header"><span class="ac-date">${a.date}</span></div>
-                  <div class="ac-title">Direct Task from Admin</div>
-                  <div class="ac-msg" style="font-weight:600;">${a.message}</div>
-                  <div id="reply-box-${a.id}" class="reply-area">
-                     ${a.status === 'Pending' ? `
-                        <input type="text" id="inp-${a.id}" placeholder="Type your reply here..." style="margin-bottom:10px;">
-                        <button class="ac-btn-read" onclick="replyToTask('${a.id}')">Reply to Task</button>
-                        <button class="ac-btn-read" style="background:gray; margin-left:5px;" onclick="taskOk('${a.id}')">Mark as OK</button>
-                     ` : `<span class="ac-read-badge">Status: ${a.status} ${a.reply? '- '+a.reply : ''}</span>`}
-                  </div>
-               </div>`;
+               return `<div class="announce-card ${isGlow}" style="border-left-color:red;"><span class="tagged-badge">Tagged Task</span><div class="ac-header"><span class="ac-date">${a.date}</span></div><div class="ac-title">Direct Task from Admin</div><div class="ac-msg" style="font-weight:600;">${a.message}</div><div id="reply-box-${a.id}" class="reply-area">${a.status === 'Pending' ? `<input type="text" id="inp-${a.id}" placeholder="Type your reply here..." style="margin-bottom:10px;"><button class="ac-btn-read" onclick="replyToTask('${a.id}')">Reply to Task</button><button class="ac-btn-read" style="background:gray; margin-left:5px;" onclick="taskOk('${a.id}')">Mark as OK</button>` : `<span class="ac-read-badge">Status: ${a.status} ${a.reply? '- '+a.reply : ''}</span>`}</div></div>`;
             } else {
-               return `
-               <div class="announce-card">
-                  <div class="ac-header">
-                      <span class="ac-date">${a.date}</span>
-                      ${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}
-                  </div>
-                  <div class="ac-title">${a.title}</div>
-                  <div class="ac-msg">${a.message}</div>
-                  ${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}
-               </div>`;
+               return `<div class="announce-card"><div class="ac-header"><span class="ac-date">${a.date}</span>${a.isRead ? '<span class="ac-read-badge"><i class="material-icons" style="font-size:14px">check</i> Read</span>' : ''}</div><div class="ac-title">${a.title}</div><div class="ac-msg">${a.message}</div>${!a.isRead ? `<button class="ac-btn-read" onclick="readAnnouncement('${a.id}', this)">Mark as Read / OK</button>` : ''}</div>`;
             }
         }).join('');
     }
-
-    async function readAnnouncement(id, btn) {
-        btn.innerText = "Processing...";
-        const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json());
-        if(res.success) {
-            fetchAnnouncements();
-        }
-    }
-
-    // --- NEW: REPLY AND OK LOGIC FOR TASKS ---
-    async function replyToTask(id) {
-       const rep = document.getElementById('inp-'+id).value;
-       if(!rep) return alert("Please write a reply");
-       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'replyTask', taskId:id, reply:rep})}).then(r=>r.json());
-       if(res.success) {
-          showModal('success', 'Replied', 'Your response has been sent to Admin');
-          fetchAnnouncements();
-       }
-    }
-    async function taskOk(id) {
-       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'taskOk', taskId:id})}).then(r=>r.json());
-       if(res.success) fetchAnnouncements();
-    }
-
-    // --- TRAINING COURSE SYSTEM (NEW) ---
+    async function readAnnouncement(id, btn) { btn.innerText = "Processing..."; const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'markRead', announcementId:id, userId:currentUser.id, userName:currentUser.name})}).then(r=>r.json()); if(res.success) fetchAnnouncements(); }
+    async function replyToTask(id) { const rep = document.getElementById('inp-'+id).value; if(!rep) return alert("Please write a reply"); const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'replyTask', taskId:id, reply:rep})}).then(r=>r.json()); if(res.success) { showModal('success', 'Replied', 'Your response has been sent to Admin'); fetchAnnouncements(); } }
+    async function taskOk(id) { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'taskOk', taskId:id})}).then(r=>r.json()); if(res.success) fetchAnnouncements(); }
+    
     async function loadTrainingCourses() {
-        const listDiv = document.getElementById('course-list');
-        listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Loading courses...</div>';
-        
+        const listDiv = document.getElementById('course-list'); listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Loading courses...</div>';
         const res = await fetchAPI('getTrainingCourses', {userId: currentUser.id});
-        
-        if(!res || res.length === 0) {
-            listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">No courses available.</div>';
-            return;
-        }
-
-        listDiv.innerHTML = res.map(c => `
-           <div class="course-card">
-              <i class="material-icons course-type-icon">${c.type === 'Video' ? 'play_circle_filled' : 'picture_as_pdf'}</i>
-              <div class="course-title">${c.title}</div>
-              <div class="course-meta">${c.type}</div>
-              <div class="course-btn ${c.isDone ? 'done' : ''}" onclick="handleCourseClick('${c.id}', '${c.link}', '${c.title}', ${c.isDone})">
-                  ${c.isDone ? 'Completed' : 'View Material'}
-              </div>
-           </div>
-        `).join('');
+        if(!res || res.length === 0) { listDiv.innerHTML = '<div style="text-align:center; grid-column:1/-1;">No courses available.</div>'; return; }
+        listDiv.innerHTML = res.map(c => `<div class="course-card"><i class="material-icons course-type-icon">${c.type === 'Video' ? 'play_circle_filled' : 'picture_as_pdf'}</i><div class="course-title">${c.title}</div><div class="course-meta">${c.type}</div><div class="course-btn ${c.isDone ? 'done' : ''}" onclick="handleCourseClick('${c.id}', '${c.link}', '${c.title}', ${c.isDone})">${c.isDone ? 'Completed' : 'View Material'}</div></div>`).join('');
     }
-
-    async function handleCourseClick(id, link, title, isDone) {
-        openViewer(link, title);
-        if(!isDone) {
-            setTimeout(() => {
-                showModal('confirm', 'Finish Course?', 'Did you complete reading/watching this material?', async () => {
-                    const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({
-                        action: 'markCourseDone', 
-                        courseId: id, 
-                        userId: currentUser.id, 
-                        userName: currentUser.name
-                    })}).then(r=>r.json());
-                    if(res.success) {
-                        loadTrainingCourses();
-                        showModal('success', 'Great Job!', 'Course marked as completed.');
-                    }
-                });
-            }, 3000);
-        }
-    }
-
-    function renderDailyQuestions(id, qs) {
-        document.getElementById(id).innerHTML = qs.map((q,i) => `
-          <div class="question-block">
-             <div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-             <div class="q-options">
-               <label><input type="radio" name="daily_q_${i}" value="Yes" onchange="toggleDaily(${i}, 'Yes')" required> Yes</label>
-               <label><input type="radio" name="daily_q_${i}" value="No" onchange="toggleDaily(${i}, 'No')"> No</label>
-               <label><input type="radio" name="daily_q_${i}" value="N/A" onchange="toggleDaily(${i}, 'NA')"> N/A</label>
-             </div>
-             <div id="daily_hide_${i}" class="hidden-input"><input type="text" name="daily_reason_${i}" placeholder="Explain why No..."></div>
-          </div>`).join('');
-    }
-    function toggleDaily(i, val) {
-        document.getElementById(`daily_hide_${i}`).style.display = (val === 'No') ? 'block' : 'none';
-        const inp = document.querySelector(`#daily_hide_${i} input`);
-        if(inp) inp.required = (val === 'No');
-    }
-
-    function renderWeeklyQuestions(id, qs) {
-        let html = '';
-        qs.forEach((q, i) => {
-            if(i === 0) {
-                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-                   <div class="q-options">
-                     <label><input type="radio" name="weekly_q_0" value="Yes" onchange="toggleWeekly(0, 'Yes')" required> Yes</label>
-                     <label><input type="radio" name="weekly_q_0" value="No" onchange="toggleWeekly(0, 'No')"> No</label>
-                   </div>
-                   <div id="weekly_hide_0" class="hidden-input"><input type="text" name="weekly_detail_0" placeholder="Please provide details..."></div>
-                </div>`;
-            } else {
-                html += `<div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div><textarea name="weekly_q_${i}" rows="2" placeholder="Your answer here..." required></textarea></div>`;
-            }
-        });
-        document.getElementById(id).innerHTML = html;
-    }
-    function toggleWeekly(i, val) {
-        document.getElementById(`weekly_hide_${i}`).style.display = (val === 'Yes') ? 'block' : 'none';
-        const inp = document.querySelector(`#weekly_hide_${i} input`);
-        if(inp) inp.required = (val === 'Yes');
-    }
+    async function handleCourseClick(id, link, title, isDone) { openViewer(link, title); if(!isDone) { setTimeout(() => { showModal('confirm', 'Finish Course?', 'Did you complete reading/watching this material?', async () => { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action: 'markCourseDone', courseId: id, userId: currentUser.id, userName: currentUser.name})}).then(r=>r.json()); if(res.success) { loadTrainingCourses(); showModal('success', 'Great Job!', 'Course marked as completed.'); } }); }, 3000); } }
 
     async function loadTraineesAndOpenDay(day) {
         showTab('training-dynamic');
         document.getElementById('training-title').innerText = "Training Day " + day;
         document.getElementById('train-cat').value = "Training Day " + day;
         document.getElementById('trainee-dropdown').innerHTML = '<option value="" disabled selected>Loading IDs...</option>';
-        document.getElementById('t-name-auto').value = "";
-        document.getElementById('t-email-auto').value = "";
+        document.getElementById('t-name-auto').value = ""; document.getElementById('t-email-auto').value = "";
         globalTraineeList = await fetchAPI('getTraineeList');
         const dd = document.getElementById('trainee-dropdown');
-        if(globalTraineeList.length > 0) {
-           dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + 
-                          globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join('');
-        } else {
-           dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
-        }
-        const div = document.getElementById('questions-container');
-        div.innerHTML = 'Loading...';
-        const qs = await fetchAPI('getTrainingQuestions', {day: day});
-        div.innerHTML = qs.map((q,i) => `
-           <div class="question-block"><div style="font-weight:600; margin-bottom:10px;">${i+1}. ${q}</div>
-           <div class="q-options">
-             <label><input type="radio" name="q_${i}" value="Pass" required> Pass</label>
-             <label><input type="radio" name="q_${i}" value="Fail"> Fail</label>
-             <label><input type="radio" name="q_${i}" value="Retrain"> Retrain</label>
-           </div></div>`).join('');
-    }
-
-    function onTraineeSelect(el) {
-       const selectedId = el.value;
-       const trainee = globalTraineeList.find(t => String(t.id) === String(selectedId));
-       if (trainee) {
-          document.getElementById('t-name-auto').value = trainee.name;
-          document.getElementById('t-email-auto').value = trainee.email;
-       }
-    }
-
-    async function fetchHistory() {
-      const id = document.getElementById('hist-id').value;
-      const data = await fetchAPI('getTrainingHistory', {
-          id:id, start:document.getElementById('hist-start').value, 
-          end:document.getElementById('hist-end').value,
-          viewerName: currentUser.name, role: currentUser.role
-      });
-      document.getElementById('history-body').innerHTML = data.length ? data.map(r=>`<tr><td>${r.date}</td><td><span class="done-tag">${r.day}</span></td><td>${r.name}</td><td>${r.id}</td><td>${r.trainer}</td><td>${r.notes}</td></tr>`).join('') : '<tr><td colspan="6">No records</td></tr>';
-      const trainees = {};
-      data.forEach(r => { if(!trainees[r.id]) trainees[r.id] = {name:r.name, days:new Set()}; const dNum = r.day.match(/\d+/); if(dNum) trainees[r.id].days.add(parseInt(dNum[0])); });
-      let pHTML = '';
-      for (const [tid, info] of Object.entries(trainees)) {
-         const pct = Math.min((info.days.size / 9)*100, 100);
-         pHTML += `
-         <div class="progress-card">
-            <div class="p-header"><span>${info.name}</span><span>${info.days.size}/9</span></div>
-            <div class="p-sub">ID: ${tid}</div>
-            <div class="p-track-history">
-               <div class="p-fill-history" style="width:${pct}%">
-                  <i class="material-icons coffee-marker">local_cafe</i>
-               </div>
-            </div>
-            <div class="p-text-history">${Math.round(pct)}% Completed</div>
-         </div>`;
-      }
-      document.getElementById('progress-grid').innerHTML = pHTML;
-      document.getElementById('progress-section').style.display = pHTML ? 'block' : 'none';
-    }
-
-    async function loadTLData() {
-       document.getElementById('tl-name').innerText = currentUser.name;
-       document.getElementById('tl-id').innerText = "ID: " + currentUser.id;
-       document.getElementById('tl-pic').src = currentUser.image || "https://via.placeholder.com/100";
-       const res = await fetchAPI('getDashboardData', {viewerId:currentUser.id, role:'User', start:document.getElementById('tl-start').value, end:document.getElementById('tl-end').value});
-       const score = Math.min(100, (res.daily.length * 5) + (res.weekly.length * 10));
-       document.getElementById('tl-bar').style.width = score + "%";
-       document.getElementById('tl-score').innerText = score + "%";
-       const dailyHTML = res.daily.length ? res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
-       const weeklyHTML = res.weekly.length ? res.weekly.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>';
-       document.getElementById('tl-daily-body').innerHTML = dailyHTML;
-       document.getElementById('tl-weekly-body').innerHTML = weeklyHTML;
-    }
-
-    // --- NEW: ASSIGN TASK MODAL LOGIC ---
-    async function openAssignTaskModal() {
-       const drop = await fetchAPI('getGlobalDropdowns');
-       const sel = document.getElementById('task-tl-names');
-       sel.innerHTML = drop.names.map(n => `<option value="${n}">${n}</option>`).join('');
-       document.getElementById('assign-task-pop').classList.add('open');
-    }
-
-    async function submitAssignedTask() {
-       const tl = document.getElementById('task-tl-names').value;
-       const msg = document.getElementById('task-msg').value;
-       if(!msg) return alert("Please write a task");
-       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'assignTask', tlName:tl, task:msg, adminName:currentUser.name})}).then(r=>r.json());
-       if(res.success) {
-          document.getElementById('assign-task-pop').classList.remove('open');
-          showModal('success', 'Success', 'Task assigned successfully to ' + tl);
-          document.getElementById('task-msg').value = "";
-       }
-    }
-
-    // --- ADMIN DASHBOARD LOGIC ---
-    function switchAdminTab(tab) {
-        currentAdminTab = tab;
-        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.innerText === tab);
-        });
-        loadAdminData();
-        updateAdminTabBadges(); // NEW: Clear badges when clicking the tab
-    }
-
-    // FEATURE 2: Admin Notification Badges
-    async function updateAdminTabBadges() {
-       // Check for Problems reported today
-       const probRes = await fetchAPI('getDashboardData', { role:'Admin', category:'Problems' });
-       const today = new Date().toLocaleDateString();
-       const newProbs = probRes.categoryData.filter(r => r.date === today).length;
-       const probTab = document.getElementById('tab-Problems');
-       if(probTab) {
-          const oldBadge = probTab.querySelector('.tab-notify');
-          if(oldBadge) oldBadge.remove();
-          if(newProbs > 0 && currentAdminTab !== 'Problems') probTab.innerHTML += `<span class="tab-notify">${newProbs}</span>`;
-       }
-
-       // Check for Tasks that have a Reply
-       const taskHistory = await fetchAPI('getAdminTasks');
-       const newReplies = taskHistory.filter(t => t.status === 'Replied').length;
-       const historyTab = document.getElementById('tab-TaskHistory');
-       if(historyTab) {
-          const oldBadge = historyTab.querySelector('.tab-notify');
-          if(oldBadge) oldBadge.remove();
-          if(newReplies > 0 && currentAdminTab !== 'Task History') historyTab.innerHTML += `<span class="tab-notify">${newReplies}</span>`;
-       }
-    }
-
-    async function loadAdminData() {
-        const tbody = document.getElementById('ad-tbody');
-        const thead = document.getElementById('ad-thead');
-        tbody.innerHTML = '<tr><td colspan="8">Loading data...</td></tr>';
+        if(globalTraineeList.length > 0) dd.innerHTML = '<option value="" disabled selected>Select Trainee ID</option>' + globalTraineeList.map(t => `<option value="${t.id}">${t.id}</option>`).join(''); else dd.innerHTML = '<option value="" disabled selected>No Trainees Registered</option>';
         
-        // Custom Logic for New Task History Tab
-        if(currentAdminTab === 'Task History') {
-           const tasks = await fetchAPI('getAdminTasks');
-           thead.innerHTML = '<tr><th>Date</th><th>TL Name</th><th>Task</th><th>Status</th><th>TL Response</th><th>Action</th></tr>';
-           tbody.innerHTML = tasks.map(t => `
-              <tr>
-                 <td>${t.date}</td><td>${t.tlName}</td><td>${t.task}</td>
-                 <td><span class="status-badge" style="background:${t.status==='Replied'?'#3b82f6':(t.status==='Pending'?'#fee2e2':'#d1fae5')}; color:${t.status==='Replied'?'white':''};">${t.status}</span></td>
-                 <td>${t.reply || '-'}</td>
-                 <td>${t.reply ? `<button class="ac-btn-read" style="padding:4px 8px; font-size:10px;" onclick="showModal('success', 'Team Leader Response', '${t.tlName} replied: ${t.reply}')">View Reply</button>` : ''}</td>
-              </tr>
-           `).join('');
-           return;
-        }
-
-        const filters = {
-            role: 'Admin', category: currentAdminTab, start: document.getElementById('ad-start').value, end: document.getElementById('ad-end').value,
-            tlName: document.getElementById('ad-tl').value, memName: document.getElementById('ad-mem').value,
-            branch: document.getElementById('ad-branch').value, sup: document.getElementById('ad-sup').value, am: document.getElementById('ad-am').value
-        };
-
-        const res = await fetchAPI('getDashboardData', filters);
-        const data = res.categoryData;
-
-        if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>';
-            return;
-        }
-
-        if (currentAdminTab === 'Daily Task' || currentAdminTab === 'Weekly Task') {
-            thead.innerHTML = `<tr><th>Date</th><th>Team Leader</th><th>Branch</th><th>Supervisor</th><th>Area Manager</th><th>Status</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.am}</td><td><span class="status-badge">${r.status}</span></td></tr>`).join('');
-        } 
-        else if (currentAdminTab === 'Problems') {
-            // Updated Problems Table: Icon and Clickable row
-            thead.innerHTML = `<tr><th>Date</th><th>Image</th><th>Team Leader</th><th>Branch</th><th>Sup</th><th>Issue</th><th>Urgency</th></tr>`;
-            tbody.innerHTML = data.map(r => `
-                <tr class="clickable-row" onclick="showProblemPop(${JSON.stringify(r).replace(/"/g, '&quot;')})">
-                    <td>${r.date}</td>
-                    <td style="text-align:center;">${r.img && r.img !== 'No Image' ? `<img src="${r.img}" class="table-img-icon">` : '-'}</td>
-                    <td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.issue}</td><td>${r.urg}</td>
-                </tr>
-            `).join('');
-        }
-        else if (currentAdminTab === 'Vacations') {
-            thead.innerHTML = `<tr><th>Req Date</th><th>Team Leader</th><th>Start Date</th><th>End Date</th><th>Reason</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.start}</td><td>${r.end}</td><td>${r.reason}</td></tr>`).join('');
-        }
-        else if (currentAdminTab === 'Trainings') {
-            thead.innerHTML = `<tr><th>Date</th><th>Day</th><th>Trainer (TL)</th><th>Trainee</th><th>ID</th><th>Notes</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.day}</td><td>${r.trainer}</td><td>${r.trainee}</td><td>${r.id}</td><td>${r.notes}</td></tr>`).join('');
-        }
-        else if (currentAdminTab === 'Announcement') {
-            thead.innerHTML = `<tr><th>ID</th><th>Date</th><th>Title</th><th>Message</th><th>By</th></tr>`;
-            tbody.innerHTML = data.map(r => `<tr><td>${r.id}</td><td>${r.date}</td><td>${r.title}</td><td>${r.msg}</td><td>${r.by}</td></tr>`).join('');
-        }
+        const div = document.getElementById('questions-container'); div.innerHTML = 'Loading...';
+        
+        // --- DYNAMIC TRAINING RENDER ---
+        const qs = await fetchAPI('getTrainingQuestions', {day: day});
+        // We use 'q_' prefix for Training as per old code logic
+        renderDynamicInputs('questions-container', qs, 'q_');
     }
 
-    // --- NEW: PROBLEM POPUP & SAVE AS IMAGE ---
-    async function showProblemPop(r) {
-       document.getElementById('pop-title').innerText = r.issue;
-       document.getElementById('pop-date').innerText = "Reported on: " + r.date;
-       document.getElementById('pop-tl').innerText = r.tl;
-       document.getElementById('pop-br').innerText = r.branch;
-       document.getElementById('pop-urg').innerText = r.urg;
-       document.getElementById('pop-desc').innerText = r.desc;
-       
-       const imgCont = document.getElementById('pop-img-container');
-       imgCont.innerHTML = "Loading image...";
-       document.getElementById('problem-pop').classList.add('open');
-
-       if(r.img && r.img !== 'No Image') {
-          try {
-             const resp = await fetchAPI('getBase64Image', { url: r.img });
-             if(resp.base64) {
-                imgCont.innerHTML = `<img src="${resp.base64}" class="pop-img">`;
-             } else {
-                imgCont.innerHTML = '<p style="color:#999;">Image load failed.</p>';
-             }
-          } catch(e) { imgCont.innerHTML = "Error loading image."; }
-       } else {
-          imgCont.innerHTML = '<p style="margin-top:10px; color:#999;">No image attached.</p>';
-       }
-    }
-
-    function saveAsImage() {
-       const area = document.getElementById('pop-capture-area');
-       html2canvas(area, { 
-          useCORS: true, 
-          allowTaint: true,
-          scale: 2,
-          backgroundColor: "#ffffff"
-       }).then(canvas => {
-          const link = document.createElement('a');
-          link.download = 'Problem_Report_' + new Date().getTime() + '.png';
-          link.href = canvas.toDataURL("image/png");
-          link.click();
-       });
-    }
-
-    function checkIssue(el) {
-       const v = el.value;
-       document.getElementById('div-oth').style.display = (v === 'Others') ? 'block' : 'none';
-       const map = {"Maintenance":"High Priority", "Team Member":"Low Priority", "Customer Complaint":"Medium Priority", "Others":"Medium Priority"};
-       document.getElementById('urg-lbl').value = map[v] || "Low Priority";
-    }
-
-    async function handleProblem(e) {
-       e.preventDefault();
-       const btn = e.target.querySelector('button');
-       btn.innerText = "Uploading..."; btn.disabled = true;
-       const fd = new FormData(e.target);
-       const obj = { category: "Report Problem", name: currentUser.name, empId: currentUser.id };
-       fd.forEach((v,k) => obj[k] = v);
-       const file = document.getElementById('p-img').files[0];
-       if(file) {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = async () => { obj.imageFile = reader.result; obj.imageName = file.name; postData(obj, btn, e.target); };
-       } else { postData(obj, btn, e.target); }
-    }
-
-    async function handleDynamicSubmit(e, cat) {
-       e.preventDefault();
-       const btn = e.target.querySelector('button');
-       btn.innerText = "Saving..."; btn.disabled = true;
-       const fd = new FormData(e.target);
-       const obj = { category: cat, name: currentUser.name, empId: currentUser.id };
-       fd.forEach((v,k) => obj[k] = v);
-       postData(obj, btn, e.target);
-    }
-
-    async function postData(obj, btn, form) {
-       const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json());
-       btn.innerText = (obj.category === 'Trainee Registration') ? "Save Team Member" : "Submit"; 
-       btn.disabled = false;
-       if(res.success) { 
-           showModal('success', 'Success', res.message);
-           form.reset(); 
-           if(obj.category === 'Trainee Registration') showTab('training-dash');
-           if(!obj.category.includes('Admin')) loadTLData();
-       } else {
-           showModal('error', 'Error', res.message);
-       }
-    }
-
+    function onTraineeSelect(el) { const selectedId = el.value; const trainee = globalTraineeList.find(t => String(t.id) === String(selectedId)); if (trainee) { document.getElementById('t-name-auto').value = trainee.name; document.getElementById('t-email-auto').value = trainee.email; } }
+    async function fetchHistory() { const id = document.getElementById('hist-id').value; const data = await fetchAPI('getTrainingHistory', { id:id, start:document.getElementById('hist-start').value, end:document.getElementById('hist-end').value, viewerName: currentUser.name, role: currentUser.role }); document.getElementById('history-body').innerHTML = data.length ? data.map(r=>`<tr><td>${r.date}</td><td><span class="done-tag">${r.day}</span></td><td>${r.name}</td><td>${r.id}</td><td>${r.trainer}</td><td>${r.notes}</td></tr>`).join('') : '<tr><td colspan="6">No records</td></tr>'; const trainees = {}; data.forEach(r => { if(!trainees[r.id]) trainees[r.id] = {name:r.name, days:new Set()}; const dNum = r.day.match(/\d+/); if(dNum) trainees[r.id].days.add(parseInt(dNum[0])); }); let pHTML = ''; for (const [tid, info] of Object.entries(trainees)) { const pct = Math.min((info.days.size / 9)*100, 100); pHTML += `<div class="progress-card"><div class="p-header"><span>${info.name}</span><span>${info.days.size}/9</span></div><div class="p-sub">ID: ${tid}</div><div class="p-track-history"><div class="p-fill-history" style="width:${pct}%"><i class="material-icons coffee-marker">local_cafe</i></div></div><div class="p-text-history">${Math.round(pct)}% Completed</div></div>`; } document.getElementById('progress-grid').innerHTML = pHTML; document.getElementById('progress-section').style.display = pHTML ? 'block' : 'none'; }
+    async function loadTLData() { document.getElementById('tl-name').innerText = currentUser.name; document.getElementById('tl-id').innerText = "ID: " + currentUser.id; document.getElementById('tl-pic').src = currentUser.image || "https://via.placeholder.com/100"; const res = await fetchAPI('getDashboardData', {viewerId:currentUser.id, role:'User', start:document.getElementById('tl-start').value, end:document.getElementById('tl-end').value}); const score = Math.min(100, (res.daily.length * 5) + (res.weekly.length * 10)); document.getElementById('tl-bar').style.width = score + "%"; document.getElementById('tl-score').innerText = score + "%"; const dailyHTML = res.daily.length ? res.daily.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>'; const weeklyHTML = res.weekly.length ? res.weekly.map(r=>`<tr><td>${r.date}</td><td>${r.branch || '-'}</td><td>${r.status}</td></tr>`).join('') : '<tr><td colspan="3">No Data</td></tr>'; document.getElementById('tl-daily-body').innerHTML = dailyHTML; document.getElementById('tl-weekly-body').innerHTML = weeklyHTML; }
+    async function openAssignTaskModal() { const drop = await fetchAPI('getGlobalDropdowns'); const sel = document.getElementById('task-tl-names'); sel.innerHTML = drop.names.map(n => `<option value="${n}">${n}</option>`).join(''); document.getElementById('assign-task-pop').classList.add('open'); }
+    async function submitAssignedTask() { const tl = document.getElementById('task-tl-names').value; const msg = document.getElementById('task-msg').value; if(!msg) return alert("Please write a task"); const res = await fetch(API_URL, {method:'POST', body:JSON.stringify({action:'assignTask', tlName:tl, task:msg, adminName:currentUser.name})}).then(r=>r.json()); if(res.success) { document.getElementById('assign-task-pop').classList.remove('open'); showModal('success', 'Success', 'Task assigned successfully to ' + tl); document.getElementById('task-msg').value = ""; } }
+    function switchAdminTab(tab) { currentAdminTab = tab; document.querySelectorAll('.admin-tab-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === tab); }); loadAdminData(); updateAdminTabBadges(); }
+    async function updateAdminTabBadges() { const probRes = await fetchAPI('getDashboardData', { role:'Admin', category:'Problems' }); const today = new Date().toLocaleDateString(); const newProbs = probRes.categoryData.filter(r => r.date === today).length; const probTab = document.getElementById('tab-Problems'); if(probTab) { const oldBadge = probTab.querySelector('.tab-notify'); if(oldBadge) oldBadge.remove(); if(newProbs > 0 && currentAdminTab !== 'Problems') probTab.innerHTML += `<span class="tab-notify">${newProbs}</span>`; } const taskHistory = await fetchAPI('getAdminTasks'); const newReplies = taskHistory.filter(t => t.status === 'Replied').length; const historyTab = document.getElementById('tab-TaskHistory'); if(historyTab) { const oldBadge = historyTab.querySelector('.tab-notify'); if(oldBadge) oldBadge.remove(); if(newReplies > 0 && currentAdminTab !== 'Task History') historyTab.innerHTML += `<span class="tab-notify">${newReplies}</span>`; } }
+    async function loadAdminData() { const tbody = document.getElementById('ad-tbody'); const thead = document.getElementById('ad-thead'); tbody.innerHTML = '<tr><td colspan="8">Loading data...</td></tr>'; if(currentAdminTab === 'Task History') { const tasks = await fetchAPI('getAdminTasks'); thead.innerHTML = '<tr><th>Date</th><th>TL Name</th><th>Task</th><th>Status</th><th>TL Response</th><th>Action</th></tr>'; tbody.innerHTML = tasks.map(t => `<tr><td>${t.date}</td><td>${t.tlName}</td><td>${t.task}</td><td><span class="status-badge" style="background:${t.status==='Replied'?'#3b82f6':(t.status==='Pending'?'#fee2e2':'#d1fae5')}; color:${t.status==='Replied'?'white':''};">${t.status}</span></td><td>${t.reply || '-'}</td><td>${t.reply ? `<button class="ac-btn-read" style="padding:4px 8px; font-size:10px;" onclick="showModal('success', 'Team Leader Response', '${t.tlName} replied: ${t.reply}')">View Reply</button>` : ''}</td></tr>`).join(''); return; } const filters = { role: 'Admin', category: currentAdminTab, start: document.getElementById('ad-start').value, end: document.getElementById('ad-end').value, tlName: document.getElementById('ad-tl').value, memName: document.getElementById('ad-mem').value, branch: document.getElementById('ad-branch').value, sup: document.getElementById('ad-sup').value, am: document.getElementById('ad-am').value }; const res = await fetchAPI('getDashboardData', filters); const data = res.categoryData; if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>'; return; } if (currentAdminTab === 'Daily Task' || currentAdminTab === 'Weekly Task') { thead.innerHTML = `<tr><th>Date</th><th>Team Leader</th><th>Branch</th><th>Supervisor</th><th>Area Manager</th><th>Status</th></tr>`; tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.am}</td><td><span class="status-badge">${r.status}</span></td></tr>`).join(''); } else if (currentAdminTab === 'Problems') { thead.innerHTML = `<tr><th>Date</th><th>Image</th><th>Team Leader</th><th>Branch</th><th>Sup</th><th>Issue</th><th>Urgency</th></tr>`; tbody.innerHTML = data.map(r => `<tr class="clickable-row" onclick="showProblemPop(${JSON.stringify(r).replace(/"/g, '&quot;')})"><td>${r.date}</td><td style="text-align:center;">${r.img && r.img !== 'No Image' ? `<img src="${r.img}" class="table-img-icon">` : '-'}</td><td>${r.tl}</td><td>${r.branch}</td><td>${r.sup}</td><td>${r.issue}</td><td>${r.urg}</td></tr>`).join(''); } else if (currentAdminTab === 'Vacations') { thead.innerHTML = `<tr><th>Req Date</th><th>Team Leader</th><th>Start Date</th><th>End Date</th><th>Reason</th></tr>`; tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.tl}</td><td>${r.start}</td><td>${r.end}</td><td>${r.reason}</td></tr>`).join(''); } else if (currentAdminTab === 'Trainings') { thead.innerHTML = `<tr><th>Date</th><th>Day</th><th>Trainer (TL)</th><th>Trainee</th><th>ID</th><th>Notes</th></tr>`; tbody.innerHTML = data.map(r => `<tr><td>${r.date}</td><td>${r.day}</td><td>${r.trainer}</td><td>${r.trainee}</td><td>${r.id}</td><td>${r.notes}</td></tr>`).join(''); } else if (currentAdminTab === 'Announcement') { thead.innerHTML = `<tr><th>ID</th><th>Date</th><th>Title</th><th>Message</th><th>By</th></tr>`; tbody.innerHTML = data.map(r => `<tr><td>${r.id}</td><td>${r.date}</td><td>${r.title}</td><td>${r.msg}</td><td>${r.by}</td></tr>`).join(''); } }
+    async function showProblemPop(r) { document.getElementById('pop-title').innerText = r.issue; document.getElementById('pop-date').innerText = "Reported on: " + r.date; document.getElementById('pop-tl').innerText = r.tl; document.getElementById('pop-br').innerText = r.branch; document.getElementById('pop-urg').innerText = r.urg; document.getElementById('pop-desc').innerText = r.desc; const imgCont = document.getElementById('pop-img-container'); imgCont.innerHTML = "Loading image..."; document.getElementById('problem-pop').classList.add('open'); if(r.img && r.img !== 'No Image') { try { const resp = await fetchAPI('getBase64Image', { url: r.img }); if(resp.base64) { imgCont.innerHTML = `<img src="${resp.base64}" class="pop-img">`; } else { imgCont.innerHTML = '<p style="color:#999;">Image load failed.</p>'; } } catch(e) { imgCont.innerHTML = "Error loading image."; } } else { imgCont.innerHTML = '<p style="margin-top:10px; color:#999;">No image attached.</p>'; } }
+    function saveAsImage() { const area = document.getElementById('pop-capture-area'); html2canvas(area, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: "#ffffff" }).then(canvas => { const link = document.createElement('a'); link.download = 'Problem_Report_' + new Date().getTime() + '.png'; link.href = canvas.toDataURL("image/png"); link.click(); }); }
+    function checkIssue(el) { const v = el.value; document.getElementById('div-oth').style.display = (v === 'Others') ? 'block' : 'none'; const map = {"Maintenance":"High Priority", "Team Member":"Low Priority", "Customer Complaint":"Medium Priority", "Others":"Medium Priority"}; document.getElementById('urg-lbl').value = map[v] || "Low Priority"; }
+    async function handleProblem(e) { e.preventDefault(); const btn = e.target.querySelector('button'); btn.innerText = "Uploading..."; btn.disabled = true; const fd = new FormData(e.target); const obj = { category: "Report Problem", name: currentUser.name, empId: currentUser.id }; fd.forEach((v,k) => obj[k] = v); const file = document.getElementById('p-img').files[0]; if(file) { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = async () => { obj.imageFile = reader.result; obj.imageName = file.name; postData(obj, btn, e.target); }; } else { postData(obj, btn, e.target); } }
+    async function handleDynamicSubmit(e, cat) { e.preventDefault(); const btn = e.target.querySelector('button'); btn.innerText = "Saving..."; btn.disabled = true; const fd = new FormData(e.target); const obj = { category: cat, name: currentUser.name, empId: currentUser.id }; fd.forEach((v,k) => obj[k] = v); postData(obj, btn, e.target); }
+    async function postData(obj, btn, form) { const res = await fetch(API_URL, {method:'POST', body:JSON.stringify(obj)}).then(r=>r.json()); btn.innerText = (obj.category === 'Trainee Registration') ? "Save Team Member" : "Submit"; btn.disabled = false; if(res.success) { showModal('success', 'Success', res.message); form.reset(); if(obj.category === 'Trainee Registration') showTab('training-dash'); if(!obj.category.includes('Admin')) loadTLData(); } else { showModal('error', 'Error', res.message); } }
     function confirmTraining() { showTab('training-dash'); }
     function showHistory() { showTab('history-view'); fetchHistory(); }
     let slideIndex=0; function showSlides(){let s=document.getElementsByClassName("slide"); if(!s.length)return; for(let i=0;i<s.length;i++)s[i].classList.remove("active-slide"); slideIndex++; if(slideIndex>s.length)slideIndex=1; s[slideIndex-1].classList.add("active-slide"); setTimeout(showSlides, 4000);} showSlides();
-    async function fetchAPI(act, p={}) {
-       const u = new URL(API_URL); u.searchParams.append('action', act);
-       for(let k in p) u.searchParams.append(k, p[k]);
-       return await fetch(u).then(r=>r.json());
-    }
+    async function fetchAPI(act, p={}) { const u = new URL(API_URL); u.searchParams.append('action', act); for(let k in p) u.searchParams.append(k, p[k]); return await fetch(u).then(r=>r.json()); }
   </script>
 </body>
 </html>
